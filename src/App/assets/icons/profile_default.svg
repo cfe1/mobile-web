@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="150" height="150" viewBox="0 0 150 150">
+    <defs>
+        <circle id="of79643iba" cx="75" cy="75" r="75"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g transform="translate(-411 -5241) translate(411 5241)">
+                <mask id="bdccjzgrab" fill="#fff">
+                    <use xlink:href="#of79643iba"/>
+                </mask>
+                <use fill="#F5F6FA" xlink:href="#of79643iba"/>
+                <g mask="url(#bdccjzgrab)">
+                    <g fill="#82889C" fill-rule="nonzero">
+                        <path d="M20.625 22.918c-6.318 0-11.457-5.14-11.457-11.457C9.168 5.142 14.307 0 20.625 0c6.318 0 11.457 5.14 11.457 11.457 0 6.318-5.139 11.46-11.457 11.46z" transform="translate(53 50)"/>
+                        <g>
+                            <path d="M10.887.036C4.88.036 0 4.916 0 10.922v8.02c0 .938.78 1.719 1.719 1.719h21.199v-7.45c0-4.307 3.207-7.861 7.356-8.48.595-1.743 1.719-3.207 3.163-4.262-2.293-.653-2.417-.433-22.55-.433z" transform="translate(53 50) translate(0 27.464)"/>
+                            <path d="M20.887.071C14.88.071 10 4.953 10 10.958v8.02c0 .938.78 1.718 1.719 1.718h21.199v-7.449c0-4.307 3.207-7.861 7.356-8.48.595-1.743 1.719-3.207 3.163-4.263-2.293-.653-2.417-.433-22.55-.433z" transform="translate(53 50) translate(0 27.464) matrix(-1 0 0 1 53.437 0)"/>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

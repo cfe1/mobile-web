@@ -1,0 +1,63 @@
+@import "../../theme/responsive.scss";
+.rootContainer {
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  min-height: 100vh;
+}
+
+.mainContainer {
+  background-color: transparent;
+  margin: 20px 130px;
+  border-radius: 30px;
+  display: flex;
+  overflow: hidden;
+  @include tablet{
+    margin: 0;
+    border-radius: 0;
+  }
+}
+
+.formContainer {
+  padding-top: 88px;
+  padding-left: 64px;
+  padding-right: 64px;
+  padding-bottom: 40px;
+  width: 550px;
+  background-color: white;
+  border-top-left-radius: 26px;
+  border-bottom-left-radius: 26px;
+  @include tablet{
+    border-radius: 0;
+  }
+}
+
+.imageContainer {
+  background-image: url(../../assets/images/auth/auth-bg.png);
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  overflow-x: hidden;
+  background-size: cover;
+  @include tablet{
+    border-radius: 0;
+  }
+}
+
+.imageContent {
+  padding: 130px 64px;
+}
+
+.emailSentContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+
+.authImg{
+    height: 60px;
+    width: 60px;
+}

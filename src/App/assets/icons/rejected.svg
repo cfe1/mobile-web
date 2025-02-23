@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
+    <title>Group 12 Copy@1x</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-12-Copy">
+            <path d="M8,0 C3.58911131,0 0,3.58911131 0,8 C0,12.4108887 3.58911131,16 8,16 C12.4108887,16 16,12.4108887 16,8 C16,3.58911131 12.4108887,0 8,0 Z" id="Shape" fill="#FDE8EA" fill-rule="nonzero"></path>
+            <g id="Group-47" transform="translate(5.000000, 5.000000)" stroke="#FF0040" stroke-linecap="round" stroke-width="1.125">
+                <line x1="4.54747351e-13" y1="5.97219407" x2="5.93789103" y2="1.70530257e-13" id="Path-10"></line>
+                <line x1="4.09272616e-12" y1="5.97219407" x2="5.93789103" y2="1.70530257e-13" id="Path-10" transform="translate(2.968946, 2.986097) scale(-1, 1) translate(-2.968946, -2.986097) "></line>
+            </g>
+        </g>
+    </g>
+</svg>

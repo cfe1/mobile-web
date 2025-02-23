@@ -1,0 +1,61 @@
+@font-face {
+  font-family: "Manrope";
+  src: url(../assets/fonts/Manrope.ttf) format("truetype");
+}
+
+a:hover {
+  text-decoration: none !important;
+}
+
+.text-muted {
+  color: #82889c;
+}
+
+.p1 {
+  font-size: 15px;
+  line-height: 26px / 15px;
+  font-weight: 400;
+}
+
+.p2 {
+  font-size: 15px;
+  line-height: 22px / 14px;
+  font-weight: 500;
+}
+
+.c1 {
+  font-size: 13px;
+  line-height: 20px / 13px;
+  font-weight: 400;
+}
+.c2 {
+  font-size: 12px;
+  line-height: 17px / 12px;
+  font-weight: 600;
+}
+
+.label {
+  font-size: 11px;
+  line-height: 15px / 11px;
+  font-weight: 600;
+}
+
+.MuiTableCell-body {
+  font-size: 13px !important;
+  line-height: 18/13 !important;
+}
+
+.MuiBreadcrumbs-li > a {
+  font-size: 13px !important;
+  line-height: 20/13 !important;
+  font-weight: normal !important;
+}
+
+.MuiBreadcrumbs-li > .MuiTypography-colorPrimary {
+  text-decoration: underline;
+  color: #9c00ba !important;
+}
+
+.text-primary {
+  color: rgba(186, 0, 177, 0.8);
+}

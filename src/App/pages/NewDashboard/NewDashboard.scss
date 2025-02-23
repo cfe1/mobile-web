@@ -1,0 +1,486 @@
+.text-10 {
+  font-size: 10px;
+}
+
+.text-12 {
+  font-size: 12px !important;
+}
+
+.text-14 {
+  font-size: 14px !important;
+}
+
+.text-16 {
+  font-size: 16px;
+}
+
+.text-20 {
+  font-size: 20px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.text-500 {
+  font-weight: 500;
+}
+
+.text-600 {
+  font-weight: 600;
+}
+
+.ml-10 {
+  margin-left: 10px;
+}
+
+.text-700 {
+  font-weight: 700;
+}
+
+.text-800 {
+  font-weight: 800;
+}
+
+.text-grey {
+  color: #929ab3;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-bold {
+  font-weight: bold;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-underline {
+  text-decoration: underline;
+}
+
+.text-grey1 {
+  color: #82889c;
+}
+
+.text-white {
+  color: white;
+}
+
+.mb {
+  margin-bottom: 10px;
+}
+
+.mb-15 {
+  margin-bottom: 15px;
+}
+
+.mb-30 {
+  margin-bottom: 30px;
+}
+
+.mb-24 {
+  margin-bottom: 24px;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.mt-5 {
+  margin-top: 5px;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.mt-30 {
+  margin-top: 30px;
+}
+
+.mb-neg-15 {
+  margin-bottom: -15px;
+}
+
+.mt-neg-20 {
+  /* margin-top: -20px; */
+}
+
+.p-4 {
+  padding: 4px;
+}
+
+.mr-10 {
+  margin-right: 10px;
+}
+
+.pb-8 {
+  padding-bottom: 8px;
+}
+
+.p-10 {
+  padding: 10px !important;
+}
+
+.p-11 {
+  padding: 11px;
+}
+
+.p-12 {
+  padding: 12px;
+}
+
+.p-20 {
+  padding: 20px;
+}
+
+.rounded-4 {
+  border-radius: 4px;
+}
+
+.paper {
+  padding: 20px;
+}
+
+.w-fit {
+  width: fit-content;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-end {
+  justify-content: end;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+.items-baseline {
+  align-items: baseline;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+.opacity-70 {
+  opacity: 0.7;
+}
+
+.mb-0 {
+  margin-bottom: 0px;
+}
+
+.gap-12 {
+  gap: 12px;
+}
+
+.gap-10 {
+  gap: 10px !important;
+}
+
+.gap-4 {
+  gap: 4px;
+}
+
+.hidden {
+  display: none;
+}
+
+.bg-lt-green {
+  background: #e3f8fa;
+}
+
+.bg-lt-pink {
+  background: #fff1f8;
+}
+
+.bg-white {
+  background: white;
+}
+
+.bg-lt-blue {
+  background: #f3f4f7;
+}
+
+.disabled {
+  opacity: 0.6;
+}
+
+.no-pointer-events {
+  pointer-events: none;
+}
+
+.border-grey {
+  border: 1px solid #434966;
+}
+
+.ellipsis {
+  white-space: nowrap;
+  width: 95%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-wrap: nowrap;
+}
+
+.horizontal-divider {
+  border: 1px solid #edecf5;
+}
+
+.pdf-btn {
+  padding: 10px;
+  border-radius: 4px;
+  background: #f4f3f8;
+}
+
+.p-border-btn {
+  padding: 5px 20px;
+  border-radius: 4px;
+  border: 1.5px solid #ff0083;
+  font-size: 14px;
+  color: #ff0083;
+  margin-top: 5px;
+}
+.name-input-field {
+  min-height: 0px;
+  // width: 122px;
+  // max-width: 185px;
+  .MuiInputBase-root {
+    height: 44px;
+    // width: 120px;
+    input {
+      font-size: 14px !important;
+      font-weight: 700 !important;
+      color: black;
+      padding-left: 4px !important;
+    }
+  }
+}
+
+.select-here-facility {
+  padding: 10px;
+  border: 1px solid #dbdbdb;
+  font-size: 14px;
+  // font-weight: 600;
+  // max-width: 185px;
+  // min-width: 185px;
+  height: 23px;
+  text-align: center;
+  border-radius: 4px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dialog-cls {
+  max-width: 900px;
+}
+
+.dialog-cls-facility {
+  max-width: 650px;
+}
+
+.error-text {
+  color: rgb(255, 0, 64);
+  font-size: 0.75rem;
+  font-weight: 400;
+  padding-left: 5px;
+}
+
+.grid-max-w {
+  max-width: 23%;
+  flex-basis: 23%;
+}
+
+.search {
+  width: 300px;
+}
+
+.grey-btn {
+  padding: 5px 10px;
+  background: #dddfe6;
+  color: var(--Gray-800, #1d2939);
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.max-h {
+  max-height: 20vh;
+  overflow-y: auto;
+}
+
+.single-rec {
+  padding: 5px 0px;
+  color: #020826;
+}
+
+.facilities-count {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff1f8;
+  color: #ff0083;
+  padding: 8px;
+  border-radius: 50%;
+  height: 5px;
+  width: 5px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.multiselect-days {
+  .MuiInputBase-root {
+    .MuiSelect-root {
+      padding-bottom: 12px !important;
+    }
+  }
+}
+
+.legend-container {
+  padding: 8px 12px 8px 12px;
+  gap: 10px;
+  border-radius: 8px;
+  border: 1px solid #dddfe6;
+}
+
+.legend-color-cont {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+.bg-lt-pink {
+  background: #ffe3f2;
+}
+
+.bg-main-pink {
+  background: #ff0083;
+}
+
+.custom-tooltip {
+  margin: 0px;
+  padding: 10px;
+  background-color: #f3f4f7;
+  white-space: nowrap;
+  border-radius: 4px;
+  padding: 10px;
+  border-radius: 4px;
+  color: #667085;
+  line-height: 18px;
+
+  .label-cont {
+    // font-size: 14px;
+
+    .tooltip-label {
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .tooltip-value {
+      font-weight: 600;
+      font-size: 12px;
+    }
+  }
+}
+
+.h-divider {
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.graph-wrapper {
+  width: 100%;
+  height: 80vh;
+  overflow-y: scroll;
+
+  .recharts-wrapper {
+    height: auto !important;
+    position: absolute;
+  }
+}
+
+.select-container {
+  padding: 4px;
+  gap: 0px;
+  border-radius: 4px;
+  border: 1px solid #f3f4f7;
+}
+
+.selected-option {
+  background: #434966;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+}
+
+.select-option {
+  padding: 4px 8px 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #929ab3;
+  width: 100px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.sticky-x-axis-container {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: white;
+  width: 100%;
+  margin-bottom: -50px;
+  // overflow: hidden;
+}
+
+.sticky-x-axis {
+  height: 30px; /* Adjust based on your actual X-axis height */
+  position: relative;
+}

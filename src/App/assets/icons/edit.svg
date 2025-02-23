@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g transform="translate(-42 -9482) translate(42 9482)">
+                <rect width="30" height="30" fill="#2E2E55" rx="4"/>
+                <g fill="#FFF" fill-rule="nonzero">
+                    <path d="M1.4 9.66L0 14 4.34 12.6z" transform="translate(8 8)"/>
+                    <path d="M2.454 4.624H12.114V8.824H2.454z" transform="translate(8 8) rotate(-45 7.283 6.724)"/>
+                    <path d="M13.79 2.17L11.83.21c-.28-.28-.7-.28-.98 0l-.63.63 2.94 2.94.63-.63c.28-.28.28-.7 0-.98z" transform="translate(8 8)"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

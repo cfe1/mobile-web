@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
+    <title>User@1x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="48" height="48" rx="24"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="User">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use id="Rectangle" fill="#F3F4F7" xlink:href="#path-1"></use>
+            <g id="1828328" mask="url(#mask-2)" fill="#050D33" fill-rule="nonzero">
+                <g transform="translate(14.000000, 12.000000)" id="Path">
+                    <path d="M15.555013,5.72167969 C15.555013,8.78971354 13.0680339,11.2766927 10,11.2766927 C6.93196615,11.2766927 4.44498698,8.78971354 4.44498698,5.72167969 C4.44498698,2.65364583 6.93196615,0.166666667 10,0.166666667 C13.0680339,0.166666667 15.555013,2.65364583 15.555013,5.72167969 Z"></path>
+                    <path d="M14.7216797,13.5 L5.27669271,13.5 C2.36816406,13.5 0,15.8681641 0,18.7783203 L0,22.6666667 C0,23.1264648 0.373535208,23.5 0.833333333,23.5 L19.1666667,23.5 C19.6264648,23.5 20,23.1264648 20,22.6666667 L20,18.7783203 C20,15.8681641 17.6318359,13.5 14.7216797,13.5 Z"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

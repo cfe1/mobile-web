@@ -1,0 +1,592 @@
+$primary-text-blue: #050d33;
+$secondary-text-grey: #82889c;
+
+.wide-btn {
+  width: 160px;
+}
+.MuiButton-root.Mui-disabled {
+  color: rgba(0, 0, 0, 0.46) !important;
+}
+
+.paydetail {
+  height: 120px;
+  width: 96%;
+  background-color: #e3f8fb;
+  margin: 20px;
+  display: flex;
+  justify-content: space-between;
+  .pay-content {
+    padding: 24px 20px 34px 0px;
+    display: flex;
+    .pay-info {
+      margin-bottom: 22px;
+      margin-right: 48px;
+      width: 100px;
+      .title {
+        font-size: 12px;
+        font-weight: 500;
+        color: #82889c;
+      }
+    }
+    .view-more {
+      color: #050d33;
+      font-family: Manrope;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+      line-height: 18px;
+      text-align: center;
+      height: 48px;
+      width: 111px;
+      // border-radius: 27px;
+      background-color: #ffffff;
+      border: none;
+      outline: none;
+      cursor: pointer;
+    }
+  }
+}
+b {
+  font-weight: bold;
+}
+.payAmount {
+  padding: 24px 0px 34px 25px;
+  height: 48px;
+  color: #050d33;
+  font-size: 18px;
+  font-family: "Manrope";
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 24px;
+  max-width: 60%;
+  b {
+    font-family: "Manrope";
+    font-weight: 600;
+  }
+}
+.divider {
+  box-sizing: border-box;
+  margin-right: 20px;
+  margin-top: 10px;
+  height: 34px;
+  width: 1px;
+  border: 1px solid #bad0d3;
+}
+
+// .MuiOutlinedInput-root {
+//   //border-radius: 29px !important;
+// }
+
+.MuiOutlinedInput-input {
+  font-size: 13px !important;
+  line-height: 20 / 13 !important;
+  font-weight: 500 !important;
+  padding: 16px 14px !important;
+  padding-left: 20px !important;
+}
+
+.MuiMenu-paper {
+  border-radius: 12px !important;
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12) !important;
+}
+.MuiMenuItem-root {
+  font-weight: 600 !important;
+  font-size: 11px !important;
+}
+
+.MuiFormLabel-root:not(.MuiInputLabel-shrink) {
+  font-size: 13px !important;
+  line-height: 20 / 13 !important;
+  font-weight: 500 !important;
+  padding-left: 10px;
+}
+
+.csv-btn {
+  box-sizing: border-box;
+  height: 48px;
+  width: 168px;
+  border: 0.8px solid #edecf5;
+  // border-radius: 24px !important;
+  background-color: #ffffff !important;
+  .MuiButton-label {
+    color: #434966;
+    font-weight: 600;
+    font-family: "Manrope";
+    font-size: 13px;
+  }
+}
+
+.csv-btn-tax {
+  box-sizing: border-box;
+  height: 48px;
+  width: 48px;
+  border: 0.8px solid #edecf5;
+
+  background-color: #ffffff !important;
+}
+
+.edit-btn {
+  box-sizing: border-box;
+  height: 37px;
+  width: 101px;
+  border: 1px solid #edecf5 !important;
+  //border-radius: 24px !important;
+  background-color: transparent !important;
+  .MuiButton-label {
+    color: #434966;
+    font-weight: 600;
+    font-family: "Manrope";
+    font-size: 12px;
+  }
+}
+.edit-btn-w {
+  box-sizing: border-box;
+  height: 37px;
+  width: 101px;
+  border: 1px solid #edecf5 !important;
+  //border-radius: 24px !important;
+  background-color: white !important;
+  .MuiButton-label {
+    color: #434966;
+    font-weight: 600;
+    font-family: "Manrope";
+    font-size: 12px;
+  }
+}
+
+.file-btn {
+  box-sizing: border-box;
+  height: 37px;
+  width: 120px;
+  border: 1px solid #edecf5 !important;
+  //border-radius: 24px !important;
+  background-color: #eeeef6 !important;
+  .MuiButton-label {
+    color: #434966;
+    font-weight: 400;
+    font-family: "Manrope";
+    font-size: 12px;
+  }
+}
+
+.approve-btn {
+  box-sizing: border-box;
+  height: 37px;
+  width: 101px;
+  //border-radius: 24px !important;
+  background-color: #17174a !important;
+  .MuiButton-label {
+    color: #ffffff;
+    font-weight: 400;
+    font-family: "Manrope";
+    font-size: 12px;
+  }
+}
+.matrix-btn {
+  box-sizing: border-box;
+  height: 37px;
+  width: 101px;
+  // border-radius: 24px !important;
+  background-color: #ff0083 !important;
+  .MuiButton-label {
+    color: #ffffff;
+    font-weight: 600;
+    font-family: "Manrope";
+    font-size: 12px;
+  }
+}
+.reject-btn {
+  box-sizing: border-box;
+  height: 37px;
+  width: 101px;
+  margin-left: 12px !important;
+  border: 1px solid #edecf5 !important;
+  //border-radius: 24px !important;
+  background-color: transparent !important;
+  .MuiButton-label {
+    color: #434966;
+    font-weight: 400;
+    font-family: "Manrope";
+    font-size: 12px;
+  }
+}
+
+.fd-card {
+  height: 181px;
+  border-radius: 12px;
+  background-color: #ffffff;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  .fd-card-icon {
+    margin-bottom: 13px;
+    height: 50px;
+    width: 50px;
+    background-color: #e3f8fb;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      fill: #e3f8fb;
+    }
+  }
+  &-title {
+    display: block;
+    color: $secondary-text-grey;
+    font-size: 13px;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  &-count {
+    display: block;
+    font-size: 18px;
+  }
+}
+
+.cancel-btn-container {
+  position: absolute;
+
+  bottom: 0;
+  right: 0;
+
+  .cancel-btn {
+    height: 43px;
+    width: 43.17px;
+    border: 3px solid #ffffff;
+    background: linear-gradient(139.92deg, #d831b4 0%, #6241e9 100%);
+    color: white;
+  }
+}
+
+.modal-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  position: fixed !important;
+  bottom: -50px !important;
+}
+
+.g-modal-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+}
+.c-modal-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+}
+.manual-prime {
+  margin-bottom: 20px;
+  .MuiToggleButtonGroup-root {
+    .MuiButtonBase-root {
+      min-width: 100px !important;
+    }
+  }
+}
+
+.modal-content {
+  width: 500px;
+  min-height: 350px;
+  border-radius: 16px;
+  background-color: white;
+  outline: none;
+  &:focus {
+    outline: none !important;
+  }
+
+  .modal-icon {
+    margin-top: 21px;
+    text-align: center;
+    margin-bottom: 21px;
+  }
+
+  .modal-heading {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 600;
+    color: $primary-text-blue;
+    margin-bottom: 12px;
+  }
+
+  .modal-sub-heading {
+    text-align: center;
+    font-size: 13px;
+    color: $secondary-text-grey;
+    margin-bottom: 50px;
+  }
+  .modal-cta {
+    background-color: #f5f6fa;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0 0 16px 16px;
+  }
+}
+
+.g-modal-content {
+  width: 750px;
+  background-color: white;
+  border-radius: 16px;
+  overflow: hidden;
+  outline: none;
+  &:focus {
+    outline: none !important;
+  }
+
+  .modal-icon {
+    margin-top: 21px;
+    text-align: center;
+    margin-bottom: 21px;
+  }
+
+  .modal-heading {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 600;
+    color: $primary-text-blue;
+    margin-bottom: 12px;
+  }
+
+  .modal-sub-heading {
+    text-align: center;
+    font-size: 13px;
+    color: $secondary-text-grey;
+    margin-bottom: 50px;
+  }
+  .modal-cta {
+    background-color: #f5f6fa;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px;
+  }
+}
+
+.c-modal-content {
+  width: 736px;
+  background-color: white;
+  border-radius: 16px;
+  overflow: hidden;
+  outline: none;
+  &:focus {
+    outline: none !important;
+  }
+
+  .modal-icon {
+    margin-top: 21px;
+    text-align: center;
+    margin-bottom: 21px;
+  }
+
+  .modal-heading {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 600;
+    color: $primary-text-blue;
+    margin-bottom: 12px;
+  }
+
+  .modal-sub-heading {
+    text-align: center;
+    font-size: 13px;
+    color: $secondary-text-grey;
+    margin-bottom: 50px;
+  }
+  .modal-cta {
+    background-color: #f5f6fa;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px;
+  }
+}
+
+#user-menu {
+  .MuiMenu-paper {
+    border-radius: 10px !important;
+    width: 204px;
+    margin-top: 10px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
+    .MuiMenu-list {
+      color: $secondary-text-grey;
+      .MuiMenuItem-root {
+        font-size: 11px !important;
+        font-family: inherit !important;
+      }
+    }
+  }
+}
+
+//dropzone css
+
+.documentPlaceholder {
+  background-color: #f5f6fa;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  border-radius: 20px;
+  min-width: 310px;
+  max-width: 310px;
+}
+.filter {
+  width: 200px;
+}
+.horizontalspace {
+  margin: 0 12px;
+}
+.filterdate {
+  padding: 0 30px 30px;
+}
+
+.fd-card-tax {
+  width: 166px !important;
+  height: 140px !important;
+  border-radius: 10px !important;
+  margin-right: 24px !important;
+  background-color: #ffffff;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  .fd-card-tax-icon {
+    margin-bottom: 13px;
+    height: 36px !important;
+    width: 36px !important;
+    background-color: #e3f8fb;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      fill: #e3f8fb;
+      height: 36px !important;
+      width: 36px !important;
+    }
+  }
+  &-title {
+    display: block;
+    color: #82889c;
+    font-size: 13px;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  &-count {
+    display: block;
+    font-size: 18px;
+    font-weight: 800;
+  }
+}
+
+@media (max-width: 1025px) {
+  .c-modal-content {
+    width: 600px !important;
+  }
+  .MuiMenuItem-root {
+    font-weight: 600 !important;
+    font-size: 10px !important;
+  }
+  .approve-btn {
+    width: 60px !important;
+  }
+
+  .reject-btn {
+    width: 60px !important;
+    margin-left: 5px !important;
+  }
+}
+@media (max-width: 992px) {
+  .manual-prime {
+    margin-bottom: 20px;
+    .MuiToggleButtonGroup-root {
+      .MuiButtonBase-root {
+        min-width: 80px !important;
+      }
+    }
+  }
+}
+
+@media (max-width: 1000px) {
+  .paydetail {
+    height: 130px;
+  }
+  .payAmount {
+    padding: 24px 0px 38px 25px;
+    font-size: 15px;
+  }
+
+  .view-more {
+    width: 77px !important;
+  }
+
+  .pay-info {
+    margin-right: 10px !important;
+    width: 84px !important;
+  }
+}
+
+@media (max-width: 800px) {
+  .paydetail {
+    height: 130px;
+  }
+  .payAmount {
+    padding: 24px 0px 38px 25px;
+    font-size: 14px;
+  }
+
+  .view-more {
+    width: 77px !important;
+  }
+
+  .pay-info {
+    margin-right: 0px !important;
+  }
+
+  .divider{
+    margin-right: 11px!important;
+  }
+}
+
+.hospital-Name {
+  font-size: 16px !important;
+}
+
+.MuiTableCell-stickyHeader {
+  background-color: #ffffff !important;
+  z-index: 500;
+}
+
+.MuiSvgIcon-root {
+  color : #17174A
+}
+.MuiSvgIcon-fontSizeInherit{
+  color: #2196f3,
+}
+
+.styledDiv{
+  font-size: 15px;
+}
+
+.account_name { 
+  font-size: 12px;
+}
+
+.account_number { 
+  font-size: 15px;
+}
