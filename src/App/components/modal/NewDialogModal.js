@@ -9,7 +9,7 @@ import BackButton from "../../assets/icons/newBack.svg";
 export const NewDialogModal = ({
   heading,
   onClose,
-  handleConfirm = () => { },
+  handleConfirm = () => {},
   children,
   dialogCls,
   handleSecBtn,
@@ -92,12 +92,13 @@ export const NewDialogModal = ({
             {extraHeaderBtn && (
               <span
                 className={`
-                ${extraHeaderBtnClass
+                ${
+                  extraHeaderBtnClass
                     ? `${classes.chip} ${classes[extraHeaderBTnTxt]}`
                     : greyEditBtn
-                      ? classes.greyEditBtn
-                      : `set-btn ${classes.eBtn}`
-                  }  
+                    ? classes.greyEditBtn
+                    : `set-btn ${classes.eBtn}`
+                }  
                 ${noPinkExtraBtn && classes.noPinkExtraBtn}
               `}
                 onClick={onExtraHeaderBtnClick}
@@ -167,8 +168,8 @@ const useStyles = makeStyles((theme) => ({
   dialog: {
     maxWidth: "856px !important",
   },
-  dialogHead: {
-    display: 'flex'
+  dialogHead:{
+    display : 'flex'
   },
   footer: {
     // marginTop: 10,
@@ -191,14 +192,6 @@ const useStyles = makeStyles((theme) => ({
     padding: "18px 38px",
     height: 44,
     marginRight: 15,
-  },
-  bgLtBl: {
-    color: "#FFFFFF",
-    background: theme.palette.primary.main,
-    transition: "background 0.3s ease",
-    "&:hover": {
-      background: theme.palette.secondary.main,
-    },
   },
   mb24: {
     marginBottom: "24px",

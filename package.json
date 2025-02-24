@@ -58,7 +58,6 @@
     "build": "react-scripts build",
     "build:dev": "env-cmd -f .env.development react-scripts build",
     "build:stage": "env-cmd -f .env.stage react-scripts build",
-    "build:master": "env-cmd -f .env.master react-scripts build",
     "build:qa": "env-cmd -f .env.qa react-scripts build",
     "build:devsc": "env-cmd -f .env.devsc react-scripts build",
     "test": "react-scripts test",
