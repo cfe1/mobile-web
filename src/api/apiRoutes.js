@@ -65,10 +65,6 @@ const APPLICANTS_MODAL = {
 const HDDP_TRACKER = {
   FETCH_ALL_DEPARTMENTS_NEW: "facilities/central-department/",
   HPPD_TRACKER_DETAILS: (params) => `owner/hppd_tracker/owner-dashboard/?${params}`,
-  JOBTITLE_TRACKER_DETAILS: (params) => `owner/hppd_tracker/owner-dashboard-job-wise/?${params}`,
-  UPDATE_JOBS: `/owner/hppd_tracker/job_title_target/`,
-  UPDATE_JOBS_TRACK: (params) => `owner/hppd_tracker/owner-dashboard-facility-job-wise/${params}/`,
-  GET_JOBTITLE_TRACKER_DETAILS: (params) => `owner/hppd_tracker/owner-dashboard-facility-job-wise?${params}`,
   HPPD_CENSUS_LISTING: (params) => `owner/census/?${params}`,
   HPPD_CENSUS_UPDATE: "owner/census/",
   HPPD_TARGET_UPDATE: "owner/hppd_tracker/",

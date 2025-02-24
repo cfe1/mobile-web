@@ -1,15 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ArrowUpward from "../../assets/icons/arrowUpPink.svg";
-import ArrowUpwardWhite from "../../assets/icons/arrowUpWhite.svg";
 import ArrowDownward from "../../assets/icons/arrowDownGreen.svg";
-import ArrowDownwardWhite from "../../assets/icons/arrowDownWhite.svg";
-import ArrowUpwardred from "../../assets/icons/arrowUpred.svg";
-import ArrowDownwardgreen from "../../assets/icons/arrowDowngreentick.svg";
 import TickCircleGreen from "../../assets/icons/tickCircleGreen.svg";
-import blackPlace from "../../assets/icons/blackPlace.svg";
 import { makeStyles, TableCell } from "@material-ui/core";
-import { useColorForValue, useFontColorForValue } from "./helper";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -83,13 +77,6 @@ const useStyles = makeStyles((theme) => ({
       padding: "8px !important",
     },
   },
-
-  blankSpace: {
-    backgroundImage: (props) => `url(${props.blackPlace})`, // Dynamic background image
-    backgroundSize: "cover", // Ensures the image fully covers the div
-    backgroundPosition: "center", // Centers the image
-    backgroundRepeat: "no-repeat", // Prevents image repetition
-  },
 }));
 const HppdRowCalculation = ({
   firstData,
@@ -97,25 +84,22 @@ const HppdRowCalculation = ({
   onCensusClick,
   onTargetClick,
   type,
-  HppdJobTitleData = "",
 }) => {
-  const classes = useStyles({ blackPlace });
+  const classes = useStyles();
 
   const processData = (data, type) => {
     if (!data) return null; // Handle null cases safely
-
-    const divisor = type === "week" ? 15 : type === "month" ? 30 : 1;
-
+  
+    const divisor = type === 'week' ? 15 : type === 'month' ? 30 : 1;
+  
     return {
-      scheduled_hours:
-        data.scheduled_hours !== null ? data.scheduled_hours / divisor : null,
-      actual_hours:
-        data.actual_hours !== null ? data.actual_hours / divisor : null,
+      scheduled_hours: data.scheduled_hours !== null ? data.scheduled_hours / divisor : null,
+      actual_hours: data.actual_hours !== null ? data.actual_hours / divisor : null,
       census: data.census !== null ? data.census / divisor : null,
       target: data.target !== null ? data.target / divisor : null,
     };
   };
-
+  
   // Process firstData and secondData
   const processedFirstData = processData(firstData, type);
   const processedSecondData = processData(secondData, type);
@@ -166,10 +150,7 @@ const HppdRowCalculation = ({
   );
 
   // Actual HPPD and Percentage
-  const actualHPPD = calculateHPPD(
-    processedFirstData.actual_hours,
-    processedFirstData.census
-  );
+  const actualHPPD = calculateHPPD(processedFirstData.actual_hours, processedFirstData.census);
   const actualYesterdayHPPD = calculateHPPD(
     processedSecondData.actual_hours,
     processedSecondData.census
@@ -188,137 +169,80 @@ const HppdRowCalculation = ({
   const varianceWithinThreshold =
     Math.abs(varianceHours / targetHours) * 100 < 5;
 
-  const colorValue =
-    useFontColorForValue(
-      Number(removeTrailingZero(Math.abs(varianceHPPD))) || 0
-    ) || "inherit";
-  const scheduledHPPDColor =
-    useFontColorForValue(Number(removeTrailingZero(scheduledHPPD)) || 0) ||
-    "inherit";
-  const actualHPPDColor =
-    useFontColorForValue(Number(removeTrailingZero(actualHPPD)) || 0) ||
-    "inherit";
-
   return (
     <>
       {/* Second cell: census */}
-      <TableCell
-        className={`${classes.cell} ${classes.censusCell} ${
-          HppdJobTitleData !== "" && classes.blankSpace
-        }`}
-      >
-        {HppdJobTitleData === "" && (
-          <div onClick={onCensusClick} className={`${classes.underline}`}>
-            {" "}
-            {processedFirstData.census.toFixed(1)}
-          </div>
-        )}
-        {HppdJobTitleData === "" &&
-          type !== "day" &&
-          parseFloat(censusPercentage) != 0 && (
-            <div
-              className={
-                parseFloat(censusPercentage) > 0
-                  ? classes.negative
-                  : classes.positive
-              }
-            >
-              {/* ArrowUpwardred */}
-              {/* ArrowDownwardgreen */}
-              {parseFloat(censusPercentage) > 0 ? (
-                <img src={ArrowUpwardred} alt="uparrow" />
-              ) : (
-                <img src={ArrowDownwardgreen} alt="downarrow" />
-              )}
-              {Math.abs(censusPercentage)}%
-            </div>
-          )}
-      </TableCell>
-
-      {/* Third cell: Scheduled HPPD */}
-      <TableCell
-        className={classes.cellInactive}
-        style={{
-          background: useColorForValue(removeTrailingZero(scheduledHPPD) ?? 0),
-          color: scheduledHPPDColor,
-        }}
-      >
-        <span style={{ color: scheduledHPPDColor }}>
-          {removeTrailingZero(scheduledHPPD)}{" "}
-        </span>
-        {parseFloat(scheduledPercentage) != 0 && (
-          <span
+      <TableCell className={`${classes.cell} ${classes.censusCell}`}>
+        <div onClick={onCensusClick} className={classes.underline}>
+          {" "}
+          {processedFirstData.census.toFixed(1)}
+        </div>
+        {(type !== "day" && parseFloat(censusPercentage) != 0) && (
+          <div
             className={
-              parseFloat(scheduledPercentage) > 0
+              parseFloat(censusPercentage) > 0
                 ? classes.positive
                 : classes.negative
             }
-            style={{ color: scheduledHPPDColor }}
           >
-            {parseFloat(scheduledPercentage) > 0 ? (
-              <img
-                className={classes.arrow}
-                src={ArrowUpwardWhite}
-                alt="uparrow"
-              />
+            {parseFloat(censusPercentage) > 0 ? (
+              <img src={ArrowUpward} alt="uparrow" />
             ) : (
-              <img
-                className={classes.arrow}
-                src={ArrowDownwardWhite}
-                alt="downarrow"
-              />
+              <img src={ArrowDownward} alt="downarrow" />
             )}
-            {Math.abs(scheduledPercentage)}%
-          </span>
+            {Math.abs(censusPercentage)}%
+          </div>
         )}
-        <div
-          className={classes.inactiveHours}
-          style={{ color: scheduledHPPDColor }}
+      </TableCell>
+
+      {/* Third cell: Scheduled HPPD */}
+      <TableCell className={classes.cellInactive}>
+        {removeTrailingZero(scheduledHPPD)}{" "}
+       {parseFloat(scheduledPercentage) != 0 && <span
+          className={
+            parseFloat(scheduledPercentage) > 0
+              ? classes.positive
+              : classes.negative
+          }
         >
+          {parseFloat(scheduledPercentage) > 0 ? (
+            <img className={classes.arrow} src={ArrowUpward} alt="uparrow" />
+          ) : (
+            <img
+              className={classes.arrow}
+              src={ArrowDownward}
+              alt="downarrow"
+            />
+          )}
+          {Math.abs(scheduledPercentage)}%
+        </span>}
+        <div className={classes.inactiveHours}>
           {formatHours(processedFirstData.scheduled_hours)}
         </div>
       </TableCell>
 
       {/* Fourth cell: Actual HPPD */}
-      <TableCell
-        className={classes.cellInactive}
-        style={{
-          background: useColorForValue(removeTrailingZero(actualHPPD) ?? 0),
-          color: actualHPPDColor,
-        }}
-      >
-        <span style={{ color: actualHPPDColor }}>
-          {removeTrailingZero(actualHPPD)}{" "}
-        </span>
-        {parseFloat(actualPercentage) != 0 && (
-          <span
-            className={
-              parseFloat(actualPercentage) > 0
-                ? classes.positive
-                : classes.negative
-            }
-            style={{ color: actualHPPDColor }}
-          >
-            {parseFloat(actualPercentage) > 0 ? (
-              <img
-                className={classes.arrow}
-                src={ArrowUpwardWhite}
-                alt="uparrow"
-              />
-            ) : (
-              <img
-                className={classes.arrow}
-                src={ArrowDownwardWhite}
-                alt="downarrow"
-              />
-            )}
-            {Math.abs(actualPercentage)}%
-          </span>
-        )}
-        <div
-          style={{ color: actualHPPDColor }}
-          className={classes.inactiveHours}
+      <TableCell className={classes.cellInactive}>
+        {removeTrailingZero(actualHPPD)}{" "}
+       {parseFloat(actualPercentage) != 0 && <span
+          className={
+            parseFloat(actualPercentage) > 0
+              ? classes.positive
+              : classes.negative
+          }
         >
+          {parseFloat(actualPercentage) > 0 ? (
+            <img className={classes.arrow} src={ArrowUpward} alt="uparrow" />
+          ) : (
+            <img
+              className={classes.arrow}
+              src={ArrowDownward}
+              alt="downarrow"
+            />
+          )}
+          {Math.abs(actualPercentage)}%
+        </span>}
+        <div className={classes.inactiveHours}>
           {formatHours(processedFirstData.actual_hours)}
         </div>
       </TableCell>
@@ -326,61 +250,51 @@ const HppdRowCalculation = ({
       {/* Fifth cell: Target HPPD */}
       <TableCell className={`${classes.cell} ${classes.targetCell} `}>
         <span onClick={onTargetClick} className={classes.underline}>
-          {/* {removeTrailingZero(targetHPPD)}{" "} */}
-          {HppdJobTitleData
-            ? parseFloat(firstData.target.toFixed(2))
-            : firstData.target || targetHPPD}
-          {/* {targetHPPD} */}
+          {removeTrailingZero(targetHPPD)}{" "}
         </span>
-        {parseFloat(targetPercentage) != 0 && (
-          <span
-            className={
-              parseFloat(targetPercentage) > 0
-                ? classes.positive
-                : classes.negative
-            }
-          >
-            {parseFloat(targetPercentage) > 0 ? (
-              <img className={classes.arrow} src={ArrowUpward} alt="uparrow" />
-            ) : (
-              <img
-                className={classes.arrow}
-                src={ArrowDownward}
-                alt="downarrow"
-              />
-            )}
-            {Math.abs(targetPercentage)}%{/* {targetHPPD} */}
-          </span>
-        )}
-        {!HppdJobTitleData && (
-          <div className={classes.inactiveHours}>
-            {formatHours(targetHours)}
-          </div>
-        )}
-      </TableCell>
-      <TableCell
-        className={`${classes.cell} ${classes.varianceCell}`}
-        style={{
-          background: useColorForValue(
-            removeTrailingZero(Math.abs(varianceHPPD)) ?? 0
-          ),
-        }}
-      >
-        <span
-          // className={` ${varianceHPPD > 0 ? classes.positive : classes.negative
-          //   }`}
-          style={{ color: colorValue }}
+       { parseFloat(targetPercentage) != 0 && <span
+          className={
+            parseFloat(targetPercentage) > 0
+              ? classes.positive
+              : classes.negative
+          }
         >
-          {" "}
-          {removeTrailingZero(varianceHPPD)}{" "}
-        </span>
+          {parseFloat(targetPercentage) > 0 ? (
+            <img className={classes.arrow} src={ArrowUpward} alt="uparrow" />
+          ) : (
+            <img
+              className={classes.arrow}
+              src={ArrowDownward}
+              alt="downarrow"
+            />
+          )}
+          {Math.abs(targetPercentage)}%
+        </span>}
+        <div className={classes.inactiveHours}>{formatHours(targetHours)}</div>
+      </TableCell>
+      <TableCell className={`${classes.cell} ${classes.varianceCell}`}>
+        {varianceWithinThreshold ? (
+          <img src={TickCircleGreen} alt="tick" />
+        ) : (
+          <>
+            <span
+              className={` ${
+                varianceHPPD > 0 ? classes.positive : classes.negative
+              }`}
+            >
+              {" "}
+              {removeTrailingZero(Math.abs(varianceHPPD))}{" "}
+            </span>
 
-        <div className={classes.inactiveHours} style={{ color: colorValue }}>
-          {formatHours(varianceHours)}
-        </div>
+            <div className={classes.inactiveHours}>
+              {formatHours(Math.abs(varianceHours))}
+            </div>
+          </>
+        )}
       </TableCell>
     </>
   );
 };
+
 
 export default HppdRowCalculation;

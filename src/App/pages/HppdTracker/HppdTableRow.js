@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -11,12 +11,10 @@ import {
   TextField,
   Popover,
   Button,
-  Tooltip
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import AddIcon from '@material-ui/icons/Add';
-import ArrowUpward from "../../assets/icons/arrowopen.svg";
-import ArrowDownward from "../../assets/icons/arrowclose.svg";
+import ArrowUpward from "../../assets/icons/arrowUpPink.svg";
+import ArrowDownward from "../../assets/icons/arrowDownGreen.svg";
 import TickCircleGreen from "../../assets/icons/tickCircleGreen.svg";
 import AddCensus from "./AddCensus";
 import HppdRowCalculation from "./HppdRowCalculation";
@@ -46,55 +44,11 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: `1px solid ${theme.palette.secondary.gray300} !important`,
   },
   rowHeader: {
-    lineHeight: "15px",
     fontWeight: "600 !important",
     fontSize: "12px !important",
     color: `${theme.palette.secondary.gray4} !important`,
     borderBottom: `1px solid ${theme.palette.secondary.gray300} !important`,
     borderRight: `1px solid ${theme.palette.secondary.gray300}`,
-    position: "relative",
-    "& img": {
-      position: "absolute",
-      top: "50%",
-      right: "12px",
-      cursor: "pointer"
-    }
-  },
-  rowellipses: {
-    cursor: "pointer",
-    maxWidth: "120px", // Adjust width as needed
-    overflow: "hidden",
-    whiteSpace: "nowrap",
-    textOverflow: "ellipsis",
-    display: "block", // Required for ellipsis effect
-    paddingRight: "22px"
-  },
-  expandStyles: {
-    background: "#F3F4F7"
-  },
-  expandButton: {
-    backgroundColor: "#F3F4F7"
-  },
-  fullWidthCell: {
-    padding: "20px",
-    width: "100%"
-  },
-  customButton: {
-    background: "#FFFFFF",
-    borderRadius: "30px",
-    fontSize: "12px",
-    fontWeight: "600",
-    lineHeight: "15px",
-    color: "#434966",
-    padding: "6px 12px",
-    boxShadow: "0px 4px 4px 0px #9854CB1A",
-    "&:hover": {
-      borderColor: "darkred",
-      backgroundColor: "rgba(255, 0, 0, 0.1)",
-    },
-  },
-  customIcon: {
-    color: "#FF0083",
   },
   arrow: {
     marginLeft: 4,
@@ -156,41 +110,21 @@ const useStyles = makeStyles((theme) => ({
       padding: "8px !important",
     },
   },
-  inputMain: {
+  inputMain:{
     gap: '8px',
     display: 'flex',
     flexDirection: 'column',
-  },
+  }
 }));
-const HppdTableRow = ({
-  getJobTitleTrack,
-  setTargetValue,
-  setTargetHppd,
-  handleNewButton,
-  row,
-  updateRowData,
-  department,
-  expandedRow,
-  setExpandedRow,
-  HppdJobTitleData = [],
-  HandleChangeTarget,
-  onHandleKeyJob,
-  setjobTitleSelectedValues
-}) => {
+const HppdTableRow = ({ row, updateRowData, department }) => {
   const classes = useStyles();
-  const cellRef = useRef(null);
-  const [isOverflow, setIsOverflow] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [censusType, setCensusType] = useState("");
   const [censusFacilityId, setFacilityId] = useState("");
   const [anchorEl, setAnchorEl] = useState(null); // To control the visibility of Popover
-  const [anchorElJob, setAnchorElJob] = useState(null);
   const [initialTarget, setInitialTarget] = useState();
   const [target, setTarget] = useState();
-  const [targetJob, setTargetJob] = useState();
-  const [jobTitileIds, setjobTitileIds] = useState([]);
   const openTarget = Boolean(anchorEl);
-  const openTargetJob = Boolean(anchorElJob);
 
   const [openTodayCensus, setOpenTodayCensus] = useState(false);
   const [anchorElTodayCensus, setAnchorElTodayCensus] = useState(null);
@@ -226,17 +160,14 @@ const HppdTableRow = ({
   // Close popover
   const handleTargetClose = () => {
     setTarget("");
-    setTargetJob("");
     setInitialTarget("");
     setFacilityId("");
     setAnchorEl(null);
-    setAnchorElJob(null);
   };
 
   // Handle input change
   const handleTargetChange = (e) => {
     setTarget(e.target.value);
-    setTargetJob(e.target.value);
   };
 
   // Handle confirm action
@@ -255,16 +186,6 @@ const HppdTableRow = ({
     getTargetUpdate(finalData);
   };
 
-  const handleTargetConfirmJob = async () => {
-    if (initialTarget == targetJob) {
-      handleTargetClose();
-      return;
-    }
-    await HandleChangeTarget(jobTitileIds, targetJob);
-    await updateRowData(row.id);
-    handleTargetClose();
-  };
-
   const getTargetUpdate = async (finalData) => {
     try {
       setLoadingTarget(true);
@@ -274,7 +195,6 @@ const HppdTableRow = ({
         setFacilityId("");
         setTarget("");
         setInitialTarget("");
-        getJobTitleTrack(row.id);
         handleTargetClose(); // Close the popover after confirmation
       }
     } catch (e) {
@@ -394,33 +314,12 @@ const HppdTableRow = ({
       setLoadingCensus(false);
     }
   };
-
-  useEffect(() => {
-    if (cellRef.current) {
-      setIsOverflow(cellRef.current.scrollWidth > cellRef.current.clientWidth);
-    }
-  }, [row.name]);
-
   return (
     <>
       {loading && <LinearProgressBar belowHeader />}
 
       <TableRow key={row.id}>
-        {/* <TableCell className={classes.rowHeader}>{row.name}</TableCell> */}
-        <TableCell className={classes.rowHeader}>
-          <Tooltip title={isOverflow ? row.name : ""} arrow>
-            <div ref={cellRef} className={classes.rowellipses}>
-              {row.name}
-            </div>
-          </Tooltip>
-          <img
-            onClick={() => setExpandedRow((state) => {
-              if (state === row.id) return null;
-              getJobTitleTrack(row.id);
-              return row.id;
-            })}
-            src={expandedRow !== row.id ? ArrowUpward : ArrowDownward} alt="" />
-        </TableCell>
+        <TableCell className={classes.rowHeader}>{row.name}</TableCell>
         {/* Today's Data */}
         <HppdRowCalculation
           key={`${row.id}-today`}
@@ -479,130 +378,15 @@ const HppdTableRow = ({
         />
       </TableRow>
 
-      {expandedRow === row.id && HppdJobTitleData &&
-        HppdJobTitleData.map((items) => {
-          return Object.entries(items.job_title_data).map(([key, jobInfo]) => {
-            if (key !== "target_hppd") {
-              setTargetValue(jobInfo?.time_range_data?.today?.target ?? "");
-              return (
-                <TableRow className={classes.expandStyles} >
-                  <TableCell onClick={() => {
-                    const formattedArray = jobInfo?.job_title?.map(([job_title_id, job_title]) => ({
-                      job_title,
-                      job_title_id,
-                      isdisabled: false
-                    }));
-                    onHandleKeyJob(key);
-                    setjobTitleSelectedValues(formattedArray)
-                    handleNewButton(row.id, "patch");
-                  }} className={classes.rowHeader}>
-                    <Tooltip title={isOverflow ? items.name : ""} arrow>
-                      <div ref={cellRef} className={classes.rowellipses}>
-                        {jobInfo.job_title.map(job => job[2]).join(", ")}
-                      </div>
-                    </Tooltip>
-                  </TableCell>
-                  {/* Today's Data */}
-                  <HppdRowCalculation
-                    HppdJobTitleData={Number(row.time_range_data.today.target) / Number(Object.entries(items.job_title_data)?.length - 1)}
-                    key={`${items.id}-today`}
-                    firstData={{
-                      name: items.name,
-                      ...jobInfo.time_range_data.today,
-                    }}
-                    secondData={{
-                      ...jobInfo.time_range_data.yesterday,
-                    }}
-                    onCensusClick={(event) => {
-                      // handleTodaysCensusClick(event, items.id)
-                    }}
-                    onTargetClick={(event) => {
-                      const jobTitleIds = jobInfo?.job_title?.map(job => job[0]);
-                      setjobTitileIds(jobTitleIds ?? [])
-                      setAnchorElJob(event.currentTarget);
-                      setTargetJob(jobInfo?.time_range_data?.today?.target ?? "")
-                      setInitialTarget(jobInfo?.time_range_data?.today?.target);
-                    }}
-                    type="day"
-                  />
-                  {/* 15 Days Data */}
-                  <HppdRowCalculation
-                    HppdJobTitleData={Number(row.time_range_data.last_15_days.target) / Number(Object.entries(items.job_title_data)?.length - 1)}
-                    key={`${items.id}-15-days`}
-                    firstData={{
-                      name: items.name,
-                      ...jobInfo.time_range_data.last_15_days,
-                    }}
-                    secondData={{
-                      ...jobInfo.time_range_data.days_15_30,
-                    }}
-                    onCensusClick={() => {
-                      // handleCensusClick("week", items.id)
-                    }}
-                    onTargetClick={(event) => {
-                      const jobTitleIds = jobInfo?.job_title?.map(job => job[0]);
-                      setjobTitileIds(jobTitleIds ?? [])
-                      setAnchorElJob(event.currentTarget);
-                      setTargetJob(jobInfo.time_range_data.last_15_days.target ?? "")
-                      setInitialTarget(jobInfo?.time_range_data?.last_15_days?.target);
-                    }}
-                    type="week"
-                  />
-                  {/* 30 Days Data */}
-                  <HppdRowCalculation
-                    HppdJobTitleData={Number(row.time_range_data.last_30_days.target) / Number(Object.entries(items.job_title_data)?.length - 1)}
-                    key={`${items.id}-30-days`}
-                    firstData={{
-                      name: items.name,
-                      ...jobInfo.time_range_data.last_30_days,
-                    }}
-                    secondData={{
-                      ...jobInfo.time_range_data.days_30_60,
-                    }}
-                    onCensusClick={() => {
-                      // handleCensusClick("month", items.id)
-                    }}
-                    onTargetClick={(event) => {
-                      const jobTitleIds = jobInfo?.job_title?.map(job => job[0]);
-                      setjobTitileIds(jobTitleIds ?? [])
-                      setAnchorElJob(event.currentTarget);
-                      setTargetJob(jobInfo.time_range_data.days_15_30.target ?? "")
-                      setInitialTarget(jobInfo?.time_range_data?.days_15_30?.target);
-
-                    }}
-                    type="month"
-                  />
-                </TableRow >
-              )
-            }
-          })
-
-        })
-      }
-      {expandedRow === row.id && (
-          <TableRow className={classes.expandButton}>
-            <TableCell colSpan={18} className={classes.fullWidthCell}>
-              <Button
-                variant="outlined"
-                startIcon={<AddIcon className={classes.customIcon} />}
-                className={classes.customButton}
-                onClick={() => handleNewButton(row.id, "post")}
-              >
-                Add New
-              </Button>
-            </TableCell>
-          </TableRow>
-        )}
-
       {/* add update census week and month */}
       {openModal && (
-          <AddCensus
-            onClose={handleCloseModal}
-            censusType={censusType}
-            censusFacilityId={censusFacilityId}
-            updateRowData={updateRowData}
-          />
-        )}
+        <AddCensus
+          onClose={handleCloseModal}
+          censusType={censusType}
+          censusFacilityId={censusFacilityId}
+          updateRowData={updateRowData}
+        />
+      )}
 
       {/* target popover */}
       <Popover
@@ -627,8 +411,8 @@ const HppdTableRow = ({
         {loadingTarget && <LinearProgressBar />}
 
         <div className={classes.popMain}>
-          <div className={classes.popoverTitle}>Target</div>
-          <div>
+        <div className={classes.popoverTitle}>Target</div>
+        <div>
             <TextField
               placeholder="Enter Here"
               variant="outlined"
@@ -653,64 +437,6 @@ const HppdTableRow = ({
               variant="contained"
               color="primary"
               onClick={handleTargetConfirm}
-              className={classes.confirmButton}
-              disabled={loadingTarget}
-            >
-              Confirm
-            </Button>
-          </div>
-        </div>
-      </Popover>
-
-      {/* Target popover for JobTitles */}
-      <Popover
-        open={openTargetJob}
-        anchorEl={anchorElJob}
-        onClose={handleTargetClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-        classes={{ paper: classes.dialog }}
-        PaperProps={{
-          style: {
-            boxShadow: "0px 6px 12px 0px #04043405 !important", // Apply the shadow here
-          },
-        }}
-      >
-        {loadingTarget && <LinearProgressBar />}
-
-        <div className={classes.popMain}>
-          <div className={classes.popoverTitle}>Target</div>
-          <div>
-            <TextField
-              placeholder="Enter Here"
-              variant="outlined"
-              size="small"
-              type="Number"
-              value={targetJob}
-              onChange={handleTargetChange}
-              className={classes.input}
-            />
-          </div>
-          <div>
-            <Button
-              variant="contained"
-              color=""
-              onClick={handleTargetClose}
-              className={classes.confirmButton}
-              style={{ marginRight: "10px" }}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleTargetConfirmJob}
               className={classes.confirmButton}
               disabled={loadingTarget}
             >
@@ -795,7 +521,6 @@ const HppdTableRow = ({
           </div>
         </div>
       </Popover>
-
     </>
   );
 };
