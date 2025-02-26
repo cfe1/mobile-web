@@ -87,35 +87,31 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-const HppdRowCalculationModal = ({
-  firstData,
-  secondData,
-  type,
-}) => {
+const HppdRowCalculationModal = ({ firstData, secondData, type }) => {
   const classes = useStyles();
 
   const processData = (data, type) => {
     if (!data) return null; // Handle null cases safely
 
-    const divisor = type === 'week' ? 15 : type === 'month' ? 30 : 1;
+    const divisor = type === "week" ? 15 : type === "month" ? 30 : 1;
 
     return {
-      scheduled_hours: data.scheduled_hours !== null ? data.scheduled_hours / divisor : null,
-      actual_hours: data.actual_hours !== null ? data.actual_hours / divisor : null,
+      scheduled_hours:
+        data.scheduled_hours !== null ? data.scheduled_hours / divisor : null,
+      actual_hours:
+        data.actual_hours !== null ? data.actual_hours / divisor : null,
       census: data.census !== null ? data.census / divisor : null,
       target: data.target !== null ? data.target / divisor : null,
     };
-  };
+  }; // Process firstData and secondData
 
-  // Process firstData and secondData
   const processedFirstData = processData(firstData, type);
   const processedSecondData = processData(secondData, type);
 
   function removeTrailingZero(num) {
     // Convert the number to a string
-    let numStr = num.toString();
+    let numStr = num.toString(); // Check if the number contains a decimal point
 
-    // Check if the number contains a decimal point
     if (numStr.includes(".")) {
       // Remove trailing zeros and the decimal point if necessary
       numStr = numStr.replace(/(\.\d*?[1-9])0+|(\.0+)$/, "$1");
@@ -133,9 +129,8 @@ const HppdRowCalculationModal = ({
 
   const formatHours = (hours) => {
     return hours ? `${removeTrailingZero(hours)} Hrs` : "0 Hrs";
-  };
+  }; // Scheduled HPPD and Percentage
 
-  // Scheduled HPPD and Percentage
   const scheduledHPPD = calculateHPPD(
     processedFirstData.scheduled_hours,
     processedFirstData.census
@@ -147,74 +142,87 @@ const HppdRowCalculationModal = ({
   const scheduledPercentage = calculatePercentage(
     scheduledHPPD,
     scheduledYesterdayHPPD
-  );
+  ); // Actual HPPD and Percentage
 
-  // Actual HPPD and Percentage
-  const actualHPPD = calculateHPPD(processedFirstData.actual_hours, processedFirstData.census);
+  const actualHPPD = calculateHPPD(
+    processedFirstData.actual_hours,
+    processedFirstData.census
+  );
   const actualYesterdayHPPD = calculateHPPD(
     processedSecondData.actual_hours,
     processedSecondData.census
   );
   const actualPercentage = calculatePercentage(actualHPPD, actualYesterdayHPPD);
 
-
   return (
     <>
-
-      {/* Third cell: Scheduled HPPD */}
+            {/* Third cell: Scheduled HPPD */}     {" "}
       <TableCell className={classes.cellInactive}>
-        {removeTrailingZero(scheduledHPPD)}{" "}
-        {parseFloat(scheduledPercentage) != 0 && <span
-          className={
-            parseFloat(scheduledPercentage) > 0
-              ? classes.positive
-              : classes.negative
-          }
-        >
-          {parseFloat(scheduledPercentage) > 0 ? (
-            <img className={classes.arrow} src={ArrowUpwardBlack} alt="uparrow" />
-          ) : (
-            <img
-              className={classes.arrow}
-              src={ArrowUpwardBlack}
-              alt="downarrow"
-            />
-          )}
-          {Math.abs(scheduledPercentage)}%
-        </span>}
+                {removeTrailingZero(scheduledHPPD)}        {" "}
+        {parseFloat(scheduledPercentage) != 0 && (
+          <span
+            className={
+              parseFloat(scheduledPercentage) > 0
+                ? classes.positive
+                : classes.negative
+            }
+          >
+                     {" "}
+            {parseFloat(scheduledPercentage) > 0 ? (
+              <img
+                className={classes.arrow}
+                src={ArrowUpwardBlack}
+                alt="uparrow"
+              />
+            ) : (
+              <img
+                className={classes.arrow}
+                src={ArrowUpwardBlack}
+                alt="downarrow"
+              />
+            )}
+                      {Math.abs(scheduledPercentage)}%        {" "}
+          </span>
+        )}
+               {" "}
         <div className={classes.inactiveHours}>
-          {formatHours(processedFirstData.scheduled_hours)}
+                    {formatHours(processedFirstData.scheduled_hours)}       {" "}
         </div>
+             {" "}
       </TableCell>
-
-      {/* Fourth cell: Actual HPPD */}
+            {/* Fourth cell: Actual HPPD */}     {" "}
       <TableCell className={classes.cellInactive2}>
-        {removeTrailingZero(actualHPPD)}{" "}
-        {parseFloat(actualPercentage) != 0 && <span
-          className={
-            parseFloat(actualPercentage) > 0
-              ? classes.positive
-              : classes.negative
-          }
-        >
-          {parseFloat(actualPercentage) > 0 ? (
-            <img className={classes.arrow} src={ArrowUpward} alt="uparrow" />
-          ) : (
-            <img
-              className={classes.arrow}
-              src={ArrowDownward}
-              alt="downarrow"
-            />
-          )}
-          {Math.abs(actualPercentage)}%
-        </span>}
+                {removeTrailingZero(actualHPPD)}        {" "}
+        {parseFloat(actualPercentage) != 0 && (
+          <span
+            className={
+              parseFloat(actualPercentage) > 0
+                ? classes.positive
+                : classes.negative
+            }
+          >
+                     {" "}
+            {parseFloat(actualPercentage) > 0 ? (
+              <img className={classes.arrow} src={ArrowUpward} alt="uparrow" />
+            ) : (
+              <img
+                className={classes.arrow}
+                src={ArrowDownward}
+                alt="downarrow"
+              />
+            )}
+                      {Math.abs(actualPercentage)}%        {" "}
+          </span>
+        )}
+               {" "}
         <div className={classes.inactiveHours}>
-          {formatHours(processedFirstData.actual_hours)}
+                    {formatHours(processedFirstData.actual_hours)}       {" "}
         </div>
+             {" "}
       </TableCell>
+         {" "}
     </>
   );
 };
-
 
 export default HppdRowCalculationModal;

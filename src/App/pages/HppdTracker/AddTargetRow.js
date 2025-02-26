@@ -6,38 +6,13 @@ import { API } from "api/apiService";
 import { LinearProgressBar, Loader, Toast } from "App/components";
 import queryString from "query-string";
 
-const useStyles = makeStyles((theme) => ({
-  dialog: {
-    maxWidth: "544px",
-  },
-  title: {
-    fontWeight: 400,
-    fontSize: 16,
-    color: theme.palette.secondary.greyBlue,
-    paddingBottom: "4px",
-  },
-  dateMain: {
-    alignItems: "center",
-    justifyContent: "space-between",
-    fontWeight: 500,
-    fontSize: "16px",
-    marginBottom: "16px",
-    color: theme.palette.secondary.greyBlue,
-  },
-  input: {
-    width: "89px",
-    "& .MuiInputBase-input": {
-      fontSize: "14px !important",
-      padding: "8px !important",
-    },
-  },
-}));
-
-const AddCensus = ({
+const AddTarget = ({
   onClose,
-  censusType,
-  censusFacilityId,
+  TargetType,
+  targetFacilityId,
   updateRowData,
+  department,
+  getJobTitleTrack,
 }) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
@@ -45,18 +20,15 @@ const AddCensus = ({
   const [rightDates, setRightDates] = useState([]);
   const [leftData, setLeftData] = useState({});
   const [rightData, setRightData] = useState({});
-  const isDayType = censusType === "day";
+  const isDayType = TargetType === "day";
   const [initialLeftData, setInitialLeftData] = useState({});
   const [initialRightData, setInitialRightData] = useState({});
-  useEffect(() => {
-    // getCensusList()
-  }, []);
 
-  const getCensusList = async (leftDatesGenerated, rightDatesGenerated) => {
+  const getTargetList = async (leftDatesGenerated, rightDatesGenerated) => {
     try {
       setLoading(true);
       const today = new Date();
-      const daysCount = censusType === "week" ? 30 : 60;
+      const daysCount = TargetType === "week" ? 30 : 60;
 
       const end_date = today.toISOString().split("T")[0]; // Today's date
       const start_date = new Date(
@@ -67,18 +39,19 @@ const AddCensus = ({
       const params = {
         start_date,
         end_date,
-        facility_id: censusFacilityId,
+        "facility-id": targetFacilityId,
+        department: department,
       };
 
       const urlParams = queryString.stringify(params);
 
-      const resp = await API.get(ENDPOINTS.HPPD_CENSUS_LISTING(urlParams));
+      const resp = await API.get(ENDPOINTS.HPPD_TARGET_LISTING(urlParams));
       if (resp.success) {
-        const censusData = resp.data;
+        const targetData = resp.data;
 
         // Convert census data to a lookup object for quick access
-        const censusLookup = censusData.reduce((acc, item) => {
-          acc[item.date] = item.patient_count;
+        const censusLookup = targetData.reduce((acc, item) => {
+          acc[item.date] = item.target;
           return acc;
         }, {});
 
@@ -103,9 +76,10 @@ const AddCensus = ({
       setLoading(false);
     }
   };
+
   useEffect(() => {
     const today = new Date();
-    const daysCount = censusType === "week" ? 15 : 30;
+    const daysCount = TargetType === "week" ? 15 : 30;
 
     const formatDate = (date) => date.toISOString().split("T")[0]; // Ensure dates are in YYYY-MM-DD format
 
@@ -122,8 +96,8 @@ const AddCensus = ({
     });
     setLeftDates(leftDatesGenerated);
     setRightDates(rightDatesGenerated);
-    getCensusList(leftDatesGenerated, rightDatesGenerated);
-  }, [censusType]);
+    getTargetList(leftDatesGenerated, rightDatesGenerated);
+  }, [TargetType]);
 
   // removable end
   const handleLeftInputChange = (date, value) => {
@@ -152,7 +126,7 @@ const AddCensus = ({
       if (leftData[date] !== initialLeftData[date]) {
         changedData.push({
           date: date,
-          patient_count: leftData[date],
+          target: leftData[date],
         });
       }
     });
@@ -161,14 +135,14 @@ const AddCensus = ({
       if (rightData[date] !== initialRightData[date]) {
         changedData.push({
           date: date,
-          patient_count: rightData[date],
+          target: rightData[date],
         });
       }
     });
     const finalData = {
-      census_data: changedData,
-      facility_id: censusFacilityId,
-      census_type: "FACILITY",
+      facility: targetFacilityId,
+      department: department,
+      data: changedData,
     };
 
     await getCensusUpdate(finalData);
@@ -177,9 +151,10 @@ const AddCensus = ({
   const getCensusUpdate = async (finalData) => {
     try {
       setLoading(true);
-      const resp = await API.patch(ENDPOINTS.HPPD_CENSUS_UPDATE, finalData);
+      const resp = await API.post(ENDPOINTS.HPPD_TARGET_UPDATE, finalData);
       if (resp.success && resp.data) {
-        updateRowData(censusFacilityId);
+        updateRowData(targetFacilityId);
+        getJobTitleTrack(targetFacilityId);
         onClose();
       }
     } catch (e) {
@@ -188,6 +163,7 @@ const AddCensus = ({
       setLoading(false);
     }
   };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const options = { day: "numeric", month: "short", year: "numeric" };
@@ -208,16 +184,17 @@ const AddCensus = ({
       formattedDate.split(" ")[2]
     }`;
   };
+
   return (
     <>
       <NewDialogModal
         dialogCls={classes.dialog}
         heading={
           isDayType
-            ? "Census"
-            : censusType == "week"
-            ? "Weekly Census"
-            : "Monthly Census"
+            ? "Target"
+            : TargetType == "week"
+            ? "Weekly Target"
+            : "Monthly Target"
         }
         isBackBtnNeeded={true}
         onBack={onClose}
@@ -229,52 +206,10 @@ const AddCensus = ({
       >
         {!isDayType && (
           <h3 className={classes.title}>
-            Add census for last {censusType == "week" ? 15 : 30} Days{" "}
+            Add Target for last {TargetType == "week" ? 15 : 30} Days{" "}
           </h3>
         )}
-        {isDayType && <h3 className={classes.title}>Census </h3>}
-        {/* <Grid container spacing={4}>
-        <Grid item xs={6}>
-          {leftDates.map((date) => (
-            <Grid
-              container
-              key={date}
-              className={classes.dateMain}
-            >
-              <span>{date}</span>
-              <TextField
-                placeholder="Enter Here"
-                variant="outlined"
-                size="small"
-                type="Number"
-                value={leftData[date] || ""}
-                onChange={(e) => handleLeftInputChange(date, e.target.value)}
-                className={classes.input}
-              />
-            </Grid>
-          ))}
-        </Grid>
-        <Grid item xs={6}>
-          {rightDates.map((date) => (
-            <Grid
-              container
-              key={date}
-              className={classes.dateMain}
-
-            >
-              <span>{date}</span>
-              <TextField
-                placeholder="Enter Here"
-                variant="outlined"
-                size="small"
-                value={rightData[date] || ""}
-                onChange={(e) => handleRightInputChange(date, e.target.value)}
-                className={classes.input}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      </Grid> */}
+        {isDayType && <h3 className={classes.title}> Target </h3>}
         <Grid container spacing={4}>
           <Grid item xs={6}>
             {leftDates.map((date) => (
@@ -314,4 +249,31 @@ const AddCensus = ({
   );
 };
 
-export default AddCensus;
+export default AddTarget;
+
+const useStyles = makeStyles((theme) => ({
+  dialog: {
+    maxWidth: "544px",
+  },
+  title: {
+    fontWeight: 400,
+    fontSize: 16,
+    color: theme.palette.secondary.greyBlue,
+    paddingBottom: "4px",
+  },
+  dateMain: {
+    alignItems: "center",
+    justifyContent: "space-between",
+    fontWeight: 500,
+    fontSize: "16px",
+    marginBottom: "16px",
+    color: theme.palette.secondary.greyBlue,
+  },
+  input: {
+    width: "89px",
+    "& .MuiInputBase-input": {
+      fontSize: "14px !important",
+      padding: "8px !important",
+    },
+  },
+}));
