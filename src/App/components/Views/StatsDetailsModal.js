@@ -110,7 +110,6 @@ const StatsDetailsModal = ({
               {dynamicData?.title}
             </Grid>
             <Grid item>
-              {" "}
               <DailyWeeklyFilter
                 setDate={setDate}
                 setWeekStartDate={setWeekStartDate}

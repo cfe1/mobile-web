@@ -467,9 +467,8 @@ class Dashboard extends Component {
                   borderRadius: "8px",
                 }}
               >
-                Total number of Facilities :{" "}
+                Total number of Facilities :
                 <div style={{ color: "#C117CC", paddingLeft: "3px" }}>
-                  {" "}
                   {this.state.facilitiesCards.length}
                 </div>
               </Button>
@@ -585,7 +584,7 @@ class Dashboard extends Component {
                             borderRadius: "8px",
                           }}
                         >
-                          Total Nurses :{" "}
+                          Total Nurses :
                           <div style={{ color: "#C117CC" }}>
                             {e.total_employees}
                           </div>
@@ -847,7 +846,6 @@ class Dashboard extends Component {
                 })
               }
               onBlur={() => {}}
-              
             ></FacilityfilterMultiSelecte>
             <TablePagination
               count={this.state.totalFacilitiesOnPayroll}

@@ -206,7 +206,7 @@ const AddTarget = ({
       >
         {!isDayType && (
           <h3 className={classes.title}>
-            Add Target for last {TargetType == "week" ? 15 : 30} Days{" "}
+            Add Target for last {TargetType == "week" ? 15 : 30} Days
           </h3>
         )}
         {isDayType && <h3 className={classes.title}> Target </h3>}

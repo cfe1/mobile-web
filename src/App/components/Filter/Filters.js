@@ -293,7 +293,7 @@ const Filters = ({
         </Grid>
         {!noFilters && (
           <div className={classes.noFilters}>No filters applied</div>
-        )}{" "}
+        )}
         {noFilters && (
           <Grid className={classes.mgLeft}>
             {selectedFilters.map((filter, index) => {
@@ -460,7 +460,7 @@ const useStyles = makeStyles((theme) => ({
   filterChip: {
     display: "flex",
     padding: "4px 8px",
-    lineHeight:"24px",
+    lineHeight: "24px",
     borderRadius: 60,
     marginLeft: 8,
     height: 32,

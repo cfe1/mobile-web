@@ -363,7 +363,6 @@ const HppdTracker = () => {
         getJobTitleTrack(faciltyID);
       }
     } catch (e) {
-      console.log(e);
       Toast.showErrorToast(e?.data?.error?.message[0]);
     } finally {
     }
@@ -375,28 +374,23 @@ const HppdTracker = () => {
 
   return (
     <>
-      {loading && <LinearProgressBar belowHeader />}     {" "}
+      {loading && <LinearProgressBar belowHeader />}
       <div>
-        {" "}
         <div>
-          {" "}
           <div>
-            <div className={classes.title}>HPPD Tracker</div>{" "}
-          </div>{" "}
+            <div className={classes.title}>HPPD Tracker</div>
+          </div>
           <div className={classes.filterMain}>
-            {" "}
             <div>
-              {" "}
               <SelectFilterHppd
                 id="hppd-select"
                 items={hppdOptions}
                 value={hppdSelection}
                 onChange={handleHppdSelectionChange}
                 height={42}
-              />{" "}
-            </div>{" "}
+              />
+            </div>
             <div>
-              {" "}
               <SearchHppd
                 value={search}
                 onChange={(e) => handleSearchChange(e.target.value)}
@@ -404,45 +398,38 @@ const HppdTracker = () => {
                 label="Search Facility"
                 widthClass={classes.searchWidth}
                 onCrossClick={handleSearchClose}
-              />{" "}
-            </div>{" "}
-          </div>{" "}
+              />
+            </div>
+          </div>
           <div>
-            {" "}
             <div>
-              {" "}
               <p className={classes.tableHeader}>
-                Showing HPPD Results for                {" "}
+                Showing HPPD Results for
                 {hppdOptions.find((opt) => opt.value === hppdSelection)
-                  ?.label || "Department"}{" "}
-              </p>{" "}
-            </div>{" "}
+                  ?.label || "Department"}
+              </p>
+            </div>
             <TableContainer
               component={Paper}
               className={classes.tableContainer}
             >
-              {" "}
               <Table className={classes.table} aria-label="HPPD Table">
-                {" "}
                 <TableHead>
-                  {" "}
                   <TableRow>
-                    {" "}
                     <TableCell className={classes.headerCellMain} rowSpan={2}>
-                      Facility                    {" "}
-                    </TableCell>{" "}
+                      Facility
+                    </TableCell>
                     <TableCell className={classes.headerCellToday} colSpan={5}>
-                      Today                    {" "}
-                    </TableCell>{" "}
+                      Today
+                    </TableCell>
                     <TableCell className={classes.headerCell15Days} colSpan={5}>
-                      15 Days - Daily Average{" "}
-                    </TableCell>{" "}
+                      15 Days - Daily Average
+                    </TableCell>
                     <TableCell className={classes.headerCell30Days} colSpan={5}>
-                      30 Days - Daily Average{" "}
-                    </TableCell>{" "}
-                  </TableRow>{" "}
+                      30 Days - Daily Average
+                    </TableCell>
+                  </TableRow>
                   <TableRow>
-                    {" "}
                     {[
                       "Census",
                       "Scheduled HPPD",
@@ -466,13 +453,12 @@ const HppdTracker = () => {
                       ])
                       .map((heading, index) => (
                         <TableCell key={index} className={classes.headerCell}>
-                          {heading}{" "}
+                          {heading}
                         </TableCell>
-                      ))}{" "}
-                  </TableRow>{" "}
-                </TableHead>{" "}
+                      ))}
+                  </TableRow>
+                </TableHead>
                 <TableBody>
-                  {" "}
                   {hppdData?.length > 0 &&
                     hppdData?.map((row, index) => {
                       return (
@@ -492,26 +478,23 @@ const HppdTracker = () => {
                           setjobTitleSelectedValues={setjobTitleSelectedValues}
                         />
                       );
-                    })}{" "}
+                    })}
                   {hppdData?.length === 0 && (
                     <TableRow>
-                      {" "}
                       <TableCell className={classes.cell} colSpan={20}>
-                        {" "}
                         <>
-                          {" "}
                           {
                             <div className={classes.noDataFound}>
-                              No data found.{" "}
+                              No data found.
                             </div>
-                          }{" "}
-                        </>{" "}
-                      </TableCell>{" "}
+                          }
+                        </>
+                      </TableCell>
                     </TableRow>
-                  )}{" "}
-                </TableBody>{" "}
-              </Table>{" "}
-            </TableContainer>{" "}
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
             {hppdData?.length > 0 && (
               <TablePagination
                 count={hppdDataPagination.count}
@@ -525,10 +508,10 @@ const HppdTracker = () => {
                   setCurrentPage(page);
                 }}
               />
-            )}{" "}
-          </div>{" "}
-        </div>{" "}
-      </div>{" "}
+            )}
+          </div>
+        </div>
+      </div>
       {isOpenNew && (
         <UpdateModal
           jobTitleSelectedValues={jobTitleSelectedValues}
@@ -548,7 +531,7 @@ const HppdTracker = () => {
           getSelectJobTitileModalData={getSelectJobTitileModalData}
           setisOpenNew={setisOpenNew}
         />
-      )}{" "}
+      )}
     </>
   );
 };

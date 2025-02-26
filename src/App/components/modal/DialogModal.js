@@ -40,7 +40,7 @@ export const DialogModal = ({
         paper: dialogCls || classes.dialog,
       }}
     >
-      {loading && <LinearProgressBar />}{" "}
+      {loading && <LinearProgressBar />}
       <DialogContent className={classes.dialogContent}>
         <Grid container justify="space-between" alignItems="center">
           <Grid

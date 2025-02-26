@@ -328,6 +328,7 @@ const HppdTableRow = ({
         });
       }
     } catch (e) {
+      console.log(e);
       Toast.showErrorToast(e.data?.error?.message[0] || "An error occurred");
     } finally {
       setLoadingCensus(false);
@@ -406,18 +407,15 @@ const HppdTableRow = ({
 
   return (
     <>
-      {loading && <LinearProgressBar belowHeader />}     {" "}
+      {loading && <LinearProgressBar belowHeader />}
       <TableRow key={row.id}>
-        {" "}
-        {/* <TableCell className={classes.rowHeader}>{row.name}</TableCell> */}{" "}
+        {/* <TableCell className={classes.rowHeader}>{row.name}</TableCell> */}
         <TableCell className={classes.rowHeader}>
-          {" "}
           <Tooltip title={isOverflow ? row.name : ""} arrow>
-            {" "}
             <div ref={cellRef} className={classes.rowellipses}>
-              {row.name}           {" "}
-            </div>{" "}
-          </Tooltip>{" "}
+              {row.name}
+            </div>
+          </Tooltip>
           <img
             onClick={() =>
               setExpandedRow((state) => {
@@ -428,9 +426,9 @@ const HppdTableRow = ({
             }
             src={expandedRow !== row.id ? ArrowUpward : ArrowDownward}
             alt=""
-          />{" "}
+          />
         </TableCell>
-        {/* Today's Data */}{" "}
+        {/* Today's Data */}
         <HppdRowCalculation
           key={`${row.id}-today`}
           firstData={{
@@ -446,7 +444,7 @@ const HppdTableRow = ({
           }
           type="day"
         />
-        {/* 15 Days Data */}{" "}
+        {/* 15 Days Data */}
         <HppdRowCalculation
           key={`${row.id}-15-days`}
           firstData={{
@@ -467,7 +465,7 @@ const HppdTableRow = ({
           }
           type="week"
         />
-        {/* 30 Days Data */}{" "}
+        {/* 30 Days Data */}
         <HppdRowCalculation
           key={`${row.id}-30-days`}
           firstData={{
@@ -487,8 +485,8 @@ const HppdTableRow = ({
             )
           }
           type="month"
-        />{" "}
-      </TableRow>{" "}
+        />
+      </TableRow>
       {expandedRow === row.id &&
         HppdJobTitleData &&
         HppdJobTitleData.map((items) => {
@@ -497,7 +495,6 @@ const HppdTableRow = ({
               setTargetValue(jobInfo?.time_range_data?.today?.target ?? "");
               return (
                 <TableRow className={classes.expandStyles}>
-                  {" "}
                   <TableCell
                     onClick={() => {
                       const formattedArray = jobInfo?.job_title?.map(
@@ -513,16 +510,13 @@ const HppdTableRow = ({
                     }}
                     className={classes.rowHeader}
                   >
-                    {" "}
                     <Tooltip title={isOverflow ? items.name : ""} arrow>
-                      {" "}
                       <div ref={cellRef} className={classes.rowellipses}>
-                        {" "}
-                        {jobInfo.job_title.map((job) => job[2]).join(", ")}{" "}
-                      </div>{" "}
-                    </Tooltip>{" "}
+                        {jobInfo.job_title.map((job) => job[2]).join(", ")}
+                      </div>
+                    </Tooltip>
                   </TableCell>
-                  {/* Today's Data */}{" "}
+                  {/* Today's Data */}
                   <HppdRowCalculation
                     HppdJobTitleData={
                       Number(row.time_range_data.today.target) /
@@ -552,7 +546,7 @@ const HppdTableRow = ({
                     }}
                     type="day"
                   />
-                  {/* 15 Days Data */}{" "}
+                  {/* 15 Days Data */}
                   <HppdRowCalculation
                     HppdJobTitleData={
                       Number(row.time_range_data.last_15_days.target) /
@@ -584,7 +578,7 @@ const HppdTableRow = ({
                     }}
                     type="week"
                   />
-                  {/* 30 Days Data */}{" "}
+                  {/* 30 Days Data */}
                   <HppdRowCalculation
                     HppdJobTitleData={
                       Number(row.time_range_data.last_30_days.target) /
@@ -615,29 +609,27 @@ const HppdTableRow = ({
                       );
                     }}
                     type="month"
-                  />{" "}
+                  />
                 </TableRow>
               );
             }
           });
-        })}{" "}
+        })}
       {expandedRow === row.id && (
         <TableRow className={classes.expandButton}>
-          {" "}
           <TableCell colSpan={18} className={classes.fullWidthCell}>
-            {" "}
             <Button
               variant="outlined"
               startIcon={<AddIcon className={classes.customIcon} />}
               className={classes.customButton}
               onClick={() => handleNewButton(row.id, "post")}
             >
-              Add New            {" "}
-            </Button>{" "}
-          </TableCell>{" "}
+              Add New
+            </Button>
+          </TableCell>
         </TableRow>
       )}
-      {/* add update census week and month */}     {" "}
+      {/* add update census week and month */}
       {openModal && (
         <AddCensus
           onClose={handleCloseModal}
@@ -645,7 +637,7 @@ const HppdTableRow = ({
           censusFacilityId={censusFacilityId}
           updateRowData={updateRowData}
         />
-      )}{" "}
+      )}
       {openTargetModal && (
         <AddTarget
           onClose={handleCloseModal}
@@ -656,7 +648,7 @@ const HppdTableRow = ({
           getJobTitleTrack={getJobTitleTrack}
         />
       )}
-      {/* target popover */}     {" "}
+      {/* target popover */}
       <Popover
         open={openTarget}
         anchorEl={anchorEl}
@@ -676,11 +668,10 @@ const HppdTableRow = ({
           },
         }}
       >
-        {loadingTarget && <LinearProgressBar />}       {" "}
+        {loadingTarget && <LinearProgressBar />}
         <div className={classes.popMain}>
-          <div className={classes.popoverTitle}>Target</div>         {" "}
+          <div className={classes.popoverTitle}>Target</div>
           <div>
-            {" "}
             <TextField
               placeholder="Enter Here"
               variant="outlined"
@@ -689,10 +680,9 @@ const HppdTableRow = ({
               value={target}
               onChange={handleTargetChange}
               className={classes.input}
-            />{" "}
-          </div>{" "}
+            />
+          </div>
           <div>
-            {" "}
             <Button
               variant="contained"
               color=""
@@ -700,8 +690,8 @@ const HppdTableRow = ({
               className={classes.confirmButton}
               style={{ marginRight: "10px" }}
             >
-              Cancel            {" "}
-            </Button>{" "}
+              Cancel
+            </Button>
             <Button
               variant="contained"
               color="primary"
@@ -709,12 +699,12 @@ const HppdTableRow = ({
               className={classes.confirmButton}
               disabled={loadingTarget}
             >
-              Confirm            {" "}
-            </Button>{" "}
-          </div>{" "}
-        </div>{" "}
+              Confirm
+            </Button>
+          </div>
+        </div>
       </Popover>
-      {/* Target popover for JobTitles */}     {" "}
+      {/* Target popover for JobTitles */}
       <Popover
         open={openTargetJob}
         anchorEl={anchorElJob}
@@ -734,11 +724,10 @@ const HppdTableRow = ({
           },
         }}
       >
-        {loadingTarget && <LinearProgressBar />}       {" "}
+        {loadingTarget && <LinearProgressBar />}
         <div className={classes.popMain}>
-          <div className={classes.popoverTitle}>Target</div>         {" "}
+          <div className={classes.popoverTitle}>Target</div>
           <div>
-            {" "}
             <TextField
               placeholder="Enter Here"
               variant="outlined"
@@ -747,10 +736,9 @@ const HppdTableRow = ({
               value={targetJob}
               onChange={handleTargetChange}
               className={classes.input}
-            />{" "}
-          </div>{" "}
+            />
+          </div>
           <div>
-            {" "}
             <Button
               variant="contained"
               color=""
@@ -758,8 +746,8 @@ const HppdTableRow = ({
               className={classes.confirmButton}
               style={{ marginRight: "10px" }}
             >
-              Cancel            {" "}
-            </Button>{" "}
+              Cancel
+            </Button>
             <Button
               variant="contained"
               color="primary"
@@ -767,12 +755,12 @@ const HppdTableRow = ({
               className={classes.confirmButton}
               disabled={loadingTarget}
             >
-              Confirm            {" "}
-            </Button>{" "}
-          </div>{" "}
-        </div>{" "}
+              Confirm
+            </Button>
+          </div>
+        </div>
       </Popover>
-      {/* census popover */}     {" "}
+      {/* census popover */}
       <Popover
         open={openTodayCensus}
         anchorEl={anchorElTodayCensus}
@@ -792,15 +780,13 @@ const HppdTableRow = ({
           },
         }}
       >
-        {loadingCensus && <LinearProgressBar />}       {" "}
+        {loadingCensus && <LinearProgressBar />}
         <div className={classes.popMain}>
-          <div className={classes.popoverTitle}>Census</div>         {" "}
-          <div className={classes.popoverHr}></div>         {" "}
+          <div className={classes.popoverTitle}>Census</div>
+          <div className={classes.popoverHr}></div>
           <div className={classes.inputMain}>
-            {" "}
-            <span className={classes.popoverLabel}>Today's Census</span>{" "}
+            <span className={classes.popoverLabel}>Today's Census</span>
             <div>
-              {" "}
               <TextField
                 placeholder="Enter Here"
                 variant="outlined"
@@ -809,16 +795,12 @@ const HppdTableRow = ({
                 value={todaysCensus}
                 onChange={handleTodaysChange}
                 className={classes.input}
-              />{" "}
-            </div>{" "}
-          </div>{" "}
+              />
+            </div>
+          </div>
           <div className={classes.inputMain}>
-            {" "}
-            <span className={classes.popoverLabel}>
-              Yesterday's Census
-            </span>{" "}
+            <span className={classes.popoverLabel}>Yesterday's Census</span>
             <div>
-              {" "}
               <TextField
                 placeholder="Enter Here"
                 variant="outlined"
@@ -827,11 +809,10 @@ const HppdTableRow = ({
                 value={yesterdayCensus}
                 onChange={handleYesterdaysChange}
                 className={classes.input}
-              />{" "}
-            </div>{" "}
-          </div>{" "}
+              />
+            </div>
+          </div>
           <div>
-            {" "}
             <Button
               variant="contained"
               color=""
@@ -839,8 +820,8 @@ const HppdTableRow = ({
               className={classes.confirmButton}
               style={{ marginRight: "10px" }}
             >
-              Cancel            {" "}
-            </Button>{" "}
+              Cancel
+            </Button>
             <Button
               variant="contained"
               color="primary"
@@ -848,11 +829,11 @@ const HppdTableRow = ({
               className={classes.confirmButton}
               disabled={loadingCensus}
             >
-              Confirm            {" "}
-            </Button>{" "}
-          </div>{" "}
-        </div>{" "}
-      </Popover>{" "}
+              Confirm
+            </Button>
+          </div>
+        </div>
+      </Popover>
     </>
   );
 };
