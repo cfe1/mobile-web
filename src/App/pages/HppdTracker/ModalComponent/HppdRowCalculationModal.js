@@ -156,9 +156,9 @@ const HppdRowCalculationModal = ({ firstData, secondData, type }) => {
 
   return (
     <>
-            {/* Third cell: Scheduled HPPD */}     {" "}
+      {/* Third cell: Scheduled HPPD */}
       <TableCell className={classes.cellInactive}>
-                {removeTrailingZero(scheduledHPPD)}        {" "}
+        {removeTrailingZero(scheduledHPPD)}
         {parseFloat(scheduledPercentage) != 0 && (
           <span
             className={
@@ -167,7 +167,6 @@ const HppdRowCalculationModal = ({ firstData, secondData, type }) => {
                 : classes.negative
             }
           >
-                     {" "}
             {parseFloat(scheduledPercentage) > 0 ? (
               <img
                 className={classes.arrow}
@@ -181,18 +180,16 @@ const HppdRowCalculationModal = ({ firstData, secondData, type }) => {
                 alt="downarrow"
               />
             )}
-                      {Math.abs(scheduledPercentage)}%        {" "}
+            {Math.abs(scheduledPercentage)}%
           </span>
         )}
-               {" "}
         <div className={classes.inactiveHours}>
-                    {formatHours(processedFirstData.scheduled_hours)}       {" "}
+          {formatHours(processedFirstData.scheduled_hours)}
         </div>
-             {" "}
       </TableCell>
-            {/* Fourth cell: Actual HPPD */}     {" "}
+      {/* Fourth cell: Actual HPPD */}
       <TableCell className={classes.cellInactive2}>
-                {removeTrailingZero(actualHPPD)}        {" "}
+        {removeTrailingZero(actualHPPD)}
         {parseFloat(actualPercentage) != 0 && (
           <span
             className={
@@ -201,7 +198,6 @@ const HppdRowCalculationModal = ({ firstData, secondData, type }) => {
                 : classes.negative
             }
           >
-                     {" "}
             {parseFloat(actualPercentage) > 0 ? (
               <img className={classes.arrow} src={ArrowUpward} alt="uparrow" />
             ) : (
@@ -211,16 +207,13 @@ const HppdRowCalculationModal = ({ firstData, secondData, type }) => {
                 alt="downarrow"
               />
             )}
-                      {Math.abs(actualPercentage)}%        {" "}
+            {Math.abs(actualPercentage)}%
           </span>
         )}
-               {" "}
         <div className={classes.inactiveHours}>
-                    {formatHours(processedFirstData.actual_hours)}       {" "}
+          {formatHours(processedFirstData.actual_hours)}
         </div>
-             {" "}
       </TableCell>
-         {" "}
     </>
   );
 };

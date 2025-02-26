@@ -105,11 +105,11 @@ function TablePagination({
           className="text-muted"
           style={{ marginLeft: 10, marginRight: 20 }}
         >
-          Showing{" "}
+          Showing
           <b>
-            {(page - 1) * rowsPerPage + 1} -{" "}
+            {(page - 1) * rowsPerPage + 1} -
             {Math.min(count, page * rowsPerPage)}
-          </b>{" "}
+          </b>
           of {count} items
         </Typography>
       )}

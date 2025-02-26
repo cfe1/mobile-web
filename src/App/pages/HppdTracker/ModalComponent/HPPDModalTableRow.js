@@ -97,16 +97,13 @@ const HppdTableRow = ({
 
   return (
     <>
-           {" "}
       <TableRow key={row.id} style={isDisabled ? { Opacity: "0.5" } : {}}>
-               {" "}
         <TableCell
           className={classes.rowHeaderFirst}
           style={
             isDisabled ? { pointerEvents: "none", background: "#afa3a324" } : {}
           }
         >
-                   {" "}
           <Checkbox
             classes={{ root: classes.checkboxRoot }}
             icon={<span className={classes.iconSizeuncheck} />} // Unchecked
@@ -124,9 +121,7 @@ const HppdTableRow = ({
                   )
             }
           />
-                 {" "}
         </TableCell>
-               {" "}
         <TableCell
           className={
             !isDisabled
@@ -134,26 +129,20 @@ const HppdTableRow = ({
               : classes.rowHeaderJobTitle
           }
         >
-                   {" "}
           {isDisabled ? (
             <div className={classes.affecting}>
-                            <span>{row?.job_title ?? ""}</span>             {" "}
-              <span className={classes.affectinghppd}>Affecting HPPD</span>     
-                   {" "}
+              <span>{row?.job_title ?? ""}</span>
+              <span className={classes.affectinghppd}>Affecting HPPD</span>
             </div>
           ) : (
             <Tooltip title={isOverflow ? row.name : ""} arrow>
-                           {" "}
               <div ref={cellRef} className={classes.rowellipses}>
-                                {row?.job_title ?? ""}             {" "}
+                {row?.job_title ?? ""}
               </div>
-                         {" "}
             </Tooltip>
           )}
-                 {" "}
         </TableCell>
-                {/* Today's Data */}
-               {" "}
+        {/* Today's Data */}
         <HppdRowCalculationModal
           key={`${row.id}-today`}
           firstData={{
@@ -167,8 +156,7 @@ const HppdTableRow = ({
           onTargetClick={(event) => {}}
           type="day"
         />
-                {/* 15 Days Data */}
-               {" "}
+        {/* 15 Days Data */}
         <HppdRowCalculationModal
           key={`${row.id}-15-days`}
           firstData={{
@@ -182,8 +170,7 @@ const HppdTableRow = ({
           onTargetClick={(event) => {}}
           type="week"
         />
-                {/* 30 Days Data */}
-               {" "}
+        {/* 30 Days Data */}
         <HppdRowCalculationModal
           key={`${row.id}-30-days`}
           firstData={{
@@ -197,9 +184,7 @@ const HppdTableRow = ({
           onTargetClick={(event) => {}}
           type="month"
         />
-             {" "}
       </TableRow>
-         {" "}
     </>
   );
 };

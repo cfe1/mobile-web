@@ -24,7 +24,7 @@ const StatsAndProgressBar = ({
     if (date) {
       fetchStats();
     }
-  }, [date, forceRender,job_title_id]);
+  }, [date, forceRender, job_title_id]);
   const fetchStats = async () => {
     const params = {
       job_title: job_title_id,
@@ -116,11 +116,11 @@ const StatsAndProgressBar = ({
                 textBeforPercent={true}
                 showOnlyProgress={true}
                 value={
-                  confirmed_hours > 0 && budgeted_hours> 0
+                  confirmed_hours > 0 && budgeted_hours > 0
                     ? (confirmed_hours / budgeted_hours) * 100
                     : 0
                 }
-              />{" "}
+              />
             </Grid>
           );
         })}

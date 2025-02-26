@@ -40,7 +40,7 @@ const FacilityDetailsTable = ({
                 handleSortClick("scheduled_hours");
               }}
             >
-              Scheduled Hours{" "}
+              Scheduled Hours
               <TableSort
                 active={sort.key === "scheduled_hours"}
                 direction={"asc"}
@@ -52,7 +52,7 @@ const FacilityDetailsTable = ({
                 handleSortClick("actual_hours");
               }}
             >
-              Actual Hours{" "}
+              Actual Hours
               <TableSort
                 active={sort.key === "actual_hours"}
                 direction={"asc"}
@@ -64,7 +64,7 @@ const FacilityDetailsTable = ({
                 handleSortClick("overtime_hours");
               }}
             >
-              Overtime{" "}
+              Overtime
               <TableSort
                 active={sort.key === "overtime_hours"}
                 direction={"asc"}

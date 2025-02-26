@@ -58,7 +58,7 @@ export const NewDialogModal = ({
       disableEnforceFocus={disableEnforceFocus}
       disableAutoFocus={disableAutoFocus}
     >
-      {loading && <LinearProgressBar />}{" "}
+      {loading && <LinearProgressBar />}
       <DialogContent className={classes.dialogContent}>
         <Grid
           container
@@ -84,7 +84,13 @@ export const NewDialogModal = ({
             >
               {heading}
               {subHeadeing && (
-                <div className={`${classes.subTxt} ${subHeaderCls && subHeaderCls}`}>{subHeadeing}</div>
+                <div
+                  className={`${classes.subTxt} ${
+                    subHeaderCls && subHeaderCls
+                  }`}
+                >
+                  {subHeadeing}
+                </div>
               )}
             </Grid>
           </Grid>
@@ -98,7 +104,7 @@ export const NewDialogModal = ({
                     : greyEditBtn
                     ? classes.greyEditBtn
                     : `set-btn ${classes.eBtn}`
-                }  
+                }
                 ${noPinkExtraBtn && classes.noPinkExtraBtn}
               `}
                 onClick={onExtraHeaderBtnClick}
@@ -168,8 +174,8 @@ const useStyles = makeStyles((theme) => ({
   dialog: {
     maxWidth: "856px !important",
   },
-  dialogHead:{
-    display : 'flex'
+  dialogHead: {
+    display: "flex",
   },
   footer: {
     // marginTop: 10,

@@ -47,7 +47,7 @@ const FacilityEmployeesTable = ({ data, handleSortClick, sort }) => {
                 handleSortClick("actual_hours");
               }}
             >
-              Actual Hours{" "}
+              Actual Hours
               <TableSort
                 active={sort.key === "actual_hours"}
                 direction={"asc"}

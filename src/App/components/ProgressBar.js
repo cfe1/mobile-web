@@ -19,10 +19,10 @@ const ProgressBar = (props) => {
     <>
       <div className={`${classes.mainContainer}`}>
         {showOnlyProgress && (
-          <div  className={classes.textContainer}>
+          <div className={classes.textContainer}>
             {textBeforPercent && (
               <span className={classes.beforeTxt}> {textBeforPercentTxt}</span>
-            )}{" "}
+            )}
             <span
               style={spanStyle}
               className={`${textBeforPercent ? classes.marginleft : ""} ${
@@ -43,10 +43,8 @@ const ProgressBar = (props) => {
         </div>
         {!showOnlyProgress && (
           <>
-            {" "}
             <div className={classes.hundred}>100%</div>
             <div className={classes.max}>
-              {" "}
               {value >= 100 ? null : (
                 <span style={spanStyle}>{value.toFixed(2)}%</span>
               )}
@@ -97,15 +95,15 @@ const useStyles = makeStyles({
   },
   fontweight: {
     fontWeight: 700,
-    fontSize:12
+    fontSize: 12,
   },
   beforeTxt: {
     fontSize: "10px !important",
     fontWeight: "600 !important",
   },
-  textContainer:{
-    display:'flex',
-    justifyContent:'space-between',
-    width:'100%'
-  }
+  textContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    width: "100%",
+  },
 });

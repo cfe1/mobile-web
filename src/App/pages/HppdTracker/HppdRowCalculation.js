@@ -193,18 +193,17 @@ const HppdRowCalculation = ({
 
   return (
     <>
-      {/* Second cell: census */}     {" "}
+      {/* Second cell: census */}
       <TableCell
         className={`${classes.cell} ${classes.censusCell} ${
           HppdJobTitleData !== "" && classes.blankSpace
         }`}
       >
-        {" "}
         {HppdJobTitleData === "" && (
           <div onClick={onCensusClick} className={`${classes.underline}`}>
-            {processedFirstData.census.toFixed(1)}{" "}
+            {processedFirstData.census.toFixed(1)}
           </div>
-        )}{" "}
+        )}
         {HppdJobTitleData === "" &&
           type !== "day" &&
           parseFloat(censusPercentage) != 0 && (
@@ -215,18 +214,17 @@ const HppdRowCalculation = ({
                   : classes.positive
               }
             >
-              {/* ArrowUpwardred */}              {/* ArrowDownwardgreen */}   
-                       {" "}
+              {/* ArrowUpwardred */} {/* ArrowDownwardgreen */}
               {parseFloat(censusPercentage) > 0 ? (
                 <img src={ArrowUpwardred} alt="uparrow" />
               ) : (
                 <img src={ArrowDownwardgreen} alt="downarrow" />
               )}
-              {Math.abs(censusPercentage)}%            {" "}
+              {Math.abs(censusPercentage)}%
             </div>
-          )}{" "}
+          )}
       </TableCell>
-      {/* Third cell: Scheduled HPPD */}     {" "}
+      {/* Third cell: Scheduled HPPD */}
       <TableCell
         className={classes.cellInactive}
         style={{
@@ -234,10 +232,9 @@ const HppdRowCalculation = ({
           color: scheduledHPPDColor,
         }}
       >
-        {" "}
         <span style={{ color: scheduledHPPDColor }}>
-          {removeTrailingZero(scheduledHPPD)}        {" "}
-        </span>{" "}
+          {removeTrailingZero(scheduledHPPD)}
+        </span>
         {parseFloat(scheduledPercentage) != 0 && (
           <span
             className={
@@ -247,7 +244,6 @@ const HppdRowCalculation = ({
             }
             style={{ color: scheduledHPPDColor }}
           >
-            {" "}
             {parseFloat(scheduledPercentage) > 0 ? (
               <img
                 className={classes.arrow}
@@ -261,17 +257,17 @@ const HppdRowCalculation = ({
                 alt="downarrow"
               />
             )}
-            {Math.abs(scheduledPercentage)}%          {" "}
+            {Math.abs(scheduledPercentage)}%
           </span>
-        )}{" "}
+        )}
         <div
           className={classes.inactiveHours}
           style={{ color: scheduledHPPDColor }}
         >
-          {formatHours(processedFirstData.scheduled_hours)}       {" "}
-        </div>{" "}
+          {formatHours(processedFirstData.scheduled_hours)}
+        </div>
       </TableCell>
-      {/* Fourth cell: Actual HPPD */}     {" "}
+      {/* Fourth cell: Actual HPPD */}
       <TableCell
         className={classes.cellInactive}
         style={{
@@ -279,10 +275,9 @@ const HppdRowCalculation = ({
           color: actualHPPDColor,
         }}
       >
-        {" "}
         <span style={{ color: actualHPPDColor }}>
-          {removeTrailingZero(actualHPPD)}        {" "}
-        </span>{" "}
+          {removeTrailingZero(actualHPPD)}
+        </span>
         {parseFloat(actualPercentage) != 0 && (
           <span
             className={
@@ -292,7 +287,6 @@ const HppdRowCalculation = ({
             }
             style={{ color: actualHPPDColor }}
           >
-            {" "}
             {parseFloat(actualPercentage) > 0 ? (
               <img
                 className={classes.arrow}
@@ -306,27 +300,26 @@ const HppdRowCalculation = ({
                 alt="downarrow"
               />
             )}
-            {Math.abs(actualPercentage)}%          {" "}
+            {Math.abs(actualPercentage)}%
           </span>
-        )}{" "}
+        )}
         <div
           style={{ color: actualHPPDColor }}
           className={classes.inactiveHours}
         >
-          {formatHours(processedFirstData.actual_hours)}       {" "}
-        </div>{" "}
+          {formatHours(processedFirstData.actual_hours)}
+        </div>
       </TableCell>
-      {/* Fifth cell: Target HPPD */}     {" "}
+      {/* Fifth cell: Target HPPD */}
       <TableCell className={`${classes.cell} ${classes.targetCell} `}>
-        {" "}
         <span onClick={onTargetClick} className={classes.underline}>
-          {/* {removeTrailingZero(targetHPPD)}{" "} */}         {" "}
+          {/* {removeTrailingZero(targetHPPD)} */}
           {HppdJobTitleData
             ? parseFloat(firstData.target.toFixed(2))
             : // : firstData.target || targetHPPD}
               targetHPPD.toFixed(2)}
-          {/* {targetHPPD} */}       {" "}
-        </span>{" "}
+          {/* {targetHPPD} */}
+        </span>
         {parseFloat(targetPercentage) != 0 && (
           <span
             className={
@@ -335,7 +328,6 @@ const HppdRowCalculation = ({
                 : classes.negative
             }
           >
-            {" "}
             {parseFloat(targetPercentage) > 0 ? (
               <img className={classes.arrow} src={ArrowUpward} alt="uparrow" />
             ) : (
@@ -345,15 +337,15 @@ const HppdRowCalculation = ({
                 alt="downarrow"
               />
             )}
-            {Math.abs(targetPercentage)}%{/* {targetHPPD} */}{" "}
+            {Math.abs(targetPercentage)}%{/* {targetHPPD} */}
           </span>
-        )}{" "}
+        )}
         {!HppdJobTitleData && (
           <div className={classes.inactiveHours}>
-            {formatHours(targetHours)}         {" "}
+            {formatHours(targetHours)}
           </div>
-        )}{" "}
-      </TableCell>{" "}
+        )}
+      </TableCell>
       <TableCell
         className={`${classes.cell} ${classes.varianceCell}`}
         style={{
@@ -362,16 +354,15 @@ const HppdRowCalculation = ({
           ),
         }}
       >
-        {" "}
-        <span // className={` ${varianceHPPD > 0 ? classes.positive : classes.negative //   }`}
+        <span // className={` ${varianceHPPD > 0 ? classes.positive : classes.negative //  }`}
           style={{ color: colorValue }}
         >
-          {removeTrailingZero(varianceHPPD)}        {" "}
-        </span>{" "}
+          {removeTrailingZero(varianceHPPD)}
+        </span>
         <div className={classes.inactiveHours} style={{ color: colorValue }}>
-          {formatHours(varianceHours)}       {" "}
-        </div>{" "}
-      </TableCell>{" "}
+          {formatHours(varianceHours)}
+        </div>
+      </TableCell>
     </>
   );
 };

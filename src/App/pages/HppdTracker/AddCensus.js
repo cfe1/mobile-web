@@ -229,7 +229,7 @@ const AddCensus = ({
       >
         {!isDayType && (
           <h3 className={classes.title}>
-            Add census for last {censusType == "week" ? 15 : 30} Days{" "}
+            Add census for last {censusType == "week" ? 15 : 30} Days
           </h3>
         )}
         {isDayType && <h3 className={classes.title}>Census </h3>}

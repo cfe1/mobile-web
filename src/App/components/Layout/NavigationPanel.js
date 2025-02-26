@@ -81,7 +81,7 @@ const ListItem = ({
               : "text-sidebar-muted p2 p2-content sidebar-text"
           }`}
           style={{
-            textAlign: 'center'
+            textAlign: "center",
           }}
         >
           {id === "CODE_DD" ? (
@@ -103,7 +103,12 @@ const NavigationPanel = (props) => {
   const { anchorEl, handleClose, change, facility, profile } = props || {};
   const classes = useStyles();
   const history = useHistory();
-  const adminArray = ["CODE_BOARD", "settings", "CODE_EMP_ADD", "CODE_HPPD_TRACKER"];
+  const adminArray = [
+    "CODE_BOARD",
+    "settings",
+    "CODE_EMP_ADD",
+    "CODE_HPPD_TRACKER",
+  ];
   const isAdmin = profile?.is_admin;
 
   const open = Boolean(anchorEl);
@@ -371,7 +376,6 @@ const NavigationPanel = (props) => {
                     }
                     className={classes.whitebg}
                   >
-                    {" "}
                     <ListItemInternal
                       item={row}
                       index={index + index2}

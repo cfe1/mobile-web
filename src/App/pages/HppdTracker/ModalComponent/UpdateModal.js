@@ -140,7 +140,6 @@ const UpdateModal = ({
 
   return (
     <>
-      {" "}
       <NewDialogModal // dialogCls={(hppdData.length === 0 && !modalLoading) ? classes.dialogNoFound : classes.dialog}
         dialogCls={classes.dialog}
         heading="Select Job Titles"
@@ -152,19 +151,15 @@ const UpdateModal = ({
         loading={modalLoading}
         isConfirmDisable={modalLoading} // needConfirmBtn={!(hppdData.length === 0 && !modalLoading)} // needSecBtn={(hppdData.length === 0 && !modalLoading)} // secBtnTxt="Close" // handleSecBtn={()=>onCloseEvent()}
       >
-        {/* {(hppdData.length > 0 || modalLoading) &&  */}{" "}
+        {/* {(hppdData.length > 0 || modalLoading) && */}
         <div className={classes.mainBlock}>
-          {" "}
           <div className={classes.contentBlock}>
-            {" "}
-            <div className={classes.title}>Selected Positions</div>{" "}
+            <div className={classes.title}>Selected Positions</div>
             <div className={classes.chipsBlock}>
-              {" "}
               {jobTitleSelectedValues?.map((itm) => {
                 return (
                   <div className={classes.chip}>
-                    {" "}
-                    <span>{itm.job_title}</span>{" "}
+                    <span>{itm.job_title}</span>
                     <ClearIcon
                       onClick={() =>
                         itm.isdisabled
@@ -172,81 +167,73 @@ const UpdateModal = ({
                           : handleRemoveChips(itm.job_title_id)
                       }
                       className={classes.icon}
-                    />{" "}
+                    />
                   </div>
                 );
-              })}{" "}
-            </div>{" "}
-          </div>{" "}
+              })}
+            </div>
+          </div>
           <div className={classes.tableBlock}>
-            {" "}
             <div className={classes.searchBlock}>
-              <span>Select From titles below</span>{" "}
+              <span>Select From titles below</span>
               <input
                 placeholder="Search Job Title"
                 type="text"
                 value={search}
                 onChange={(e) => onHandleSearchChange(e)}
-              />{" "}
-            </div>{" "}
+              />
+            </div>
             <div className={classes.Blocktable}>
-              {" "}
               <TableContainer
                 component={Paper}
                 className={classes.tableContainer}
               >
-                {" "}
                 <Table className={classes.table} aria-label="HPPD Table">
-                  {" "}
                   <TableHead>
-                    {" "}
                     <TableRow>
-                      {" "}
                       <TableCell
                         className={classes.headerCellSelect}
                         rowSpan={2}
                       >
-                        Select{" "}
-                      </TableCell>{" "}
+                        Select
+                      </TableCell>
                       <TableCell
                         className={classes.headerCellJObTitle}
                         rowSpan={2}
                       >
-                        Job Title                                            {" "}
-                      </TableCell>{" "}
+                        Job Title
+                      </TableCell>
                       <TableCell
                         className={classes.headerCellToday}
                         colSpan={2}
                       >
-                        Today{" "}
-                      </TableCell>{" "}
+                        Today
+                      </TableCell>
                       <TableCell
                         className={classes.headerCell15Days}
                         colSpan={2}
                       >
-                        15 Days - Daily Average{" "}
-                      </TableCell>{" "}
+                        15 Days - Daily Average
+                      </TableCell>
                       <TableCell
                         className={classes.headerCell30Days}
                         colSpan={2}
                       >
-                        30 Days - Daily Average{" "}
-                      </TableCell>{" "}
-                    </TableRow>{" "}
+                        30 Days - Daily Average
+                      </TableCell>
+                    </TableRow>
                     <TableRow>
-                      {" "}
                       {["Avg Scheduled HPPD", "Avg Actual HPPD"]
                         .concat(["Avg Scheduled HPPD", "Avg Actual HPPD"])
                         .concat(["Avg Scheduled HPPD", "Avg Actual HPPD"])
                         .map((heading, index) => (
                           <TableCell key={index} className={classes.headerCell}>
-                            {heading}{" "}
+                            {heading}
                           </TableCell>
-                        ))}{" "}
-                    </TableRow>{" "}
-                  </TableHead>{" "}
+                        ))}
+                    </TableRow>
+                  </TableHead>
                   <TableBody>
-                    {" "}
                     {hppdData?.length > 0 &&
                       hppdData?.map((row, index) => {
                         // if (!row.job_title_data || Object.keys(row.job_title_data).length === 0) return;
@@ -262,26 +249,23 @@ const UpdateModal = ({
                             JobTitleArray={JobTitleArray}
                           />
                         );
-                      })}{" "}
+                      })}
                     {hppdData?.length === 0 && (
                       <TableRow>
-                        {" "}
                         <TableCell className={classes.cell} colSpan={20}>
-                          {" "}
                           <>
-                            {" "}
                             {
                               <div className={classes.noDataFound}>
-                                No data found.{" "}
+                                No data found.
                               </div>
-                            }{" "}
-                          </>{" "}
-                        </TableCell>{" "}
+                            }
+                          </>
+                        </TableCell>
                       </TableRow>
-                    )}{" "}
-                  </TableBody>{" "}
-                </Table>{" "}
-              </TableContainer>{" "}
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
               {hppdData?.length > 0 && hppdDataPaginationModal.count > 1 && (
                 <TablePagination
                   count={hppdDataPaginationModal.count}
@@ -295,13 +279,13 @@ const UpdateModal = ({
                     setCurrentPage(page);
                   }}
                 />
-              )}{" "}
-            </div>{" "}
-          </div>{" "}
+              )}
+            </div>
+          </div>
         </div>
-        {/* } */}               {" "}
-        {/* {(hppdData.length === 0 && !modalLoading) && <div className={classes.NoFoundData}>No Data Found</div>} */}{" "}
-      </NewDialogModal>{" "}
+        {/* } */}
+        {/* {(hppdData.length === 0 && !modalLoading) && <div className={classes.NoFoundData}>No Data Found</div>} */}
+      </NewDialogModal>
     </>
   );
 };

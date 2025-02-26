@@ -21,7 +21,7 @@ const styles = {
   },
 
   card2: {
-    marginTop: "15%"
+    marginTop: "15%",
   },
 
   card3: {
@@ -39,11 +39,11 @@ const styles = {
     color: "#82889C",
   },
   card5: {
-    marginBottom: "100px"
+    marginBottom: "100px",
   },
   card6: {
-    height: 48
-  }
+    height: 48,
+  },
 };
 
 export class PageNotFound extends Component {
@@ -74,7 +74,6 @@ export class PageNotFound extends Component {
                   component={Route}
                   to={"/dashboard"}
                   onClick={this.navigateTo}
-
                   className={classes.base}
                 >
                   Dashboard
@@ -84,35 +83,20 @@ export class PageNotFound extends Component {
           </div>
         </div>
         <Paper>
-          <div className={`fc-container ${classes.card1}`} >
+          <div className={`fc-container ${classes.card1}`}>
             {loading && <Loader />}
             <div>
               <div>
-                <div >
+                <div>
                   <Grid container justify="center" align="center">
-                    <Grid
-                      item
-                      xs={12}
-                      align="center"
-                      className={classes.card2}
-                    >
+                    <Grid item xs={12} align="center" className={classes.card2}>
                       <img src={icon1} alt="404"></img>
                     </Grid>
-                    <Grid
-                      item
-                      xs={12}
-                      align="center"
-                      className={classes.card3}
-                    >
+                    <Grid item xs={12} align="center" className={classes.card3}>
                       404 Error!
                     </Grid>
-                    <Grid
-                      item
-                      xs={12}
-                      align="center"
-                      className={classes.card4}
-                    >
-                      The page you requested can not be found.But don't <br />{" "}
+                    <Grid item xs={12} align="center" className={classes.card4}>
+                      The page you requested can not be found.But don't <br />
                       worry you can find plenty of things on our dashboard.
                     </Grid>
                     <Grid align="center" className={classes.card5}>
@@ -124,7 +108,6 @@ export class PageNotFound extends Component {
                         <PrimaryButton
                           variant="contained"
                           color="primary"
-
                           className={classes.card6}
                           onClick={this.navigateTo}
                         >
