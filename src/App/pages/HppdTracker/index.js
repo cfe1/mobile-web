@@ -405,8 +405,9 @@ const HppdTracker = () => {
             <div>
               <p className={classes.tableHeader}>
                 Showing HPPD Results for
-                {hppdOptions.find((opt) => opt.value === hppdSelection)
-                  ?.label || "Department"}
+                {` ${
+                  hppdOptions.find((opt) => opt.value === hppdSelection)?.label
+                }` || "Department"}
               </p>
             </div>
             <TableContainer

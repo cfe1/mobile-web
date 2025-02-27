@@ -193,7 +193,7 @@ const AddTarget = ({
           isDayType
             ? "Target"
             : TargetType == "week"
-            ? "Weekly Target"
+            ? "Target"
             : "Monthly Target"
         }
         isBackBtnNeeded={true}
