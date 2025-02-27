@@ -360,7 +360,7 @@ const HppdRowCalculation = ({
           {removeTrailingZero(varianceHPPD)}
         </span>
         <div className={classes.inactiveHours} style={{ color: colorValue }}>
-          {formatHours(varianceHours)}
+          {formatHours(Math.abs(varianceHours))}
         </div>
       </TableCell>
     </>
