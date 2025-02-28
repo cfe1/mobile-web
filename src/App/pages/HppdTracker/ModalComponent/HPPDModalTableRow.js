@@ -195,7 +195,7 @@ const useStyles = makeStyles((theme) => ({
   checkboxRoot: {
     color: "#FF007F", // Default unchecked color
     "&.Mui-checked": {
-      color: "#086375", // Checked color
+      color: "#FF0083", // Checked color
     },
   },
   iconSizeuncheck: {
@@ -209,7 +209,7 @@ const useStyles = makeStyles((theme) => ({
   iconSizeChecked: {
     fontSize: "20px", // Adjust icon size
     border: "none",
-    color: "#086375",
+    color: "#FF0083",
     borderRadius: "50%",
     height: "20px",
     width: "20px",
@@ -218,7 +218,7 @@ const useStyles = makeStyles((theme) => ({
     width: "20px",
     height: "20px",
     borderRadius: "50%",
-    background: "#086375",
+    background: "#FF0083",
     textAlign: "center",
     position: "relative",
     "& img": {
@@ -345,7 +345,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   customIcon: {
-    color: "#086375",
+    color: "#FF0083",
   },
   arrow: {
     marginLeft: 4,

@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   customIcon: {
-    color: "#086375",
+    color: "#FF0083",
   },
   arrow: {
     marginLeft: 4,

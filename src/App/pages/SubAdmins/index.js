@@ -68,10 +68,10 @@ const useStyles = makeStyles((theme) => ({
   addButton: {
     height: 44,
     marginRight: 12,
-    backgroundColor: "#00735D", // Deep teal alternative
+    backgroundColor: "#FF0083", // Deep teal alternative
     color: "white",
     "&:hover": {
-      backgroundColor: "#00735DDD", // Slightly transparent on hover
+      backgroundColor: "#FF0083", // Slightly transparent on hover
     },
   },
 
@@ -109,7 +109,6 @@ const renderTooltip = (items, classes, facilityTooltip = true) => (
   <Tooltip
     title={
       <Typography className={classes.facilityTooltip}>
-               {" "}
         {items
           .map((item) =>
             facilityTooltip
@@ -117,19 +116,16 @@ const renderTooltip = (items, classes, facilityTooltip = true) => (
               : item?.facility_details?.role?.role_name
           )
           .join(", ")}
-             {" "}
       </Typography>
     }
     interactive
   >
-       {" "}
     <Chip
       label={`+${items.length}`}
       size="small"
       style={{ marginLeft: 8 }}
       className={classes.chip}
     />
-     {" "}
   </Tooltip>
 );
 
@@ -229,7 +225,7 @@ const SubAdminPage = () => {
   };
   const handleNewButton = async (row) => {
     setisOpenNew(true);
-    setSubAdminData(row); //  getSelectJobTitileModalData(facilityRowId);
+    setSubAdminData(row); // getSelectJobTitileModalData(facilityRowId);
   };
 
   const handleCloseAddSubADmin = () => {
@@ -252,30 +248,25 @@ const SubAdminPage = () => {
 
   return (
     <div className={classes.root}>
-           {" "}
       <div className={classes.header}>
-                <h2>Sub Admins</h2>     {" "}
+        <h2>Sub Admins</h2>
       </div>
-            {loading && <LinearProgressBar belowHeader={true} />}     {" "}
+      {loading && <LinearProgressBar belowHeader={true} />}
       <div className={classes.filters}>
-               {" "}
         <Filters
           gridSize={8}
           filterObject={filtersObj}
           onFilterSelected={(data) => setSelectedFilters(data)}
           selectedFiltersPopulate={selectedFilters}
         />
-               {" "}
         <div className={classes.flex}>
-                   {" "}
           <Button
             variant="contained"
             onClick={handleNewButton}
             className={classes.addButton}
           >
-                        Add New Sub Admin          {" "}
+            Add New Sub Admin
           </Button>
-                   {" "}
           <SearchHppd
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
@@ -284,76 +275,50 @@ const SubAdminPage = () => {
             widthClass={classes.searchWidth}
             onCrossClick={handleSearchClose}
           />
-                 {" "}
         </div>
-             {" "}
       </div>
-           {" "}
       <TableContainer component={Paper} className={classes.tableContainer}>
-               {" "}
         <Table>
-                   {" "}
           <TableHead>
-                       {" "}
             <TableRow>
-                            <TableCell>Admin</TableCell>             {" "}
-              <TableCell>Facility Name</TableCell>             {" "}
-              <TableCell>Role</TableCell>             {" "}
-              <TableCell align="right"></TableCell>           {" "}
+              <TableCell>Admin</TableCell> <TableCell>Facility Name</TableCell>
+              <TableCell>Role</TableCell> <TableCell align="right"></TableCell>
             </TableRow>
-                     {" "}
           </TableHead>
-                   {" "}
           <TableBody>
-                       {" "}
             {listingData?.results?.map((row) => {
               const { facilities = [] } = row;
               const firstFacility = facilities[0] || {};
               const remainingFacilities = facilities.slice(1);
               return (
                 <TableRow key={row.id} onClick={() => handleNewButton(row)}>
-                                    <TableCell>{row.name}</TableCell>           
-                       {" "}
+                  <TableCell>{row.name}</TableCell>
                   <TableCell>
-                                        {firstFacility.facility_details?.name} 
-                                     {" "}
+                    {firstFacility.facility_details?.name}
                     {remainingFacilities.length > 0 &&
                       renderTooltip(remainingFacilities, classes)}
-                                     {" "}
                   </TableCell>
-                                   {" "}
                   <TableCell>
-                                       {" "}
-                    {firstFacility?.facility_details?.role?.role_name}         
-                             {" "}
+                    {firstFacility?.facility_details?.role?.role_name}
                     {remainingFacilities.length > 0 &&
                       renderTooltip(remainingFacilities, classes, false)}
-                                     {" "}
                   </TableCell>
-                                   {" "}
                   <TableCell align="right" onClick={(e) => e.stopPropagation()}>
-                                       {" "}
                     <SwitchButton
                       value={row.subadmin_status === STATUS.ACITVE}
                       onChange={(e) => handleChangeStatus(row, e)}
-                      color="#086375"
+                      color="#FF0083"
                       width={28}
                       height={16}
                       handleDiameter={14}
                     />
-                                     {" "}
                   </TableCell>
-                                 {" "}
                 </TableRow>
               );
             })}
-                     {" "}
           </TableBody>
-                 {" "}
         </Table>
-             {" "}
       </TableContainer>
-           {" "}
       <TablePagination
         count={listingData?.count}
         page={currentPage}
@@ -366,7 +331,6 @@ const SubAdminPage = () => {
           setCurrentPage(page);
         }}
       />
-           {" "}
       {isOpenNew && (
         <AddSubadminModal
           setisOpenNew={setisOpenNew}
@@ -374,7 +338,6 @@ const SubAdminPage = () => {
           handleCloseAddSubADmin={handleCloseAddSubADmin}
         />
       )}
-         {" "}
     </div>
   );
 };

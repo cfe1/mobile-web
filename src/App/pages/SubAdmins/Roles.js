@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "8px",
   },
   formContainer: {
-    //  padding: "24px",
+    // padding: "24px",
   },
   hr: {
     height: 1,
@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
         borderColor: "#B8BCCA",
       },
       "&.Mui-focused fieldset": {
-        borderColor: "#086375",
+        borderColor: "#FF0083",
       },
     },
     "& .MuiOutlinedInput-input": {
@@ -308,12 +308,9 @@ const Roles = ({
       loading={loading || isLoading}
       isConfirmDisable={loading || isLoading}
     >
-           {" "}
       <div className={classes.formContainer}>
-               {" "}
         <div className={classes.inputContainer}>
-                    <Typography className={classes.roleLabel}>Role</Typography>
-                   {" "}
+          <Typography className={classes.roleLabel}>Role</Typography>
           <TextField
             placeholder="Enter Here"
             variant="outlined"
@@ -328,72 +325,52 @@ const Roles = ({
               "aria-label": "role name",
             }}
           />
-                 {" "}
         </div>
-             {" "}
       </div>
-           {" "}
       <div className={classes.infosAccess}>
-               {" "}
         <div className={classes.infoAccess}>
-                   {" "}
           <div className={classes.accessContainer}>
-                       {" "}
             <div className={classes.accessContent}>
-                            <div className="title">Select All</div>             {" "}
+              <div className="title">Select All</div>
               <div className={classes.switch}>
-                               {" "}
                 <SwitchButton
                   value={active}
                   onChange={handleChange}
-                  color="#086375"
+                  color="#FF0083"
                   width={28}
                   height={16}
                   handleDiameter={14}
                 />
-                             {" "}
               </div>
-                         {" "}
             </div>
-                     {" "}
           </div>
-                 {" "}
         </div>
-               {" "}
         {acls.map((role) => (
           <div key={role.feature} className={classes.infoAccess}>
-                        <div className="title">{role.name}</div>           {" "}
+            <div className="title">{role.name}</div>
             <div className={classes.accessContainer}>
-                           {" "}
               {role.acl.map((acl) => (
                 <div key={acl.key} className={classes.accessContent}>
-                                    <div className="title">{acl.title}</div>   
-                               {" "}
+                  <div className="title">{acl.title}</div>
                   <div className={classes.switch}>
-                                       {" "}
                     <SwitchButton
                       value={acl.value}
                       onChange={(checked) =>
                         handleAclSwitch(checked, role.feature, acl.key)
                       }
-                      color="#086375"
+                      color="#FF0083"
                       width={28}
                       height={16}
                       handleDiameter={14}
                     />
-                                     {" "}
                   </div>
-                                 {" "}
                 </div>
               ))}
-                         {" "}
             </div>
-                        <div className={classes.hr}></div>         {" "}
+            <div className={classes.hr}></div>
           </div>
         ))}
-             {" "}
       </div>
-         {" "}
     </NewDialogModal>
   );
 };

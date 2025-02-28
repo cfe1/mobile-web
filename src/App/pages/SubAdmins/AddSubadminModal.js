@@ -157,7 +157,7 @@ const AddSubadminModal = ({
       newErrors.email = "Email is required";
     } else if (!validateEmail(formData.email)) {
       newErrors.email = "Invalid email format";
-    } // if (!formData.mobile.trim()) { //   newErrors.mobile = "Mobile number is required"; // } else if (!validatePhone(formData.mobile)) { //   newErrors.mobile = "Invalid mobile number"; // }
+    } // if (!formData.mobile.trim()) { //  newErrors.mobile = "Mobile number is required"; // } else if (!validatePhone(formData.mobile)) { //  newErrors.mobile = "Invalid mobile number"; // }
 
     const hasInvalidFacility = facilityRows.some(
       (row) => !row.facility_id || !row.role
@@ -371,16 +371,11 @@ const AddSubadminModal = ({
       loading={isLoading || loading}
       isConfirmDisable={isLoading || loading}
     >
-           {" "}
       <div className={classes.formContainer}>
-               {" "}
         <div className={classes.formSection}>
-                   {" "}
           <div className={classes.inputRow}>
-                        <div className={classes.inputLabel}>First Name</div>   
-                   {" "}
+            <div className={classes.inputLabel}>First Name</div>
             <div>
-                           {" "}
               <TextField
                 variant="outlined"
                 value={formData.first_name}
@@ -392,16 +387,11 @@ const AddSubadminModal = ({
                 error={!!errors.first_name}
                 helperText={errors.first_name}
               />
-                         {" "}
             </div>
-                     {" "}
           </div>
-                   {" "}
           <div className={classes.inputRow}>
-                        <div className={classes.inputLabel}>Last Name</div>     
-                 {" "}
+            <div className={classes.inputLabel}>Last Name</div>
             <div>
-                           {" "}
               <TextField
                 variant="outlined"
                 value={formData.last_name}
@@ -411,16 +401,11 @@ const AddSubadminModal = ({
                 error={!!errors.last_name}
                 helperText={errors.last_name}
               />
-                         {" "}
             </div>
-                     {" "}
           </div>
-                   {" "}
           <div className={classes.inputRow}>
-                        <div className={classes.inputLabel}>Email</div>         
-             {" "}
+            <div className={classes.inputLabel}>Email</div>
             <div>
-                           {" "}
               <TextField
                 variant="outlined"
                 type="email"
@@ -431,16 +416,11 @@ const AddSubadminModal = ({
                 error={!!errors.email}
                 helperText={errors.email}
               />
-                         {" "}
             </div>
-                     {" "}
           </div>
-                   {" "}
           <div className={classes.inputRow}>
-                        <div className={classes.inputLabel}>Number</div>       
-               {" "}
+            <div className={classes.inputLabel}>Number</div>
             <div>
-                           {" "}
               <TextField
                 variant="outlined"
                 type="tel"
@@ -454,26 +434,18 @@ const AddSubadminModal = ({
                   maxLength: 17,
                 }}
               />
-                         {" "}
             </div>
-                     {" "}
           </div>
-                 {" "}
         </div>
-                <div className={classes.hr} />       {" "}
+        <div className={classes.hr} />
         <div>
-                   {" "}
           <div className={classes.divContainer}>
-                       {" "}
-            <div className={classes.facilitiesLabel}>Facilities</div>           {" "}
-            <div className={classes.facilitiesLabel}>Role</div>         {" "}
+            <div className={classes.facilitiesLabel}>Facilities</div>
+            <div className={classes.facilitiesLabel}>Role</div>
           </div>
-                   {" "}
           {facilityRows.map((facility, index) => (
             <div key={index} className={classes.facilityRow}>
-                           {" "}
               <FormControl className={classes.facilitySelect}>
-                               {" "}
                 <CustomMultiSelect
                   id={`facility-${index}`}
                   variant="outlined"
@@ -490,11 +462,8 @@ const AddSubadminModal = ({
                   placeholder="Select Here"
                   height={42}
                 />
-                             {" "}
               </FormControl>
-                           {" "}
               <FormControl className={classes.roleSelect}>
-                               {" "}
                 <CustomMultiSelect
                   id={`role-${index}`}
                   variant="outlined"
@@ -527,11 +496,8 @@ const AddSubadminModal = ({
                   disabled={!facility.facility_id}
                   height={42}
                 />
-                             {" "}
               </FormControl>
-                           {" "}
               <div className={classes.switchContainer}>
-                               {" "}
                 <SwitchButton
                   value={facility.is_active}
                   onChange={() =>
@@ -541,40 +507,30 @@ const AddSubadminModal = ({
                       !facility.is_active
                     )
                   }
-                  color="#086375"
+                  color="#FF0083"
                   width={28}
                   height={16}
                   handleDiameter={14}
                 />
-                             {" "}
               </div>
-                           {" "}
               {facilityRows.length > 1 && (
                 <IconButton
                   size="small"
                   onClick={() => handleRemoveFacility(index)}
                 >
-                                   {" "}
-                  <DeleteOutlineIcon className={classes.deleteIcon} />         
-                       {" "}
+                  <DeleteOutlineIcon className={classes.deleteIcon} />
                 </IconButton>
               )}
-                         {" "}
             </div>
           ))}
-                   {" "}
           {errors.facilities && (
             <div className={classes.error}>{errors.facilities}</div>
           )}
-                   {" "}
           <button className={classes.addButton} onClick={handleAddFacility}>
-                        Add Facility and Role          {" "}
+            Add Facility and Role
           </button>
-                 {" "}
         </div>
-             {" "}
       </div>
-           {" "}
       {openRolesCreataion && (
         <Roles
           setOpenRolesCreataion={setOpenRolesCreataion}
@@ -588,7 +544,6 @@ const AddSubadminModal = ({
           }}
         />
       )}
-         {" "}
     </NewDialogModal>
   );
 };
@@ -676,7 +631,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 20,
   },
   addButton: {
-    color: "#00735D",
+    color: "#FF0083",
     fontSize: "14px",
     fontWeight: 500,
     cursor: "pointer",

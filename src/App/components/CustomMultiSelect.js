@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
       padding: "1px 4px !important",
     },
     "& .edit-icon": {
-      color: "#086375",
+      color: "#FF0083",
       padding: 4,
     },
   },
@@ -102,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
     }, // padding: 0, // cursor: "pointer", // marginTop: 8, // position: "sticky", // bottom: 0,
   },
   plusIcon: {
-    color: "#086375",
+    color: "#FF0083",
     fontSize: "20px",
     marginRight: "8px",
   },
@@ -189,16 +189,14 @@ const CustomMultiSelect = (props = {}) => {
 
   return (
     <div className={classes.container}>
-           {" "}
       {/* <InputLabel id={`${id}-placeholder-label`}>Select Here</InputLabel> */}
-           {" "}
       <Select
         id={id} // labelId={`${id}-placeholder-label`}
         multiple={multiple}
         variant={variant}
         value={value}
         fullWidth={fullWidth}
-        onChange={onChange} //   placeholder="Select Here"
+        onChange={onChange} //  placeholder="Select Here"
         open={menuOpen}
         onOpen={() => setMenuOpen(true)}
         onClose={() => setMenuOpen(false)}
@@ -220,7 +218,7 @@ const CustomMultiSelect = (props = {}) => {
         disabled={fullSelectDisable}
         IconComponent={() => (
           <div className={classes.iconContainer}>
-                        <span className={classes.pipe}>|</span>           {" "}
+            <span className={classes.pipe}>|</span>
             {menuOpen ? (
               <ExpandLess
                 className={`${isdropDownIconClickable && classes.cursor}`}
@@ -232,7 +230,6 @@ const CustomMultiSelect = (props = {}) => {
                 onClick={arrowIconClickHanlder}
               />
             )}
-                     {" "}
           </div>
         )}
         MenuProps={{
@@ -260,11 +257,10 @@ const CustomMultiSelect = (props = {}) => {
         }}
         {...rest}
       >
-               {" "}
         {options.map((item, itemIndex) =>
           item?.type === "divider" ? (
             <div key={item.id} className={classes.divider}>
-                            <Divider />           {" "}
+              <Divider />
             </div>
           ) : (
             <MenuItem
@@ -273,24 +269,20 @@ const CustomMultiSelect = (props = {}) => {
               className={classes.menuItem}
               disabled={!item?._all_ && disabled}
             >
-                           {" "}
               <div className={classes.itemContent}>
-                               {" "}
                 {renderCheckbox ? (
                   <RoundedCheckbox
                     checked={value?.includes(item[valueField])}
                   />
                 ) : null}
-                               {" "}
                 {infoIcon ? (
                   <AccessTimeIcon
                     color="primary"
                     style={{ marginRight: 4, opacity: 0.9 }}
                   />
                 ) : null}
-                                {item[labelField]}             {" "}
+                {item[labelField]}
               </div>
-                           {" "}
               {showEditIcon && (
                 <img
                   src={Edit}
@@ -300,14 +292,11 @@ const CustomMultiSelect = (props = {}) => {
                   }}
                 />
               )}
-                         {" "}
             </MenuItem>
           )
         )}
-               {" "}
         {typeof onCreateRole === "function" && needCreateRole && (
           <MenuItem className={classes.btnItem}>
-                       {" "}
             <button
               className={classes.createRoleBtn}
               onClick={(e) => {
@@ -317,16 +306,12 @@ const CustomMultiSelect = (props = {}) => {
                 setMenuOpen(false);
               }}
             >
-                            <span className={classes.plusIcon}>+</span>         
-                  <span className={classes.createRoleText}>Create Role</span>   
-                     {" "}
+              <span className={classes.plusIcon}>+</span>
+              <span className={classes.createRoleText}>Create Role</span>
             </button>
-                     {" "}
           </MenuItem>
         )}
-             {" "}
       </Select>
-         {" "}
     </div>
   );
 };
