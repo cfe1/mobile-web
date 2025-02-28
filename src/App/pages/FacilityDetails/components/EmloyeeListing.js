@@ -117,7 +117,6 @@ const EmployeeListing = ({ facilityId, getFacilityDetails }) => {
                   className={`${classes.nameAndJobTitle} ${classes.fullName}`}
                 >
                   <div className={classes.fullName}>
-                    {" "}
                     {`+ ${EmployeeCount - 12} More`}
                   </div>
                 </div>

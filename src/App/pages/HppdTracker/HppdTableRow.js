@@ -11,14 +11,16 @@ import {
   TextField,
   Popover,
   Button,
-  Tooltip
+  Tooltip,
 } from "@material-ui/core";
+import moment from "moment";
 import { makeStyles } from "@material-ui/core/styles";
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from "@material-ui/icons/Add";
 import ArrowUpward from "../../assets/icons/arrowopen.svg";
 import ArrowDownward from "../../assets/icons/arrowclose.svg";
 import TickCircleGreen from "../../assets/icons/tickCircleGreen.svg";
 import AddCensus from "./AddCensus";
+import AddTarget from "./AddTargetRow";
 import HppdRowCalculation from "./HppdRowCalculation";
 import { API, ENDPOINTS } from "api/apiService";
 import { LinearProgressBar, Loader, Toast } from "App/components";
@@ -57,8 +59,8 @@ const useStyles = makeStyles((theme) => ({
       position: "absolute",
       top: "50%",
       right: "12px",
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   },
   rowellipses: {
     cursor: "pointer",
@@ -67,17 +69,17 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
     display: "block", // Required for ellipsis effect
-    paddingRight: "22px"
+    paddingRight: "22px",
   },
   expandStyles: {
-    background: "#F3F4F7"
+    background: "#F3F4F7",
   },
   expandButton: {
-    backgroundColor: "#F3F4F7"
+    backgroundColor: "#F3F4F7",
   },
   fullWidthCell: {
     padding: "20px",
-    width: "100%"
+    width: "100%",
   },
   customButton: {
     background: "#FFFFFF",
@@ -138,8 +140,7 @@ const useStyles = makeStyles((theme) => ({
     border: `1px solid ${theme.palette.secondary.gray300}`,
   },
   popoverHr: {
-    borderBottom: '1px solid #F3F4F7',
-    // padding: '4px',
+    borderBottom: "1px solid #F3F4F7", // padding: '4px',
   },
   popMain: {
     padding: "12px",
@@ -148,18 +149,16 @@ const useStyles = makeStyles((theme) => ({
     gap: "8px",
   },
   input: {
-    width: "auto",
-    // marginBottom: "7px",
-    // marginTop: "7px",
+    width: "auto", // marginBottom: "7px", // marginTop: "7px",
     "& .MuiInputBase-input": {
       fontSize: "14px !important",
       padding: "8px !important",
     },
   },
   inputMain: {
-    gap: '8px',
-    display: 'flex',
-    flexDirection: 'column',
+    gap: "8px",
+    display: "flex",
+    flexDirection: "column",
   },
 }));
 const HppdTableRow = ({
@@ -175,13 +174,15 @@ const HppdTableRow = ({
   HppdJobTitleData = [],
   HandleChangeTarget,
   onHandleKeyJob,
-  setjobTitleSelectedValues
+  setjobTitleSelectedValues,
 }) => {
   const classes = useStyles();
   const cellRef = useRef(null);
   const [isOverflow, setIsOverflow] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [censusType, setCensusType] = useState("");
+  const [openTargetModal, setTargetOpenModal] = useState(false);
+  const [targetType, setTargetType] = useState("");
   const [censusFacilityId, setFacilityId] = useState("");
   const [anchorEl, setAnchorEl] = useState(null); // To control the visibility of Popover
   const [anchorElJob, setAnchorElJob] = useState(null);
@@ -200,30 +201,35 @@ const HppdTableRow = ({
 
   const [loading, setLoading] = useState(false);
   const [loadingTarget, setLoadingTarget] = useState(false);
-  const [loadingCensus, setLoadingCensus] = useState(false);
+  const [loadingCensus, setLoadingCensus] = useState(false); // for week and month
 
-  // for week and month
   const handleCensusClick = (type, facilityId) => {
     setCensusType(type);
     setFacilityId(facilityId);
     setOpenModal(true);
-  };
+  }; // for week and month
 
-  // for week and month
   const handleCloseModal = () => {
     setCensusType("");
+    setTargetType("");
     setFacilityId("");
     setOpenModal(false);
+    setTargetOpenModal(false);
   };
 
-  const handleTargetClick = (event, target, facilityId) => {
+  const handleTargetClick = (event, target, facilityId, type) => {
+    setTargetType(type);
     setTarget(target);
     setInitialTarget(target);
     setFacilityId(facilityId);
-    setAnchorEl(event.currentTarget);
-  };
 
-  // Close popover
+    if (type === "week" || type === "month") {
+      setTargetOpenModal(true);
+    } else {
+      setAnchorEl(event.currentTarget);
+    }
+  }; // Close popover
+
   const handleTargetClose = () => {
     setTarget("");
     setTargetJob("");
@@ -231,15 +237,13 @@ const HppdTableRow = ({
     setFacilityId("");
     setAnchorEl(null);
     setAnchorElJob(null);
-  };
+  }; // Handle input change
 
-  // Handle input change
   const handleTargetChange = (e) => {
     setTarget(e.target.value);
     setTargetJob(e.target.value);
-  };
+  }; // Handle confirm action
 
-  // Handle confirm action
   const handleTargetConfirm = () => {
     if (initialTarget == target) {
       handleTargetClose();
@@ -248,8 +252,13 @@ const HppdTableRow = ({
 
     const finalData = {
       department: department,
-      facility: censusFacilityId, // Replace with actual facility_id
-      target,
+      facility: censusFacilityId,
+      data: [
+        {
+          date: moment().format("YYYY-MM-DD"),
+          target: target === "" ? 0 : target,
+        },
+      ],
     };
 
     getTargetUpdate(finalData);
@@ -287,9 +296,8 @@ const HppdTableRow = ({
   const fetchCensusData = async (facilityId) => {
     try {
       setLoadingCensus(true);
-      setFacilityId(facilityId);
+      setFacilityId(facilityId); // Calculate yesterday's and today's dates
 
-      // Calculate yesterday's and today's dates
       const end_date = new Date().toISOString().split("T")[0];
       const start_date = new Date(new Date().setDate(new Date().getDate() - 1))
         .toISOString()
@@ -320,35 +328,31 @@ const HppdTableRow = ({
         });
       }
     } catch (e) {
+      console.log(e);
       Toast.showErrorToast(e.data?.error?.message[0] || "An error occurred");
     } finally {
       setLoadingCensus(false);
     }
-  };
+  }; // input change for today's census
 
-  // input change for today's census
   const handleTodaysChange = (e) => {
     setTodaysCensus(e.target.value);
-  };
+  }; // input change for yesterday's census
 
-  // input change for yesterday's census
   const handleYesterdaysChange = (e) => {
     setYesterdayCensus(e.target.value);
-  };
+  }; // census open popover
 
-  // census open popover
   const handleTodaysCensusClick = (event, facilityId) => {
     setAnchorElTodayCensus(event.currentTarget);
     fetchCensusData(facilityId);
     setOpenTodayCensus(true);
-  };
+  }; // census close popover
 
-  // census close popover
   const handleTodayCensusClose = () => {
     setOpenTodayCensus(false);
-  };
+  }; // Census confirm
 
-  // Census confirm
   const handleDayCensusConfirm = () => {
     const changedData = [];
     const end_date = new Date().toISOString().split("T")[0];
@@ -404,7 +408,6 @@ const HppdTableRow = ({
   return (
     <>
       {loading && <LinearProgressBar belowHeader />}
-
       <TableRow key={row.id}>
         {/* <TableCell className={classes.rowHeader}>{row.name}</TableCell> */}
         <TableCell className={classes.rowHeader}>
@@ -414,12 +417,16 @@ const HppdTableRow = ({
             </div>
           </Tooltip>
           <img
-            onClick={() => setExpandedRow((state) => {
-              if (state === row.id) return null;
-              getJobTitleTrack(row.id);
-              return row.id;
-            })}
-            src={expandedRow !== row.id ? ArrowUpward : ArrowDownward} alt="" />
+            onClick={() =>
+              setExpandedRow((state) => {
+                if (state === row.id) return null;
+                getJobTitleTrack(row.id);
+                return row.id;
+              })
+            }
+            src={expandedRow !== row.id ? ArrowUpward : ArrowDownward}
+            alt=""
+          />
         </TableCell>
         {/* Today's Data */}
         <HppdRowCalculation
@@ -452,7 +459,8 @@ const HppdTableRow = ({
             handleTargetClick(
               event,
               row.time_range_data.last_15_days.target,
-              row.id
+              row.id,
+              "week"
             )
           }
           type="week"
@@ -472,39 +480,48 @@ const HppdTableRow = ({
             handleTargetClick(
               event,
               row.time_range_data.days_15_30.target,
-              row.id
+              row.id,
+              "month"
             )
           }
           type="month"
         />
       </TableRow>
-
-      {expandedRow === row.id && HppdJobTitleData &&
+      {expandedRow === row.id &&
+        HppdJobTitleData &&
         HppdJobTitleData.map((items) => {
           return Object.entries(items.job_title_data).map(([key, jobInfo]) => {
             if (key !== "target_hppd") {
               setTargetValue(jobInfo?.time_range_data?.today?.target ?? "");
               return (
-                <TableRow className={classes.expandStyles} >
-                  <TableCell onClick={() => {
-                    const formattedArray = jobInfo?.job_title?.map(([job_title_id, job_title]) => ({
-                      job_title,
-                      job_title_id,
-                      isdisabled: false
-                    }));
-                    onHandleKeyJob(key);
-                    setjobTitleSelectedValues(formattedArray)
-                    handleNewButton(row.id, "patch");
-                  }} className={classes.rowHeader}>
+                <TableRow className={classes.expandStyles}>
+                  <TableCell
+                    onClick={() => {
+                      const formattedArray = jobInfo?.job_title?.map(
+                        ([job_title_id, job_title]) => ({
+                          job_title,
+                          job_title_id,
+                          isdisabled: false,
+                        })
+                      );
+                      onHandleKeyJob(key);
+                      setjobTitleSelectedValues(formattedArray);
+                      handleNewButton(row.id, "patch");
+                    }}
+                    className={classes.rowHeader}
+                  >
                     <Tooltip title={isOverflow ? items.name : ""} arrow>
                       <div ref={cellRef} className={classes.rowellipses}>
-                        {jobInfo.job_title.map(job => job[2]).join(", ")}
+                        {jobInfo.job_title.map((job) => job[2]).join(", ")}
                       </div>
                     </Tooltip>
                   </TableCell>
                   {/* Today's Data */}
                   <HppdRowCalculation
-                    HppdJobTitleData={Number(row.time_range_data.today.target) / Number(Object.entries(items.job_title_data)?.length - 1)}
+                    HppdJobTitleData={
+                      Number(row.time_range_data.today.target) /
+                      Number(Object.entries(items.job_title_data)?.length - 1)
+                    }
                     key={`${items.id}-today`}
                     firstData={{
                       name: items.name,
@@ -517,17 +534,24 @@ const HppdTableRow = ({
                       // handleTodaysCensusClick(event, items.id)
                     }}
                     onTargetClick={(event) => {
-                      const jobTitleIds = jobInfo?.job_title?.map(job => job[0]);
-                      setjobTitileIds(jobTitleIds ?? [])
+                      const jobTitleIds = jobInfo?.job_title?.map(
+                        (job) => job[0]
+                      );
+                      setjobTitileIds(jobTitleIds ?? []);
                       setAnchorElJob(event.currentTarget);
-                      setTargetJob(jobInfo?.time_range_data?.today?.target ?? "")
+                      setTargetJob(
+                        jobInfo?.time_range_data?.today?.target ?? ""
+                      );
                       setInitialTarget(jobInfo?.time_range_data?.today?.target);
                     }}
                     type="day"
                   />
                   {/* 15 Days Data */}
                   <HppdRowCalculation
-                    HppdJobTitleData={Number(row.time_range_data.last_15_days.target) / Number(Object.entries(items.job_title_data)?.length - 1)}
+                    HppdJobTitleData={
+                      Number(row.time_range_data.last_15_days.target) /
+                      Number(Object.entries(items.job_title_data)?.length - 1)
+                    }
                     key={`${items.id}-15-days`}
                     firstData={{
                       name: items.name,
@@ -540,17 +564,26 @@ const HppdTableRow = ({
                       // handleCensusClick("week", items.id)
                     }}
                     onTargetClick={(event) => {
-                      const jobTitleIds = jobInfo?.job_title?.map(job => job[0]);
-                      setjobTitileIds(jobTitleIds ?? [])
+                      const jobTitleIds = jobInfo?.job_title?.map(
+                        (job) => job[0]
+                      );
+                      setjobTitileIds(jobTitleIds ?? []);
                       setAnchorElJob(event.currentTarget);
-                      setTargetJob(jobInfo.time_range_data.last_15_days.target ?? "")
-                      setInitialTarget(jobInfo?.time_range_data?.last_15_days?.target);
+                      setTargetJob(
+                        jobInfo.time_range_data.last_15_days.target ?? ""
+                      );
+                      setInitialTarget(
+                        jobInfo?.time_range_data?.last_15_days?.target
+                      );
                     }}
                     type="week"
                   />
                   {/* 30 Days Data */}
                   <HppdRowCalculation
-                    HppdJobTitleData={Number(row.time_range_data.last_30_days.target) / Number(Object.entries(items.job_title_data)?.length - 1)}
+                    HppdJobTitleData={
+                      Number(row.time_range_data.last_30_days.target) /
+                      Number(Object.entries(items.job_title_data)?.length - 1)
+                    }
                     key={`${items.id}-30-days`}
                     firstData={{
                       name: items.name,
@@ -563,47 +596,58 @@ const HppdTableRow = ({
                       // handleCensusClick("month", items.id)
                     }}
                     onTargetClick={(event) => {
-                      const jobTitleIds = jobInfo?.job_title?.map(job => job[0]);
-                      setjobTitileIds(jobTitleIds ?? [])
+                      const jobTitleIds = jobInfo?.job_title?.map(
+                        (job) => job[0]
+                      );
+                      setjobTitileIds(jobTitleIds ?? []);
                       setAnchorElJob(event.currentTarget);
-                      setTargetJob(jobInfo.time_range_data.days_15_30.target ?? "")
-                      setInitialTarget(jobInfo?.time_range_data?.days_15_30?.target);
-
+                      setTargetJob(
+                        jobInfo.time_range_data.days_15_30.target ?? ""
+                      );
+                      setInitialTarget(
+                        jobInfo?.time_range_data?.days_15_30?.target
+                      );
                     }}
                     type="month"
                   />
-                </TableRow >
-              )
+                </TableRow>
+              );
             }
-          })
-
-        })
-      }
+          });
+        })}
       {expandedRow === row.id && (
-          <TableRow className={classes.expandButton}>
-            <TableCell colSpan={18} className={classes.fullWidthCell}>
-              <Button
-                variant="outlined"
-                startIcon={<AddIcon className={classes.customIcon} />}
-                className={classes.customButton}
-                onClick={() => handleNewButton(row.id, "post")}
-              >
-                Add New
-              </Button>
-            </TableCell>
-          </TableRow>
-        )}
-
+        <TableRow className={classes.expandButton}>
+          <TableCell colSpan={18} className={classes.fullWidthCell}>
+            <Button
+              variant="outlined"
+              startIcon={<AddIcon className={classes.customIcon} />}
+              className={classes.customButton}
+              onClick={() => handleNewButton(row.id, "post")}
+            >
+              Add New
+            </Button>
+          </TableCell>
+        </TableRow>
+      )}
       {/* add update census week and month */}
       {openModal && (
-          <AddCensus
-            onClose={handleCloseModal}
-            censusType={censusType}
-            censusFacilityId={censusFacilityId}
-            updateRowData={updateRowData}
-          />
-        )}
-
+        <AddCensus
+          onClose={handleCloseModal}
+          censusType={censusType}
+          censusFacilityId={censusFacilityId}
+          updateRowData={updateRowData}
+        />
+      )}
+      {openTargetModal && (
+        <AddTarget
+          onClose={handleCloseModal}
+          TargetType={targetType}
+          targetFacilityId={censusFacilityId}
+          updateRowData={updateRowData}
+          department={department}
+          getJobTitleTrack={getJobTitleTrack}
+        />
+      )}
       {/* target popover */}
       <Popover
         open={openTarget}
@@ -625,7 +669,6 @@ const HppdTableRow = ({
         }}
       >
         {loadingTarget && <LinearProgressBar />}
-
         <div className={classes.popMain}>
           <div className={classes.popoverTitle}>Target</div>
           <div>
@@ -661,7 +704,6 @@ const HppdTableRow = ({
           </div>
         </div>
       </Popover>
-
       {/* Target popover for JobTitles */}
       <Popover
         open={openTargetJob}
@@ -683,7 +725,6 @@ const HppdTableRow = ({
         }}
       >
         {loadingTarget && <LinearProgressBar />}
-
         <div className={classes.popMain}>
           <div className={classes.popoverTitle}>Target</div>
           <div>
@@ -719,7 +760,6 @@ const HppdTableRow = ({
           </div>
         </div>
       </Popover>
-
       {/* census popover */}
       <Popover
         open={openTodayCensus}
@@ -741,7 +781,6 @@ const HppdTableRow = ({
         }}
       >
         {loadingCensus && <LinearProgressBar />}
-
         <div className={classes.popMain}>
           <div className={classes.popoverTitle}>Census</div>
           <div className={classes.popoverHr}></div>
@@ -795,7 +834,6 @@ const HppdTableRow = ({
           </div>
         </div>
       </Popover>
-
     </>
   );
 };

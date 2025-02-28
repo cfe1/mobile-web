@@ -79,7 +79,7 @@ const MultiSelect = ({
             } else {
               return (
                 <span>
-                  {ellipsizeText(selected[0]?.label, 10)}{" "}
+                  {ellipsizeText(selected[0]?.label, 10)}
                   <span>(+ {selected?.length - 1} more)</span>
                 </span>
               );

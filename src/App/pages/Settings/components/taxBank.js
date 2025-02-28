@@ -399,7 +399,6 @@ class TaxBank extends Component {
           {this.state.editMode === false && taxBank !== null && (
             <>
               <Grid item xs={12}>
-                {" "}
                 <div className={classes.head}>Tax Bank Information</div>
               </Grid>
               <Grid item xs={4}>
@@ -471,7 +470,6 @@ class TaxBank extends Component {
           {clearingAccount !== null && (
             <>
               <Grid item xs={12}>
-                {" "}
                 <div className={classes.head}>Clearing Account Information</div>
               </Grid>
 
@@ -544,7 +542,6 @@ class TaxBank extends Component {
           {overHeadAccount !== null && (
             <>
               <Grid item xs={12}>
-                {" "}
                 <div className={classes.head}>Overhead Account Information</div>
               </Grid>
 
@@ -701,18 +698,19 @@ class TaxBank extends Component {
               Add
             </PrimaryButton>
           )}
-          {taxBank !== null && taxBank.status === "Verification in progress" && (
-            <SecondaryButton
-              variant="contained"
-              type="submit"
-              onClick={() => {
-                this.setState({ bankVerificationOpen: true });
-              }}
-              style={{ width: 208, height: 54, marginRight: 20 }}
-            >
-              Verify
-            </SecondaryButton>
-          )}
+          {taxBank !== null &&
+            taxBank.status === "Verification in progress" && (
+              <SecondaryButton
+                variant="contained"
+                type="submit"
+                onClick={() => {
+                  this.setState({ bankVerificationOpen: true });
+                }}
+                style={{ width: 208, height: 54, marginRight: 20 }}
+              >
+                Verify
+              </SecondaryButton>
+            )}
           {/* {this.state.editMode === false && (
             <PrimaryButton
               variant="contained"

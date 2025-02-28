@@ -338,7 +338,6 @@ const NewDashboard = () => {
     setSelectedFilters(updatedFilters);
     setFacilityTitle(facilityTitle);
     setFacilityId(facilityId);
-    setSearch("");
   };
 
   const onTimelineClick = (row) => {

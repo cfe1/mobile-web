@@ -10,7 +10,14 @@ import Checkbox from "@material-ui/core/Checkbox";
 import CheckIcon from "@material-ui/icons/CheckCircleOutline"; // Outline version
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"; // Filled version
 
-const HppdTableRow = ({ JobTitleArrayMapped, row, setjobTitleSelectedValues, jobTitleSelectedValues, JobTitleArray, methodUpdate }) => {
+const HppdTableRow = ({
+  JobTitleArrayMapped,
+  row,
+  setjobTitleSelectedValues,
+  jobTitleSelectedValues,
+  JobTitleArray,
+  methodUpdate,
+}) => {
   const classes = useStyles();
   const cellRef = useRef(null);
   const [checked, setChecked] = React.useState(false);
@@ -18,7 +25,6 @@ const HppdTableRow = ({ JobTitleArrayMapped, row, setjobTitleSelectedValues, job
 
   const fetchCensusData = async (facilityId) => {
     try {
-
       // Calculate yesterday's and today's dates
       const end_date = new Date().toISOString().split("T")[0];
       const start_date = new Date(new Date().setDate(new Date().getDate() - 1))
@@ -45,9 +51,8 @@ const HppdTableRow = ({ JobTitleArrayMapped, row, setjobTitleSelectedValues, job
     } catch (e) {
       Toast.showErrorToast(e.data?.error?.message[0] || "An error occurred");
     }
-  };
+  }; // census open popover
 
-  // census open popover
   const handleTodaysCensusClick = (event, facilityId) => {
     fetchCensusData(facilityId);
   };
@@ -59,18 +64,17 @@ const HppdTableRow = ({ JobTitleArrayMapped, row, setjobTitleSelectedValues, job
   }, [row.name]);
 
   const handleCheckboxChange = (e, job_title, job_title_id) => {
-    setjobTitleSelectedValues(prevState => {
+    setjobTitleSelectedValues((prevState) => {
       if (e.target.checked) {
-        setChecked(e.target.checked)
-        // Check for duplicate before adding
-        if (!prevState.some(item => item.job_title_id === job_title_id)) {
+        setChecked(e.target.checked); // Check for duplicate before adding
+        if (!prevState.some((item) => item.job_title_id === job_title_id)) {
           return [...prevState, { job_title, job_title_id, isdisabled: false }];
         }
         return prevState;
       } else {
         // Remove item if unchecked
-        setChecked(e.target.checked)
-        return prevState.filter(item => item.job_title_id !== job_title_id);
+        setChecked(e.target.checked);
+        return prevState.filter((item) => item.job_title_id !== job_title_id);
       }
     });
   };
@@ -80,12 +84,12 @@ const HppdTableRow = ({ JobTitleArrayMapped, row, setjobTitleSelectedValues, job
   useEffect(() => {
     if (methodUpdate === "patch") {
       if (JobTitleArrayMapped.includes(row?.job_title_id ?? "")) {
-        setChecked(true)
+        setChecked(true);
         setIsDisabled(false);
       }
     } else {
       if (JobTitleArray.includes(row?.job_title_id ?? "")) {
-        setChecked(false)
+        setChecked(false);
         setIsDisabled(true);
       }
     }
@@ -94,39 +98,62 @@ const HppdTableRow = ({ JobTitleArrayMapped, row, setjobTitleSelectedValues, job
   return (
     <>
       <TableRow key={row.id} style={isDisabled ? { Opacity: "0.5" } : {}}>
-        <TableCell className={classes.rowHeaderFirst} style={isDisabled ? { pointerEvents: "none", background: "#afa3a324" } : {}}>
+        <TableCell
+          className={classes.rowHeaderFirst}
+          style={
+            isDisabled ? { pointerEvents: "none", background: "#afa3a324" } : {}
+          }
+        >
           <Checkbox
             classes={{ root: classes.checkboxRoot }}
             icon={<span className={classes.iconSizeuncheck} />} // Unchecked
-            checkedIcon={<CheckCircleIcon className={classes.iconSizeChecked} />} // Checked
+            checkedIcon={
+              <CheckCircleIcon className={classes.iconSizeChecked} />
+            } // Checked
             checked={checked}
-            onChange={(e) => isDisabled ? {} : handleCheckboxChange(e, row?.job_title ?? "", row?.job_title_id ?? "")}
+            onChange={(e) =>
+              isDisabled
+                ? {}
+                : handleCheckboxChange(
+                    e,
+                    row?.job_title ?? "",
+                    row?.job_title_id ?? ""
+                  )
+            }
           />
         </TableCell>
-        <TableCell className={!isDisabled ? classes.rowHeaderJobTitledisabled : classes.rowHeaderJobTitle}>
-          {isDisabled
-            ? <div className={classes.affecting}>
+        <TableCell
+          className={
+            !isDisabled
+              ? classes.rowHeaderJobTitledisabled
+              : classes.rowHeaderJobTitle
+          }
+        >
+          {isDisabled ? (
+            <div className={classes.affecting}>
               <span>{row?.job_title ?? ""}</span>
               <span className={classes.affectinghppd}>Affecting HPPD</span>
             </div>
-            : <Tooltip title={isOverflow ? row.name : ""} arrow>
+          ) : (
+            <Tooltip title={isOverflow ? row.name : ""} arrow>
               <div ref={cellRef} className={classes.rowellipses}>
                 {row?.job_title ?? ""}
               </div>
-            </Tooltip>}
+            </Tooltip>
+          )}
         </TableCell>
         {/* Today's Data */}
         <HppdRowCalculationModal
           key={`${row.id}-today`}
           firstData={{
             name: row.name,
-            ...row?.time_range_data?.today ?? {},
+            ...(row?.time_range_data?.today ?? {}),
           }}
           secondData={{
-            ...row?.time_range_data?.yesterday ?? {},
+            ...(row?.time_range_data?.yesterday ?? {}),
           }}
           onCensusClick={(event) => handleTodaysCensusClick(event, row.id)}
-          onTargetClick={(event) => { }}
+          onTargetClick={(event) => {}}
           type="day"
         />
         {/* 15 Days Data */}
@@ -134,13 +161,13 @@ const HppdTableRow = ({ JobTitleArrayMapped, row, setjobTitleSelectedValues, job
           key={`${row.id}-15-days`}
           firstData={{
             name: row.name,
-            ...row?.time_range_data?.last_15_days ?? {},
+            ...(row?.time_range_data?.last_15_days ?? {}),
           }}
           secondData={{
-            ...row?.time_range_data?.days_15_30 ?? {},
+            ...(row?.time_range_data?.days_15_30 ?? {}),
           }}
-          onCensusClick={() => { }}
-          onTargetClick={(event) => { }}
+          onCensusClick={() => {}}
+          onTargetClick={(event) => {}}
           type="week"
         />
         {/* 30 Days Data */}
@@ -148,13 +175,13 @@ const HppdTableRow = ({ JobTitleArrayMapped, row, setjobTitleSelectedValues, job
           key={`${row.id}-30-days`}
           firstData={{
             name: row.name,
-            ...row?.time_range_data?.last_30_days ?? {},
+            ...(row?.time_range_data?.last_30_days ?? {}),
           }}
           secondData={{
-            ...row?.time_range_data?.days_30_60 ?? {},
+            ...(row?.time_range_data?.days_30_60 ?? {}),
           }}
-          onCensusClick={() => { }}
-          onTargetClick={(event) => { }}
+          onCensusClick={() => {}}
+          onTargetClick={(event) => {}}
           type="month"
         />
       </TableRow>
@@ -177,7 +204,7 @@ const useStyles = makeStyles((theme) => ({
     background: "#F3F4F7",
     borderRadius: "50%",
     height: "20px",
-    width: "20px"
+    width: "20px",
   },
   iconSizeChecked: {
     fontSize: "20px", // Adjust icon size
@@ -185,7 +212,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#FF0083",
     borderRadius: "50%",
     height: "20px",
-    width: "20px"
+    width: "20px",
   },
   check: {
     width: "20px",
@@ -197,8 +224,8 @@ const useStyles = makeStyles((theme) => ({
     "& img": {
       position: "absolute !important",
       top: "35% !important",
-      right: "5px !important"
-    }
+      right: "5px !important",
+    },
   },
   rowHeaderFirst: {
     // display: "flex",
@@ -222,7 +249,7 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: `1px solid ${theme.palette.secondary.gray300} !important`,
     borderRight: `1px solid ${theme.palette.secondary.gray300}`,
     position: "relative",
-    background: "#F1EEFF"
+    background: "#F1EEFF",
   },
   rowHeaderJobTitledisabled: {
     lineHeight: "15px",
@@ -247,9 +274,8 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "9px",
     fontWeight: 500,
     lineHeight: "11.25px",
-  },
+  }, /////////////////////////
 
-  /////////////////////////
   root: {
     width: "100%",
     overflowX: "auto",
@@ -282,8 +308,8 @@ const useStyles = makeStyles((theme) => ({
       position: "absolute",
       top: "50%",
       right: "12px",
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   },
   rowellipses: {
     cursor: "pointer",
@@ -292,17 +318,17 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
     display: "block", // Required for ellipsis effect
-    paddingRight: "22px"
+    paddingRight: "22px",
   },
   expandStyles: {
-    background: "#F3F4F7"
+    background: "#F3F4F7",
   },
   expandButton: {
-    backgroundColor: "#F3F4F7"
+    backgroundColor: "#F3F4F7",
   },
   fullWidthCell: {
     padding: "20px",
-    width: "100%"
+    width: "100%",
   },
   customButton: {
     background: "#FFFFFF",
@@ -363,8 +389,7 @@ const useStyles = makeStyles((theme) => ({
     border: `1px solid ${theme.palette.secondary.gray300}`,
   },
   popoverHr: {
-    borderBottom: '1px solid #F3F4F7',
-    // padding: '4px',
+    borderBottom: "1px solid #F3F4F7", // padding: '4px',
   },
   popMain: {
     padding: "12px",
@@ -373,17 +398,15 @@ const useStyles = makeStyles((theme) => ({
     gap: "8px",
   },
   input: {
-    width: "auto",
-    // marginBottom: "7px",
-    // marginTop: "7px",
+    width: "auto", // marginBottom: "7px", // marginTop: "7px",
     "& .MuiInputBase-input": {
       fontSize: "14px !important",
       padding: "8px !important",
     },
   },
   inputMain: {
-    gap: '8px',
-    display: 'flex',
-    flexDirection: 'column',
+    gap: "8px",
+    display: "flex",
+    flexDirection: "column",
   },
 }));

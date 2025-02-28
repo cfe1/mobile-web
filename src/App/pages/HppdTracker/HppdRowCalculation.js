@@ -114,17 +114,15 @@ const HppdRowCalculation = ({
       census: data.census !== null ? data.census / divisor : null,
       target: data.target !== null ? data.target / divisor : null,
     };
-  };
+  }; // Process firstData and secondData
 
-  // Process firstData and secondData
   const processedFirstData = processData(firstData, type);
   const processedSecondData = processData(secondData, type);
 
   function removeTrailingZero(num) {
     // Convert the number to a string
-    let numStr = num.toString();
+    let numStr = num.toString(); // Check if the number contains a decimal point
 
-    // Check if the number contains a decimal point
     if (numStr.includes(".")) {
       // Remove trailing zeros and the decimal point if necessary
       numStr = numStr.replace(/(\.\d*?[1-9])0+|(\.0+)$/, "$1");
@@ -142,16 +140,13 @@ const HppdRowCalculation = ({
 
   const formatHours = (hours) => {
     return hours ? `${removeTrailingZero(hours)} Hrs` : "0 Hrs";
-  };
-
-  // Census Percentage
+  }; // Census Percentage
 
   const censusPercentage = calculatePercentage(
     processedFirstData.census,
     processedSecondData.census
-  );
+  ); // Scheduled HPPD and Percentage
 
-  // Scheduled HPPD and Percentage
   const scheduledHPPD = calculateHPPD(
     processedFirstData.scheduled_hours,
     processedFirstData.census
@@ -163,9 +158,8 @@ const HppdRowCalculation = ({
   const scheduledPercentage = calculatePercentage(
     scheduledHPPD,
     scheduledYesterdayHPPD
-  );
+  ); // Actual HPPD and Percentage
 
-  // Actual HPPD and Percentage
   const actualHPPD = calculateHPPD(
     processedFirstData.actual_hours,
     processedFirstData.census
@@ -174,15 +168,13 @@ const HppdRowCalculation = ({
     processedSecondData.actual_hours,
     processedSecondData.census
   );
-  const actualPercentage = calculatePercentage(actualHPPD, actualYesterdayHPPD);
+  const actualPercentage = calculatePercentage(actualHPPD, actualYesterdayHPPD); // Target HPPD, Target Hours, and Target Percentage
 
-  // Target HPPD, Target Hours, and Target Percentage
   const targetHPPD = processedFirstData.target || 0;
   const targetHours = targetHPPD * processedFirstData.census;
   const targetYesterdayHPPD = processedSecondData.target || 0;
-  const targetPercentage = calculatePercentage(targetHPPD, targetYesterdayHPPD);
+  const targetPercentage = calculatePercentage(targetHPPD, targetYesterdayHPPD); // Variance HPPD and Hours
 
-  // Variance HPPD and Hours
   const varianceHPPD = scheduledHPPD - targetHPPD;
   const varianceHours = processedFirstData.scheduled_hours - targetHours;
   const varianceWithinThreshold =
@@ -209,7 +201,6 @@ const HppdRowCalculation = ({
       >
         {HppdJobTitleData === "" && (
           <div onClick={onCensusClick} className={`${classes.underline}`}>
-            {" "}
             {processedFirstData.census.toFixed(1)}
           </div>
         )}
@@ -223,8 +214,7 @@ const HppdRowCalculation = ({
                   : classes.positive
               }
             >
-              {/* ArrowUpwardred */}
-              {/* ArrowDownwardgreen */}
+              {/* ArrowUpwardred */} {/* ArrowDownwardgreen */}
               {parseFloat(censusPercentage) > 0 ? (
                 <img src={ArrowUpwardred} alt="uparrow" />
               ) : (
@@ -234,7 +224,6 @@ const HppdRowCalculation = ({
             </div>
           )}
       </TableCell>
-
       {/* Third cell: Scheduled HPPD */}
       <TableCell
         className={classes.cellInactive}
@@ -244,7 +233,7 @@ const HppdRowCalculation = ({
         }}
       >
         <span style={{ color: scheduledHPPDColor }}>
-          {removeTrailingZero(scheduledHPPD)}{" "}
+          {removeTrailingZero(scheduledHPPD)}
         </span>
         {parseFloat(scheduledPercentage) != 0 && (
           <span
@@ -278,7 +267,6 @@ const HppdRowCalculation = ({
           {formatHours(processedFirstData.scheduled_hours)}
         </div>
       </TableCell>
-
       {/* Fourth cell: Actual HPPD */}
       <TableCell
         className={classes.cellInactive}
@@ -288,7 +276,7 @@ const HppdRowCalculation = ({
         }}
       >
         <span style={{ color: actualHPPDColor }}>
-          {removeTrailingZero(actualHPPD)}{" "}
+          {removeTrailingZero(actualHPPD)}
         </span>
         {parseFloat(actualPercentage) != 0 && (
           <span
@@ -322,14 +310,14 @@ const HppdRowCalculation = ({
           {formatHours(processedFirstData.actual_hours)}
         </div>
       </TableCell>
-
       {/* Fifth cell: Target HPPD */}
       <TableCell className={`${classes.cell} ${classes.targetCell} `}>
         <span onClick={onTargetClick} className={classes.underline}>
-          {/* {removeTrailingZero(targetHPPD)}{" "} */}
+          {/* {removeTrailingZero(targetHPPD)} */}
           {HppdJobTitleData
             ? parseFloat(firstData.target.toFixed(2))
-            : firstData.target || targetHPPD}
+            : // : firstData.target || targetHPPD}
+              targetHPPD.toFixed(2)}
           {/* {targetHPPD} */}
         </span>
         {parseFloat(targetPercentage) != 0 && (
@@ -366,17 +354,13 @@ const HppdRowCalculation = ({
           ),
         }}
       >
-        <span
-          // className={` ${varianceHPPD > 0 ? classes.positive : classes.negative
-          //   }`}
+        <span // className={` ${varianceHPPD > 0 ? classes.positive : classes.negative //  }`}
           style={{ color: colorValue }}
         >
-          {" "}
-          {removeTrailingZero(varianceHPPD)}{" "}
+          {removeTrailingZero(varianceHPPD)}
         </span>
-
         <div className={classes.inactiveHours} style={{ color: colorValue }}>
-          {formatHours(varianceHours)}
+          {formatHours(Math.abs(varianceHours))}
         </div>
       </TableCell>
     </>

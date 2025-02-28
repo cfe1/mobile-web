@@ -75,7 +75,7 @@ const NurseCard = (props) => {
                 <Typography className={classes.credText}>
                   <div className={classes.textC} onClick={handleCredentials}>
                     Credentials Incomplete
-                  </div>{" "}
+                  </div>
                 </Typography>
               </div>
             )}
@@ -88,7 +88,7 @@ const NurseCard = (props) => {
                     onClick={() => handleCredentials("payment")}
                   >
                     Monthly rate not set.
-                  </div>{" "}
+                  </div>
                 </Typography>
               </div>
             )}

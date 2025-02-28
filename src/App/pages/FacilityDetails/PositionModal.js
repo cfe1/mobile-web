@@ -142,7 +142,9 @@ export const PositionModal = ({ facility_id, startDate, onClose }) => {
             <Grid item className={classes.flex}>
               {width > breakPoint && getSearchWeekFilter()}
               <PinkPrimaryButton
-                className={`${classes.assignBtn} ${hasDayPassed(date)?classes.disabled:""}  matrix-btn`}
+                className={`${classes.assignBtn} ${
+                  hasDayPassed(date) ? classes.disabled : ""
+                }  matrix-btn`}
                 onClick={() => {
                   handleOpenAssignEmployee();
                 }}
@@ -155,7 +157,7 @@ export const PositionModal = ({ facility_id, startDate, onClose }) => {
           </Grid>
           {width <= breakPoint && (
             <Grid container justify="flex-end">
-              {getSearchWeekFilter()}{" "}
+              {getSearchWeekFilter()}
             </Grid>
           )}
           <StatsAndProgressBar
@@ -165,7 +167,7 @@ export const PositionModal = ({ facility_id, startDate, onClose }) => {
             facility_id={facility_id}
             forceRender={forceRender}
             job_title_id={jobTitles[jobTitleSelectedIndex]?.id || ""}
-            />
+          />
           {facility_id && (
             <PositionModalTable
               facility_id={facility_id}
@@ -184,7 +186,7 @@ export const PositionModal = ({ facility_id, startDate, onClose }) => {
               date={date}
               facility_id={facility_id}
               handleForceRender={handleForceRender}
-              jobTitleIndex = {jobTitleSelectedIndex}
+              jobTitleIndex={jobTitleSelectedIndex}
               jobTitles={jobTitles}
             />
           )}
@@ -229,7 +231,7 @@ const useStyles = makeStyles({
   },
   assignBtn: {
     height: 44,
-    padding:0
+    padding: 0,
   },
   grayBg: {
     backgroundColor: "#F3F4F7",
@@ -239,7 +241,7 @@ const useStyles = makeStyles({
     height: 50,
     width: 200,
   },
-  disabled:{
-    backgroundColor:'lightgray !important'
-  }
+  disabled: {
+    backgroundColor: "lightgray !important",
+  },
 });
