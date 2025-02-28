@@ -9,6 +9,11 @@ const menuItems = [
     title: "HPPD Tracker",
     link: "/hppd-tracker",
   },
+  {
+    id: "CODE_SUB_ADMINS",
+    title: "Sub Admins",
+    link: "/sub-admins",
+  },
 ];
 
 export default menuItems;

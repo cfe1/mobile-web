@@ -160,10 +160,10 @@ const FacilityDetails = (props) => {
             <div className="module-title">Dashboard</div>
             <div className="module-breadcrumb">
               <Breadcrumbs separator="›" aria-label="breadcrumb">
-                Route{" "}
+                Route
                 <Link color="inherit" component={Route} to={"/dashboard"}>
                   Agalia
-                </Link>{" "}
+                </Link>
                 <Link color="inherit" component={Route} to={"/dashboard"}>
                   Dashboard
                 </Link>
@@ -208,7 +208,7 @@ const FacilityDetails = (props) => {
       <Paper className={classes.paddingBottom}>
         <Grid container className={`${classes.whiteBg} ${classes.tableDiv}`}>
           <Grid container justify="space-between">
-            <Grid className={`${classes.shiftOpeningsTxt}`}>Details</Grid>{" "}
+            <Grid className={`${classes.shiftOpeningsTxt}`}>Details</Grid>
             <div className="mrs">
               <DailyWeeklyFilter
                 setDate={setDate}
@@ -233,7 +233,7 @@ const FacilityDetails = (props) => {
             weekStartDate={weekStartDate}
             weekEndDate={weekEndDate}
             handleOpenAssignEmployee={handleOpenAssignEmployee}
-            getFacilityDetails = {getFacilityDetails}
+            getFacilityDetails={getFacilityDetails}
           />
         )}
         {facilityData && (

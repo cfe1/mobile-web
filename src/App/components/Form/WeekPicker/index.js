@@ -198,7 +198,7 @@ class CustomElements extends PureComponent {
                   disableUnderline: true,
                 }}
                 onClose={this.toggleOpen}
-              />{" "}
+              />
             </MuiPickersUtilsProvider>
           </div>
           <div className={classes.calendarDiv}>

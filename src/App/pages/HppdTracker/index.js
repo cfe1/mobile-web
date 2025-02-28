@@ -25,6 +25,7 @@ import SelectFilterHppd from "App/components/Form/SelectFilterHppd";
 import { ENDPOINTS } from "api/apiRoutes";
 import { API } from "api/apiService";
 import queryString from "query-string";
+import UpdateModal from "./ModalComponent/UpdateModal";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,6 +62,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 4,
   },
   headerCell: {
+    width: "200px",
+    lineHeight: "15px",
     fontWeight: "bold",
     borderRight: `1px solid ${theme.palette.secondary.gray300}`,
     borderBottom: `1px solid ${theme.palette.secondary.gray300} !important`,
@@ -74,6 +77,7 @@ const useStyles = makeStyles((theme) => ({
   },
   headerCellMain: {
     fontWeight: 500,
+    lineHeight: "15px",
     fontSize: "12px !important",
     textAlign: "center",
     borderRight: `1px solid ${theme.palette.secondary.gray300}`,
@@ -86,6 +90,7 @@ const useStyles = makeStyles((theme) => ({
   },
   headerCellToday: {
     fontWeight: 600,
+    lineHeight: "15px",
     fontSize: "12px !important",
     textAlign: "center",
     borderRight: `1px solid ${theme.palette.secondary.gray300}`,
@@ -98,6 +103,7 @@ const useStyles = makeStyles((theme) => ({
   },
   headerCell15Days: {
     fontWeight: 600,
+    lineHeight: "15px",
     fontSize: "12px !important",
     textAlign: "center",
     borderRight: `1px solid ${theme.palette.secondary.gray300}`,
@@ -110,6 +116,7 @@ const useStyles = makeStyles((theme) => ({
   },
   headerCell30Days: {
     fontWeight: 600,
+    lineHeight: "15px",
     fontSize: "12px !important",
     textAlign: "center",
     borderBottom: `1px solid ${theme.palette.secondary.gray300} !important`,
@@ -142,6 +149,20 @@ const HppdTracker = () => {
   const [hppdSelection, setHppdSelection] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [expandedRow, setExpandedRow] = useState(null);
+  const [jobTitleSelectedValues, setjobTitleSelectedValues] = useState([]);
+
+  const [modalLoading, setModalLoading] = useState(false);
+  const [jobKey, setjobKey] = useState("");
+  const [methodUpdate, setMethodUpdate] = useState("post");
+  const [faciltyID, setFaciltyID] = useState("");
+  const [isOpenNew, setisOpenNew] = useState(false);
+  const [JobTitleArray, setJobTitleArray] = useState([]);
+  const [targetvalue, setTargetValue] = useState(0);
+  const [targetHppd, setTargetHppd] = useState("");
+  const [HppdJobTitleData, setHppdJobTitleData] = useState([]);
+  const [hppdDataModal, setHppdDataModal] = useState([]);
+  const [hppdDataPaginationModal, setHppdDataPaginationModal] = useState([]);
 
   useEffect(() => {
     getDepartmentList();
@@ -164,10 +185,14 @@ const HppdTracker = () => {
           value: item.central_department.id,
         }));
         setHppdOptions(options);
-        const nursingOption = options.find(option => option.label === 'Nursing');
+        const nursingOption = options.find(
+          (option) => option.label === "Nursing"
+        );
 
-        const selectedOption = nursingOption ? nursingOption.value : options[0]?.value;
-      
+        const selectedOption = nursingOption
+          ? nursingOption.value
+          : options[0]?.value;
+
         if (selectedOption) {
           setHppdSelection(selectedOption);
           handleHppdSelectionChange(selectedOption);
@@ -176,7 +201,7 @@ const HppdTracker = () => {
     } catch (e) {
       Toast.showErrorToast(e.data?.error?.message[0]);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -248,6 +273,105 @@ const HppdTracker = () => {
     setSearch("");
   };
 
+  const handleNewButton = async (facilityRowId, method) => {
+    setMethodUpdate(method);
+    setisOpenNew(true);
+    getSelectJobTitileModalData(facilityRowId);
+  };
+
+  const getSelectJobTitileModalData = async (
+    facilityRowId,
+    searchText = ""
+  ) => {
+    try {
+      setModalLoading(true);
+      let params = {
+        department_id: hppdSelection,
+        facility: facilityRowId,
+        job_title: searchText, // name: search, // page: currentPage, // page_size: pageSize,
+      };
+
+      if (!searchText || searchText.trim() === "") {
+        delete params.job_title;
+      }
+
+      const urlParams = queryString.stringify(params);
+
+      const endpoint = ENDPOINTS.JOBTITLE_TRACKER_DETAILS(urlParams);
+      const resp = await API.get(endpoint);
+
+      if (resp.success) {
+        setHppdDataModal(Object.values(resp.data?.results[0]?.job_title_data));
+        setHppdDataPaginationModal(resp?.data);
+      } else {
+        Toast.showErrorToast(
+          resp.message || "Failed to fetch tracker details."
+        );
+      }
+    } catch (e) {
+      Toast.showErrorToast(e.data?.error?.message[0] || "An error occurred.");
+    } finally {
+      setModalLoading(false);
+    }
+  };
+
+  const getJobTitleTrack = async (facilityRowId) => {
+    setLoading(true);
+    setFaciltyID(facilityRowId);
+    try {
+      let params = {
+        department_id: hppdSelection,
+        facility: facilityRowId,
+      };
+
+      const urlParams = queryString.stringify(params);
+
+      const endpoint = ENDPOINTS.GET_JOBTITLE_TRACKER_DETAILS(urlParams);
+      const resp = await API.get(endpoint);
+
+      if (resp.success) {
+        if (resp?.data[0]?.job_title_data?.target_hppd)
+          setTargetHppd(resp?.data[0]?.job_title_data?.target_hppd);
+        if (resp?.data) setHppdJobTitleData(resp.data);
+        const jobTitleIds = Object.entries(resp.data[0].job_title_data)
+          .filter(([key]) => key !== "target_hppd")
+          .flatMap(([key, jobData]) => jobData.job_title.map((j) => j[0]));
+
+        setJobTitleArray(jobTitleIds);
+      } else {
+        Toast.showErrorToast(
+          resp.message || "Failed to fetch tracker details."
+        );
+      }
+    } catch (e) {
+      Toast.showErrorToast(e.data?.error?.message[0] || "An error occurred.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const HandleChangeTarget = async (jobs, target) => {
+    const payload = {
+      target_hppd: targetHppd,
+      job_titles: jobs,
+      target: target,
+    };
+    try {
+      const resp = await API.post(ENDPOINTS.UPDATE_JOBS, payload);
+      if (resp?.success) {
+        Toast.showInfoToast(resp?.data?.message);
+        getJobTitleTrack(faciltyID);
+      }
+    } catch (e) {
+      Toast.showErrorToast(e?.data?.error?.message[0]);
+    } finally {
+    }
+  };
+
+  const onHandleKeyJob = async (key) => {
+    setjobKey(key);
+  };
+
   return (
     <>
       {loading && <LinearProgressBar belowHeader />}
@@ -280,11 +404,12 @@ const HppdTracker = () => {
           <div>
             <div>
               <p className={classes.tableHeader}>
-                Showing HPPD Results for{" "}
-                {hppdOptions.find((opt) => opt.value === hppdSelection)?.label || "Department"}
+                Showing HPPD Results for
+                {` ${
+                  hppdOptions.find((opt) => opt.value === hppdSelection)?.label
+                }` || "Department"}
               </p>
             </div>
-
             <TableContainer
               component={Paper}
               className={classes.tableContainer}
@@ -308,8 +433,8 @@ const HppdTracker = () => {
                   <TableRow>
                     {[
                       "Census",
-                      "Avg Scheduled HPPD",
-                      "Avg Actual HPPD",
+                      "Scheduled HPPD",
+                      "Actual HPPD",
                       "Target",
                       "Variance",
                     ]
@@ -340,8 +465,18 @@ const HppdTracker = () => {
                       return (
                         <HppdTableRow
                           row={row}
+                          HppdJobTitleData={HppdJobTitleData}
+                          getJobTitleTrack={getJobTitleTrack}
+                          setTargetValue={setTargetValue}
+                          setTargetHppd={setTargetHppd}
                           updateRowData={updateRowData}
                           department={hppdSelection}
+                          expandedRow={expandedRow}
+                          setExpandedRow={setExpandedRow}
+                          handleNewButton={handleNewButton}
+                          HandleChangeTarget={HandleChangeTarget}
+                          onHandleKeyJob={onHandleKeyJob}
+                          setjobTitleSelectedValues={setjobTitleSelectedValues}
                         />
                       );
                     })}
@@ -353,7 +488,7 @@ const HppdTracker = () => {
                             <div className={classes.noDataFound}>
                               No data found.
                             </div>
-                          }{" "}
+                          }
                         </>
                       </TableCell>
                     </TableRow>
@@ -378,6 +513,26 @@ const HppdTracker = () => {
           </div>
         </div>
       </div>
+      {isOpenNew && (
+        <UpdateModal
+          jobTitleSelectedValues={jobTitleSelectedValues}
+          setjobTitleSelectedValues={setjobTitleSelectedValues}
+          faciltyID={faciltyID}
+          jobKey={jobKey}
+          methodUpdate={methodUpdate}
+          getJobTitleTrack={getJobTitleTrack}
+          targetvalue={targetvalue}
+          targetHppd={targetHppd}
+          modalLoading={modalLoading}
+          hppdDataPaginationModal={hppdDataPaginationModal}
+          JobTitleArray={JobTitleArray}
+          setJobTitleArray={setJobTitleArray}
+          hppdData={hppdDataModal}
+          setHppdDataModal={setHppdDataModal}
+          getSelectJobTitileModalData={getSelectJobTitileModalData}
+          setisOpenNew={setisOpenNew}
+        />
+      )}
     </>
   );
 };

@@ -177,7 +177,6 @@ export class SuccessModal extends Component {
         minDate.push(new Date(item.min_created_at));
       });
     });
-
   };
 
   handleAllSelection = () => {
@@ -225,7 +224,6 @@ export class SuccessModal extends Component {
     let paymentList = [1, 2, 3, 4, 5, 6];
     let selectedPaymentID = {};
     let isAllSelection = false;
- 
 
     let TotalAmount = 0;
     let payArray = [];
@@ -395,10 +393,10 @@ export class SuccessModal extends Component {
             {viewList !== null && (
               <div className="paydetail">
                 <div className="payAmount" style={{ fontWeight: "400" }}>
-                  The payment amount will be debited on{" "}
-                  <b>{moment(payoutDate).format("MMMM DD, yyyy")}</b> and{" "}
+                  The payment amount will be debited on
+                  <b>{moment(payoutDate).format("MMMM DD, yyyy")}</b> and
                   {this.calculateNoOfPayroll()} person will be paid.This payment
-                  is from{" "}
+                  is from
                   <b>
                     {moment(from_date).format("MMMM DD, yyyy") +
                       " to " +
@@ -510,7 +508,7 @@ export class SuccessModal extends Component {
                           <TableCell></TableCell>
                           <TableCell></TableCell>
                           <TableCell className={classes.accountNumber}>
-                            Bank Account No.{" "}
+                            Bank Account No.
                             <div>
                               {facility.account_number
                                 ? facility.account_number
@@ -687,7 +685,7 @@ export class SuccessModal extends Component {
               <div className="modal-heading">{this.props.heading}</div>
               <div className="modal-sub-heading">{this.props.subHeading}</div>
               <div className="modal-cta">
-              
+
               <SecondaryButton
               variant="contained"
               style={{ height: 54, marginRight: 16,display:this.props.hideCancelBtn===true?"none":"block" }}

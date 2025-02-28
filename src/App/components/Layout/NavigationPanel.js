@@ -73,22 +73,20 @@ const ListItem = ({
           }}
           alt="menu items"
         />
-        <div
-          //  onClick={() => onLinkClick()}
+        <div // onClick={() => onLinkClick()}
           className={`${
             isActive
               ? "text-pink p2 p2-content sidebar-text"
               : "text-sidebar-muted p2 p2-content sidebar-text"
           }`}
           style={{
-            textAlign: 'center'
+            textAlign: "center",
           }}
         >
           {id === "CODE_DD" ? (
             <div>
               {title.split(" ")[0]}
-              <br />
-              {title.split(" ").slice(1).join(" ")}
+              <br /> {title.split(" ").slice(1).join(" ")}
             </div>
           ) : (
             title
@@ -103,7 +101,13 @@ const NavigationPanel = (props) => {
   const { anchorEl, handleClose, change, facility, profile } = props || {};
   const classes = useStyles();
   const history = useHistory();
-  const adminArray = ["CODE_BOARD", "settings", "CODE_EMP_ADD", "CODE_HPPD_TRACKER"];
+  const adminArray = [
+    "CODE_BOARD",
+    "settings",
+    "CODE_EMP_ADD",
+    "CODE_HPPD_TRACKER",
+    "CODE_SUB_ADMINS",
+  ];
   const isAdmin = profile?.is_admin;
 
   const open = Boolean(anchorEl);
@@ -220,8 +224,7 @@ const NavigationPanel = (props) => {
           }}
           alt="menu items"
         />
-        <Typography
-          //onClick={() => onLinkClick()}
+        <Typography //onClick={() => onLinkClick()}
           className={
             isActive
               ? "text-accordian-list p2 p2-content sidebar-text"
@@ -295,8 +298,7 @@ const NavigationPanel = (props) => {
         ) : (
           <Accordion
             style={{
-              backgroundColor: "white",
-              //     marginBottom: 20,
+              backgroundColor: "white", //   marginBottom: 20,
               color: "#17174A",
             }}
             defaultExpanded={defaultExpanion}
@@ -348,7 +350,6 @@ const NavigationPanel = (props) => {
                 {item.title}
               </Typography>
             </AccordionSummary>
-
             {item.views &&
               item.views
                 .filter((item) => {
@@ -371,7 +372,6 @@ const NavigationPanel = (props) => {
                     }
                     className={classes.whitebg}
                   >
-                    {" "}
                     <ListItemInternal
                       item={row}
                       index={index + index2}
@@ -386,7 +386,6 @@ const NavigationPanel = (props) => {
                 ))}
           </Accordion>
         )}
-
         <div className="hr1"></div>
       </div>
     );
@@ -432,8 +431,7 @@ const NavigationPanel = (props) => {
     });
 
   return (
-    <Popover
-      //id={id}
+    <Popover //id={id}
       open={open}
       anchorEl={anchorEl}
       onClose={handleClose}
@@ -447,9 +445,7 @@ const NavigationPanel = (props) => {
       }}
     >
       <Grid container className={classes.panel} onMouseLeave={handleClose}>
-        {links1}
-        <div className="hr"></div>
-        {listView}
+        {links1} <div className="hr"></div> {listView}
       </Grid>
     </Popover>
   );
@@ -564,8 +560,7 @@ const useStyles = makeStyles({
   linkDiv: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
-    // marginBottom: 20,
+    alignItems: "center", // marginBottom: 20,
     cursor: "pointer",
     userSelect: "none",
   },

@@ -136,7 +136,6 @@ const NewDashboard = (props) => {
         <>
           {number !== 0 && (
             <span className={number ? "" : classes.current}>
-              {" "}
               {number ? number : "-"}
             </span>
           )}

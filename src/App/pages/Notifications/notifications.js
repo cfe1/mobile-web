@@ -30,18 +30,17 @@ import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
 import { setupToken, DeleteFirebaseToken } from "../../../firebase";
 import { handlePermission } from "../../../APN";
-import {updateNotification}  from "../../../redux/actions/adminActions"
+import { updateNotification } from "../../../redux/actions/adminActions";
 import { connect } from "react-redux";
 
 const styles = {
- 
   title: {
     marginBottom: 9,
   },
   breadcrumbs: {
     marginBottom: 23,
   },
-  
+
   paper: {
     padding: 20,
   },
@@ -60,28 +59,28 @@ const styles = {
   table: {
     width: "100%",
   },
-  base1:{
-    color: "#9C00BA"
+  base1: {
+    color: "#9C00BA",
   },
-  base2:{
+  base2: {
     marginLeft: 5,
-    marginRight: 5
+    marginRight: 5,
   },
-  base3:{
-    width: 30
+  base3: {
+    width: 30,
   },
-  base4:{
-    width:"70%"
+  base4: {
+    width: "70%",
   },
-  base5:{
-    width:"30%"
+  base5: {
+    width: "30%",
   },
-  base6:{
-    marginLeft: 10 
+  base6: {
+    marginLeft: 10,
   },
-  base7:{
-    marginRight:10
-  }
+  base7: {
+    marginRight: 10,
+  },
 };
 
 export class Notifications extends Component {
@@ -224,7 +223,7 @@ export class Notifications extends Component {
             selectedNotificationsID: new Set(),
             selectedNotifications: [],
           });
-          this.props.updateNotification(response.data.data)
+          this.props.updateNotification(response.data.data);
         }
       })
       .catch((error) => {
@@ -356,9 +355,7 @@ export class Notifications extends Component {
                 <Link color="inherit" component={Route} to={"/"}>
                   Agalia
                 </Link>
-                <Typography className={classes.base1}>
-                  Notifications
-                </Typography>
+                <Typography className={classes.base1}>Notifications</Typography>
               </Breadcrumbs>
             </div>
           </div>
@@ -395,18 +392,17 @@ export class Notifications extends Component {
             alignItems="center"
             className={classes.paper}
           >
-            <div className="btn-grp-prime">
-              
-            </div>
-            
+            <div className="btn-grp-prime"></div>
+
             <div className="row-center">
-             
-            {this.state.selectedNotificationsID.size>0 && <CapsuleButton
-                label="Mark as read"
-                onClick={() => {
-                  this.handleMarkAsRead(this.state.selectedNotificationsID);
-                }}
-              ></CapsuleButton>}
+              {this.state.selectedNotificationsID.size > 0 && (
+                <CapsuleButton
+                  label="Mark as read"
+                  onClick={() => {
+                    this.handleMarkAsRead(this.state.selectedNotificationsID);
+                  }}
+                ></CapsuleButton>
+              )}
               <span className={classes.base2}> &nbsp;</span>
               <CapsuleButton
                 label="Delete all"
@@ -429,8 +425,12 @@ export class Notifications extends Component {
                       }
                     />
                   </TableCell>
-                  <TableCell  className={classes.base4}>Notification Message</TableCell>
-                  <TableCell  className={classes.base5}>Notification Time</TableCell>
+                  <TableCell className={classes.base4}>
+                    Notification Message
+                  </TableCell>
+                  <TableCell className={classes.base5}>
+                    Notification Time
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -454,14 +454,10 @@ export class Notifications extends Component {
                     >
                       <div className="notification-message">
                         <p>
-                          {row.title}{" "}
+                          {row.title}
                           {row.is_read === false && (
                             <span>
-                              <img
-                                src={New}
-                                alt=""
-                                className={classes.base6}
-                              />
+                              <img src={New} alt="" className={classes.base6} />
                             </span>
                           )}
                         </p>
@@ -475,11 +471,11 @@ export class Notifications extends Component {
                       className="cursor-pointer"
                     >
                       <div className="notification-time">
-                        <img src={Clock} alt="" className={classes.base7} />{" "}
+                        <img src={Clock} alt="" className={classes.base7} />
                         {moment(row.created_at).format(
                           "DD MMM YYYY [at] h:mm A z"
                         )}
-                      </div>{" "}
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

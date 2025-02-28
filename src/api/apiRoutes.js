@@ -7,6 +7,8 @@ const AUTH_ROUTES = {
 
 const HOME_ROUTES = {
   OWNER_FACILITY_LISTING: "owner/facility/list",
+  FETCH_ROLES: (params) => `owner/facility-roles/?${params}`,
+  FETCH_ROLES_FACILITY: (params) => `facilities/features`,
 };
 const DASHBOARD = {
   FETCH_STATS: (start_date, end_date, params) =>
@@ -36,7 +38,8 @@ const PDF_SETTINGS = {
 
 const FACILITY_DETAILS = {
   FETCH_PROFILE: (facility_id) => `/owner/facility/${facility_id}/detail/`,
-  FACILITY_LIMIT: (facility_id) => `/owner/metrics-limit/facility/${facility_id}/`,
+  FACILITY_LIMIT: (facility_id) =>
+    `/owner/metrics-limit/facility/${facility_id}/`,
   FACILITY_EMPLOYEES: (facility_id, urlParams) =>
     `owner/facility/${facility_id}/employees/?${urlParams}`,
   NURSE_TYPE_LISTING: (facility_id, start_date, end_date, urlParams) =>
@@ -64,12 +67,33 @@ const APPLICANTS_MODAL = {
 };
 const HDDP_TRACKER = {
   FETCH_ALL_DEPARTMENTS_NEW: "facilities/central-department/",
-  HPPD_TRACKER_DETAILS: (params) => `owner/hppd_tracker/owner-dashboard/?${params}`,
+  HPPD_TRACKER_DETAILS: (params) =>
+    `owner/hppd_tracker/owner-dashboard/?${params}`,
+  JOBTITLE_TRACKER_DETAILS: (params) =>
+    `owner/hppd_tracker/owner-dashboard-job-wise/?${params}`,
+  UPDATE_JOBS: `/owner/hppd_tracker/job_title_target/`,
+  GET_JOBTITLE_TRACKER_DETAILS: (params) =>
+    `owner/hppd_tracker/owner-dashboard-facility-job-wise?${params}`,
+  HPPD_TRACKER_DETAILS: (params) =>
+    `owner/hppd_tracker/owner-dashboard/?${params}`,
+  UPDATE_JOBS_TRACK: (params) =>
+    `owner/hppd_tracker/owner-dashboard-facility-job-wise/${params}/`,
   HPPD_CENSUS_LISTING: (params) => `owner/census/?${params}`,
+  HPPD_TARGET_LISTING: (params) => `/owner/hppd_tracker/?${params}`,
   HPPD_CENSUS_UPDATE: "owner/census/",
   HPPD_TARGET_UPDATE: "owner/hppd_tracker/",
-  FETCH_HDDP_FACILITY: (facilityId,params) => `owner/hppd_tracker/${facilityId}?${params}`,
+  FETCH_HDDP_FACILITY: (facilityId, params) =>
+    `owner/hppd_tracker/${facilityId}?${params}`,
+};
 
+const SUB_ADMINS = {
+  SUBADMINS_LISTING: (params) => `owner/facility-subadmin/?${params}`,
+  CHANGE_SUBADMIN_STATUS: (id) => `owner/facility-subadmin/${id}/`,
+  ADD_SUBADMIN: `owner/sub-admin/`,
+  ADD_ROLE: "owner/roles/",
+  PATCH_ROLE: (role_id) => `owner/roles/${role_id}/`,
+  PATCH_SUBADMIN: `owner/sub-admin/update/`,
+  GET_ROLE_DETAILS: (role_id) => `owner/roles/${role_id}`,
 };
 //Test
 const ENDPOINTS = {
@@ -81,6 +105,7 @@ const ENDPOINTS = {
   ...APPLICANTS_MODAL,
   ...PDF_SETTINGS,
   ...HDDP_TRACKER,
+  ...SUB_ADMINS,
 };
 
 export { ENDPOINTS };

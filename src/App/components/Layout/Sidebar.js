@@ -23,6 +23,11 @@ export const ICONS = {
     inActive: require("../../assets/icons/sidebar/hppdTracker.svg"),
     hover: require("../../assets/icons/sidebar/hppdTrackerWtBg.svg"),
   },
+  CODE_SUB_ADMINS: {
+    active: require("../../assets/icons/sidebar/Subadmin_pink.svg"),
+    inActive: require("../../assets/icons/sidebar/Sub_Admin_Inactive.svg"),
+    hover: require("../../assets/icons/sidebar/Subadmin_Hover.svg"),
+  },
   CODE_FAC: {
     active: require("../../assets/icons/sidebar/facility.svg"),
     inActive: require("../../assets/icons/sidebar/facility-inactive.svg"),
@@ -139,13 +144,10 @@ const Sidebar = (props) => {
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
   const classes = useSidebarStyles({
     backgroundColor: theme.palette.background.default,
-  });
-  // const adminArray = ["dashboard", "schedule","CODE_SHIFTS","CODE_EMP","CODE_PAY","CODE_MPBJ", "CODE_BENEF", "CODE_SUBAD", "CODE_ROLES", "CODE_DD","settings"]
+  }); // const adminArray = ["dashboard", "schedule","CODE_SHIFTS","CODE_EMP","CODE_PAY","CODE_MPBJ", "CODE_BENEF", "CODE_SUBAD", "CODE_ROLES", "CODE_DD","settings"]
   const adminArray = ["CODE_BOARD", "settings"];
   let getRoleInfo = {};
-  const role = JSON.parse(StorageManager.get("ROLE"));
-  //const rClick = document.
-
+  const role = JSON.parse(StorageManager.get("ROLE")); //const rClick = document.
   if (role) {
     if (role.acls.length > 0) {
       role.acls.forEach((element) => {
@@ -166,19 +168,7 @@ const Sidebar = (props) => {
   React.useEffect(() => {
     props.updateRole(getRoleInfo);
     window.addEventListener("resize", updateDimensions);
-  }, []);
-
-  // const handleClickOutside = (event) => {
-  //   if (ref.current && !ref.current.contains(event.target)) {
-  //     setAnchorEl(false);
-  //   }
-  // };
-  // React.useEffect(() => {
-  //   document.addEventListener("click", handleClickOutside, true);
-  //   return () => {
-  //     document.removeEventListener("click", handleClickOutside, true);
-  //   };
-  // });
+  }, []); // const handleClickOutside = (event) => { //  if (ref.current && !ref.current.contains(event.target)) { //   setAnchorEl(false); //  } // }; // React.useEffect(() => { //  document.addEventListener("click", handleClickOutside, true); //  return () => { //   document.removeEventListener("click", handleClickOutside, true); //  }; // });
 
   function toggleSidebar(bool) {
     //only work for desktop version
@@ -190,9 +180,7 @@ const Sidebar = (props) => {
   return (
     <div
       ref={ref}
-      className={anchorEl ? "sidenav side1" : "sidenav side"}
-      // onMouseEnter={() => setAnchorEl(true)}
-      // onMouseLeave={() => setAnchorEl(false)}
+      className={anchorEl ? "sidenav side1" : "sidenav side"} // onMouseEnter={() => setAnchorEl(true)} // onMouseLeave={() => setAnchorEl(false)}
       onMouseEnter={() => toggleSidebar(true)}
       onMouseLeave={() => toggleSidebar(false)}
     >
@@ -205,8 +193,8 @@ const Sidebar = (props) => {
               </div>
               <div style={{ transition: "0.5s" }}>
                 {/* <Typography variant="h5" className={classes.title}>
-                  {facilityInfo?.name ?? ""}
-                </Typography> */}
+         {facilityInfo?.name ?? ""}
+        </Typography> */}
                 <div className="row-center" style={{ marginTop: 12 }}>
                   <Typography
                     className="text-muted"
@@ -228,36 +216,35 @@ const Sidebar = (props) => {
           )}
         </div>
         {/* <div style={{ height: 60 }}>
-          {anchorEl || windowWidth < 1025 ? (
-            <div style={{ display: "flex", alignItems: "center", height: 65 }}>
-              <div>
-                <img
-                  src={AgaliaLogo}
-                  className={classes.logoImage}
-                  style={{ marginRight: 5 }}
-                  alt="logo"
-                />
-              </div>
-              <div style={{ transition: "0.5s" }}>
-                <div className="row-center">
-                  <Typography
-                    variant="p1Light2"
-                    style={{ fontSize: "25.26px" }}
-                  >
-                    Agalia
-                  </Typography>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <img src={icon1} alt="Agalia" style={{ marginTop: "20px" }} />
-          )}
-        </div> */}
+     {anchorEl || windowWidth < 1025 ? (
+      <div style={{ display: "flex", alignItems: "center", height: 65 }}>
+       <div>
+        <img
+         src={AgaliaLogo}
+         className={classes.logoImage}
+         style={{ marginRight: 5 }}
+         alt="logo"
+        />
+       </div>
+       <div style={{ transition: "0.5s" }}>
+        <div className="row-center">
+         <Typography
+          variant="p1Light2"
+          style={{ fontSize: "25.26px" }}
+         >
+          Agalia
+         </Typography>
+        </div>
+       </div>
+      </div>
+     ) : (
+      <img src={icon1} alt="Agalia" style={{ marginTop: "20px" }} />
+     )}
+    </div> */}
         <div
           className="rect-separator"
           style={{ width: anchorEl || windowWidth < 1025 ? 214 : 50 }}
         ></div>
-
         <div className={classes.menuContainer}>
           {menuItems
             .filter((item) => {

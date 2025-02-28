@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import { Grid, makeStyles, Typography } from "@material-ui/core";
-import {
-  PinkPrimaryButton,
-  HoverText,
-} from "App/components";
+import { PinkPrimaryButton, HoverText } from "App/components";
 import { hasDayPassed } from "utils/dateUtils";
 import StorageManager from "storage/StorageManager";
 import moment from "moment";
@@ -12,7 +9,6 @@ import $ from "jquery";
 import { getAbbreviatedPositionName } from "utils/textUtils";
 import WeekDataModal from "App/pages/Dashboard/WeekDataModal";
 import { PositionModal } from "./PositionModal";
-
 
 const FacilityBudget = ({
   date,
@@ -62,14 +58,13 @@ const FacilityBudget = ({
         <>
           {number !== 0 && (
             <span className={number ? "" : classes.current}>
-              {" "}
               {number ? number : "-"}
             </span>
           )}
           {!number && (
             <PinkPrimaryButton
-              className={`${classes.setBtn}  
-                 ${hasDayPassed(date) ? classes.disableSet : ""} 
+              className={`${classes.setBtn}
+                 ${hasDayPassed(date) ? classes.disableSet : ""}
               `}
               onClick={(e) => {
                 e.stopPropagation();
