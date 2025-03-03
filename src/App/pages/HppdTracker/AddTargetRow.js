@@ -5,6 +5,7 @@ import { ENDPOINTS } from "api/apiRoutes";
 import { API } from "api/apiService";
 import { LinearProgressBar, Loader, Toast } from "App/components";
 import queryString from "query-string";
+import { TWO_DECIMAL_REGEX } from "App/constants/ModalConstants";
 
 const AddTarget = ({
   onClose,
@@ -13,6 +14,7 @@ const AddTarget = ({
   updateRowData,
   department,
   getJobTitleTrack,
+  current_date,
 }) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
@@ -27,7 +29,7 @@ const AddTarget = ({
   const getTargetList = async (leftDatesGenerated, rightDatesGenerated) => {
     try {
       setLoading(true);
-      const today = new Date();
+      const today = new Date(current_date);
       const daysCount = TargetType === "week" ? 30 : 60;
 
       const end_date = today.toISOString().split("T")[0]; // Today's date
@@ -78,7 +80,7 @@ const AddTarget = ({
   };
 
   useEffect(() => {
-    const today = new Date();
+    const today = new Date(current_date);
     const daysCount = TargetType === "week" ? 15 : 30;
 
     const formatDate = (date) => date.toISOString().split("T")[0]; // Ensure dates are in YYYY-MM-DD format
@@ -101,7 +103,7 @@ const AddTarget = ({
 
   // removable end
   const handleLeftInputChange = (date, value) => {
-    if (/^\d*$/.test(value)) {
+    if (TWO_DECIMAL_REGEX.test(value)) {
       // Allow only numeric input
       setLeftData((prevData) => ({
         ...prevData,
@@ -111,7 +113,7 @@ const AddTarget = ({
   };
 
   const handleRightInputChange = (date, value) => {
-    if (/^\d*$/.test(value)) {
+    if (TWO_DECIMAL_REGEX.test(value)) {
       // Allow only numeric input
       setRightData((prevData) => ({
         ...prevData,

@@ -14,4 +14,6 @@ const ModalTypes = {
   VIEW4: "VIEW4",
 };
 
-export { ModalInitialState, ModalTypes };
+const TWO_DECIMAL_REGEX = /^\d*\.?\d{0,2}$/;
+
+export { ModalInitialState, ModalTypes, TWO_DECIMAL_REGEX };
