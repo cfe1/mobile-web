@@ -38,6 +38,7 @@ const AddCensus = ({
   censusType,
   censusFacilityId,
   updateRowData,
+  current_date,
 }) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
@@ -55,7 +56,7 @@ const AddCensus = ({
   const getCensusList = async (leftDatesGenerated, rightDatesGenerated) => {
     try {
       setLoading(true);
-      const today = new Date();
+      const today = new Date(current_date);
       const daysCount = censusType === "week" ? 30 : 60;
 
       const end_date = today.toISOString().split("T")[0]; // Today's date
@@ -104,7 +105,7 @@ const AddCensus = ({
     }
   };
   useEffect(() => {
-    const today = new Date();
+    const today = new Date(current_date);
     const daysCount = censusType === "week" ? 15 : 30;
 
     const formatDate = (date) => date.toISOString().split("T")[0]; // Ensure dates are in YYYY-MM-DD format
