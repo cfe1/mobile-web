@@ -203,6 +203,8 @@ const HppdTableRow = ({
   const [loadingTarget, setLoadingTarget] = useState(false);
   const [loadingCensus, setLoadingCensus] = useState(false); // for week and month
 
+  const { current_date = "2025-03-03" } = row || {};
+
   const handleCensusClick = (type, facilityId) => {
     setCensusType(type);
     setFacilityId(facilityId);
@@ -255,7 +257,7 @@ const HppdTableRow = ({
       facility: censusFacilityId,
       data: [
         {
-          date: moment().format("YYYY-MM-DD"),
+          date: current_date,
           target: target === "" ? 0 : target,
         },
       ],
@@ -298,10 +300,10 @@ const HppdTableRow = ({
       setLoadingCensus(true);
       setFacilityId(facilityId); // Calculate yesterday's and today's dates
 
-      const end_date = new Date().toISOString().split("T")[0];
-      const start_date = new Date(new Date().setDate(new Date().getDate() - 1))
-        .toISOString()
-        .split("T")[0];
+      const end_date = current_date;
+      const start_date = moment(current_date)
+        .add(-1, "day")
+        .format("YYYY-MM-DD");
 
       const params = {
         start_date,
@@ -355,10 +357,8 @@ const HppdTableRow = ({
 
   const handleDayCensusConfirm = () => {
     const changedData = [];
-    const end_date = new Date().toISOString().split("T")[0];
-    const start_date = new Date(new Date().setDate(new Date().getDate() - 1))
-      .toISOString()
-      .split("T")[0];
+    const end_date = current_date;
+    const start_date = moment(current_date).add(-1, "day").format("YYYY-MM-DD");
 
     if (todaysCensus !== initialCensus[end_date]) {
       changedData.push({
@@ -636,6 +636,7 @@ const HppdTableRow = ({
           censusType={censusType}
           censusFacilityId={censusFacilityId}
           updateRowData={updateRowData}
+          current_date={current_date}
         />
       )}
       {openTargetModal && (
@@ -646,6 +647,7 @@ const HppdTableRow = ({
           updateRowData={updateRowData}
           department={department}
           getJobTitleTrack={getJobTitleTrack}
+          current_date={current_date}
         />
       )}
       {/* target popover */}
