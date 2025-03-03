@@ -350,14 +350,20 @@ const HppdTracker = () => {
     }
   };
 
-  const HandleChangeTarget = async (jobs, target) => {
+  const HandleChangeTarget = async (jobs, target, facilityId) => {
     const payload = {
-      target_hppd: targetHppd,
+      // target_hppd: targetHppd,
       job_titles: jobs,
       target: target,
+      // department_id: hppdSelection,
+      // facility_id: facilityId,
     };
+
     try {
-      const resp = await API.post(ENDPOINTS.UPDATE_JOBS, payload);
+      const resp = await API.patch(
+        ENDPOINTS.UPDATE_JOBS_TRACK(jobKey),
+        payload
+      );
       if (resp?.success) {
         Toast.showInfoToast(resp?.data?.message);
         getJobTitleTrack(faciltyID);
@@ -476,6 +482,7 @@ const HppdTracker = () => {
                           handleNewButton={handleNewButton}
                           HandleChangeTarget={HandleChangeTarget}
                           onHandleKeyJob={onHandleKeyJob}
+                          jobKey={jobKey}
                           setjobTitleSelectedValues={setjobTitleSelectedValues}
                         />
                       );
@@ -531,6 +538,8 @@ const HppdTracker = () => {
           setHppdDataModal={setHppdDataModal}
           getSelectJobTitileModalData={getSelectJobTitileModalData}
           setisOpenNew={setisOpenNew}
+          department={hppdSelection}
+          updateRowData={updateRowData}
         />
       )}
     </>
