@@ -271,7 +271,7 @@ const HppdTableRow = ({
       handleTargetClose();
       return;
     }
-    await HandleChangeTarget(jobTitileIds, targetJob);
+    await HandleChangeTarget(jobTitileIds, targetJob, row.id);
     await updateRowData(row.id);
     handleTargetClose();
   };
@@ -543,6 +543,7 @@ const HppdTableRow = ({
                         jobInfo?.time_range_data?.today?.target ?? ""
                       );
                       setInitialTarget(jobInfo?.time_range_data?.today?.target);
+                      onHandleKeyJob(key);
                     }}
                     type="day"
                   />
@@ -575,6 +576,7 @@ const HppdTableRow = ({
                       setInitialTarget(
                         jobInfo?.time_range_data?.last_15_days?.target
                       );
+                      onHandleKeyJob(key);
                     }}
                     type="week"
                   />
@@ -607,6 +609,7 @@ const HppdTableRow = ({
                       setInitialTarget(
                         jobInfo?.time_range_data?.days_15_30?.target
                       );
+                      onHandleKeyJob(key);
                     }}
                     type="month"
                   />
