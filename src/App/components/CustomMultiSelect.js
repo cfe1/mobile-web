@@ -187,8 +187,6 @@ const CustomMultiSelect = (props = {}) => {
     }
   };
 
-  console.log({ value });
-
   return (
     <div className={classes.container}>
       <Select
@@ -204,7 +202,6 @@ const CustomMultiSelect = (props = {}) => {
         className={classes.select}
         displayEmpty={isDisplayEmpty}
         renderValue={(selected) => {
-          console.log(selected);
           if (!multiple && (selected === "" || selected === null)) {
             return <span>{placeholder}</span>;
           }
