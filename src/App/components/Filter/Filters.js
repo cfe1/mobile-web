@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Grid, makeStyles } from "@material-ui/core";
+import { Chip, Grid, makeStyles } from "@material-ui/core";
 import filterIcon from "../../assets/icons/filterIcon.svg";
 import rightArrow from "../../assets/icons/right-arrow1.svg";
 import orangeCross from "../../assets/icons/orangeX.svg";
@@ -279,6 +279,8 @@ const Filters = ({
       }
     });
   };
+
+  console.log(selectedFilters);
   return (
     <>
       <Grid
@@ -343,6 +345,15 @@ const Filters = ({
               alignItems="center"
             >
               <div>Filter Applied</div>
+              {/* <button onClick={clearAll}>Clear all</button> */}
+
+              {selectedFilters.length > 1 && (
+                <Chip
+                  onClick={clearAll}
+                  label="Clear All"
+                  classes={{ root: classes.customChip }}
+                />
+              )}
               {
                 <Grid
                   item
@@ -501,5 +512,10 @@ const useStyles = makeStyles((theme) => ({
     width: 16,
     marginLeft: 4,
     cursor: "pointer",
+  },
+  customChip: {
+    height: 24, // Adjust the height as needed
+    padding: "0 6px", // Adjust the padding as needed
+    fontSize: "0.75rem", // Optional: adjust font size if needed
   },
 }));
