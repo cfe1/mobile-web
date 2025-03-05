@@ -358,7 +358,6 @@ const AddSubadminModal = ({
     return formatted;
   }
 
-  console.log({ facilityRows });
   return (
     <NewDialogModal
       dialogCls={classes.dialog}
@@ -419,7 +418,7 @@ const AddSubadminModal = ({
             </div>
           </div>
           <div className={classes.inputRow}>
-            <div className={classes.inputLabel}>Number</div>
+            <div className={classes.inputLabel}>Phone Number</div>
             <div>
               <TextField
                 variant="outlined"
@@ -442,6 +441,7 @@ const AddSubadminModal = ({
           <div className={classes.divContainer}>
             <div className={classes.facilitiesLabel}>Facilities</div>
             <div className={classes.facilitiesLabel}>Role</div>
+            <span className={classes.facilitiesLabel}>Action</span>
           </div>
           {facilityRows.map((facility, index) => (
             <div key={index} className={classes.facilityRow}>
@@ -459,8 +459,9 @@ const AddSubadminModal = ({
                   valueField="value"
                   multiple={false}
                   fontSize={14}
-                  placeholder="Select Here"
+                  placeholder="Select Facility"
                   height={42}
+                  isDisplayEmpty={true}
                 />
               </FormControl>
               <FormControl className={classes.roleSelect}>
@@ -478,10 +479,9 @@ const AddSubadminModal = ({
                   multiple={false}
                   fullSelectDisable={!Boolean(facility?.facility_id)}
                   fontSize={14}
-                  placeholder="Select Here"
+                  placeholder="Select Role"
                   showEditIcon={!!facility.facility_id}
                   handleEditClick={(e, itemIndex) => {
-                    console.log(facility);
                     e.stopPropagation();
                     setSelectedRowId(facility?.roleOptions[itemIndex]?.value);
                     setOpenRolesCreataion(true);
@@ -494,6 +494,7 @@ const AddSubadminModal = ({
                     setOpenRolesCreataion(true);
                   }}
                   disabled={!facility.facility_id}
+                  isDisplayEmpty={true}
                   height={42}
                 />
               </FormControl>
@@ -552,7 +553,7 @@ export default AddSubadminModal;
 
 const useStyles = makeStyles((theme) => ({
   dialog: {
-    maxWidth: "420px",
+    maxWidth: "700px",
     borderRadius: 9,
   },
   formContainer: {
@@ -576,9 +577,9 @@ const useStyles = makeStyles((theme) => ({
     color: "#434966",
   },
   inputField: {
-    width: 200,
+    width: 300,
     "& .MuiOutlinedInput-root": {
-      width: 200,
+      width: 300,
       fontSize: "14px",
       "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
         borderColor: "#2563EB",
@@ -665,10 +666,13 @@ const useStyles = makeStyles((theme) => ({
   },
   divContainer: {
     display: "flex",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     alignItems: "center",
     "& div": {
-      width: "50%",
+      width: "47%",
+    },
+    "& span": {
+      width: "7%",
     },
   },
 }));

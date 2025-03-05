@@ -170,6 +170,8 @@ const CustomMultiSelect = (props = {}) => {
     needCreateRole = false,
     fullSelectDisable = false,
     height = 48,
+    placeholder = "Select Here",
+    isDisplayEmpty = false,
     ...rest
   } = props;
 
@@ -185,29 +187,30 @@ const CustomMultiSelect = (props = {}) => {
     }
   };
 
-  console.log({ value });
-
   return (
     <div className={classes.container}>
-      {/* <InputLabel id={`${id}-placeholder-label`}>Select Here</InputLabel> */}
       <Select
-        id={id} // labelId={`${id}-placeholder-label`}
+        id={id}
         multiple={multiple}
         variant={variant}
         value={value}
         fullWidth={fullWidth}
-        onChange={onChange} //  placeholder="Select Here"
+        onChange={onChange}
         open={menuOpen}
         onOpen={() => setMenuOpen(true)}
         onClose={() => setMenuOpen(false)}
         className={classes.select}
+        displayEmpty={isDisplayEmpty}
         renderValue={(selected) => {
+          if (!multiple && (selected === "" || selected === null)) {
+            return <span>{placeholder}</span>;
+          }
+
           if (!Array.isArray(selected)) {
             const option = options.find((opt) => opt[valueField] === selected);
             return option ? option[labelField] : "";
           }
 
-          console.log({ selected });
           return selected
             .map((value) => {
               const option = options.find((opt) => opt[valueField] === value);

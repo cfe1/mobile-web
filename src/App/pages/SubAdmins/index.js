@@ -16,6 +16,7 @@ import {
 } from "@material-ui/core";
 import SearchHppd from "App/components/Form/SearchHppd";
 import {
+  Badge,
   LinearProgressBar,
   SwitchButton,
   TablePagination,
@@ -179,11 +180,11 @@ const SubAdminPage = () => {
     }
   };
   const getFacilityList = async () => {
-    setLoading(true);
+    // setLoading(true);
     const data = await FacilityService.fetchFacilityList();
     const facilityList = transformJobTitles(data);
     setFacilityList(facilityList);
-    setLoading(false);
+    // setLoading(false);
   };
 
   const getPayload = (data = {}) => {
@@ -249,7 +250,9 @@ const SubAdminPage = () => {
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        <h2>Sub Admins</h2>
+        <Badge count={listingData.count || 0} innerDivStyle={{ marginTop: 24 }}>
+          <h2>Sub Admins</h2>
+        </Badge>
       </div>
       {loading && <LinearProgressBar belowHeader={true} />}
       <div className={classes.filters}>
@@ -282,45 +285,55 @@ const SubAdminPage = () => {
           <TableHead>
             <TableRow>
               <TableCell>Admin</TableCell> <TableCell>Facility Name</TableCell>
-              <TableCell>Role</TableCell> <TableCell align="right"></TableCell>
+              <TableCell>Role</TableCell>{" "}
+              <TableCell align="right">Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {listingData?.results?.map((row) => {
-              const { facilities = [] } = row;
-              const firstFacility = facilities[0] || {};
-              const remainingFacilities = facilities.slice(1);
-              return (
-                <TableRow key={row.id} onClick={() => handleNewButton(row)}>
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell>
-                    {firstFacility.facility_details?.name}
-                    {remainingFacilities.length > 0 &&
-                      renderTooltip(remainingFacilities, classes)}
-                  </TableCell>
-                  <TableCell>
-                    {firstFacility?.facility_details?.role?.role_name}
-                    {remainingFacilities.length > 0 &&
-                      renderTooltip(remainingFacilities, classes, false)}
-                  </TableCell>
-                  <TableCell align="right" onClick={(e) => e.stopPropagation()}>
-                    <SwitchButton
-                      value={row.subadmin_status === STATUS.ACITVE}
-                      onChange={(e) => handleChangeStatus(row, e)}
-                      color="#FF0083"
-                      width={28}
-                      height={16}
-                      handleDiameter={14}
-                    />
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+            {listingData?.results?.length > 0 ? (
+              listingData?.results?.map((row) => {
+                const { facilities = [] } = row;
+                const firstFacility = facilities[0] || {};
+                const remainingFacilities = facilities.slice(1);
+                return (
+                  <TableRow key={row.id} onClick={() => handleNewButton(row)}>
+                    <TableCell>{row.name}</TableCell>
+                    <TableCell>
+                      {firstFacility.facility_details?.name}
+                      {remainingFacilities.length > 0 &&
+                        renderTooltip(remainingFacilities, classes)}
+                    </TableCell>
+                    <TableCell>
+                      {firstFacility?.facility_details?.role?.role_name}
+                      {remainingFacilities.length > 0 &&
+                        renderTooltip(remainingFacilities, classes, false)}
+                    </TableCell>
+                    <TableCell
+                      align="right"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <SwitchButton
+                        value={row.subadmin_status === STATUS.ACITVE}
+                        onChange={(e) => handleChangeStatus(row, e)}
+                        color="#FF0083"
+                        width={28}
+                        height={16}
+                        handleDiameter={14}
+                      />
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5}>No data found.</TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
-        count={listingData?.count}
+        count={listingData?.count || 0}
         page={currentPage}
         rowsPerPage={pageSize}
         setRowsPerPage={(size) => {
