@@ -253,9 +253,6 @@ const SubAdminPage = () => {
         <Badge count={listingData.count || 0} innerDivStyle={{ marginTop: 24 }}>
           <h2>Sub Admins</h2>
         </Badge>
-        {/* <div className={classes.flex}> */}
-        {/* <span>{`(${listingData.count || 0})`}</span> */}
-        {/* </div> */}
       </div>
       {loading && <LinearProgressBar belowHeader={true} />}
       <div className={classes.filters}>
