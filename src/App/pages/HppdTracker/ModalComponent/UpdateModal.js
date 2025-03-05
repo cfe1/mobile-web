@@ -39,7 +39,9 @@ const UpdateModal = ({
   methodUpdate,
   jobKey,
   jobTitleSelectedValues,
+  department,
   setjobTitleSelectedValues,
+  updateRowData,
 }) => {
   const classes = useStyles();
   const [currentPage, setCurrentPage] = useState(1);
@@ -66,9 +68,11 @@ const UpdateModal = ({
 
   const HandleConfirm = async () => {
     const payload = {
-      target_hppd: targetHppd,
+      ...(targetHppd && { target_hppd: targetHppd }),
       job_titles: jobTitleSelectedValues.map((job) => job.job_title_id),
       target: 0,
+      facility_id: faciltyID,
+      central_department_id: department,
     };
     try {
       if (jobTitleSelectedValues?.length > 0) {
@@ -101,6 +105,7 @@ const UpdateModal = ({
     } finally {
       onCloseEvent();
       getJobTitleTrack(faciltyID);
+      updateRowData(faciltyID);
     }
   };
 
