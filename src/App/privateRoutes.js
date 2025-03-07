@@ -9,6 +9,7 @@ const EditProfile = React.lazy(() => import("./pages/profile/editProfile"));
 
 const Settings = React.lazy(() => import("./pages/Settings"));
 const HddpTracker = React.lazy(() => import("./pages/HppdTracker"));
+const SubAdmins = React.lazy(() => import("./pages/SubAdmins"));
 const Notifications = React.lazy(() =>
   import("./pages/Notifications/notifications")
 );
@@ -78,6 +79,15 @@ const routes = [
     module: MODULES.HddpTracker,
     checkAccess: false,
     component: HddpTracker,
+  },
+  {
+    path: "/sub-admins",
+    key: "hppdTracker",
+    exact: true,
+    name: "SUB ADMINS",
+    module: MODULES.SUBADMIN,
+    checkAccess: false,
+    component: SubAdmins,
   },
   {
     path: "*",
