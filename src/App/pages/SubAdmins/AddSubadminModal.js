@@ -306,9 +306,26 @@ const AddSubadminModal = ({
     }
   };
 
-  const handleRemoveFacility = (index) => {
-    const newFacilityRows = facilityRows.filter((_, i) => i !== index);
-    setFacilityRows(newFacilityRows);
+  const handleRemoveFacility = async (facility, index) => {
+    const id = facility?.facility_details?.subadmin_data?.subadmin_id;
+    if (!id) {
+      const newFacilityRows = facilityRows.filter((_, i) => i !== index);
+      setFacilityRows(newFacilityRows);
+      return;
+    }
+    try {
+      setLoading(true); // Create an array of promises for all API calls
+      const resp = await API.deleteResource(ENDPOINTS.DELETE_SUBADMIN(id));
+      if (resp.success) {
+        const newFacilityRows = facilityRows.filter((_, i) => i !== index);
+        setFacilityRows(newFacilityRows);
+      }
+      return null;
+    } catch (e) {
+      Toast.showErrorToast(e.data?.error?.message[0]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSubmit = () => {
@@ -357,6 +374,24 @@ const AddSubadminModal = ({
 
     return formatted;
   }
+  const findFacilityById = (subAdminData, facilityId) => {
+    // Guard clauses for invalid inputs
+    if (
+      !subAdminData ||
+      !subAdminData.facilities ||
+      !Array.isArray(subAdminData.facilities) ||
+      !facilityId
+    ) {
+      return null;
+    }
+
+    // Find the facility in the facilities array
+    return (
+      subAdminData.facilities.find(
+        (facility) => facility?.facility_details?.facility_id === facilityId
+      ) || null
+    );
+  };
 
   return (
     <NewDialogModal
@@ -517,7 +552,12 @@ const AddSubadminModal = ({
               {facilityRows.length > 1 && (
                 <IconButton
                   size="small"
-                  onClick={() => handleRemoveFacility(index)}
+                  onClick={() =>
+                    handleRemoveFacility(
+                      findFacilityById(subAdminData, facility?.facility_id),
+                      index
+                    )
+                  }
                 >
                   <DeleteOutlineIcon className={classes.deleteIcon} />
                 </IconButton>
