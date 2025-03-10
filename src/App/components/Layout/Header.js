@@ -171,7 +171,7 @@ const Header = React.memo((props) => {
   };
 
   const getNotfications = (url) => {
-    API.get("facilities/notifications/unread-count")
+    API.get("owner/notifications/unread-count")
       .then((response) => {
         if (response.statusCode === 200) {
           setUnreadCount(response.data.count);
