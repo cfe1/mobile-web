@@ -211,7 +211,7 @@ export class Notifications extends Component {
   getNotfications = () => {
     this.setState({ loading: true });
     Axios.get(
-      `/notifications?ordering=${this.state.sortStatus}&page_size=${this.state.pageSize}&page=${this.state.currentNotificationsPage}`
+      `owner/notifications?ordering=${this.state.sortStatus}&page_size=${this.state.pageSize}&page=${this.state.currentNotificationsPage}`
     )
       .then((response) => {
         this.setState({ loading: false });
@@ -237,7 +237,7 @@ export class Notifications extends Component {
     const packet = {
       notification_ids: Array.from(ids),
     };
-    Axios.patch(`/notifications`, packet)
+    Axios.patch(`owner/notifications`, packet)
       .then((response) => {
         this.setState({ loading: false });
         if (response.data.statusCode === 200) {
@@ -258,7 +258,7 @@ export class Notifications extends Component {
 
   handleDeleteAll = () => {
     this.setState({ loading: true });
-    Axios.delete(`/notifications`)
+    Axios.delete(`owner/notifications`)
       .then((response) => {
         this.setState({ loading: false });
         if (response.data.statusCode === 200) {
