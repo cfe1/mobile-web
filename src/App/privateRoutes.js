@@ -1,5 +1,5 @@
 import React from "react";
-
+ 
 import MODULES from "./moduleList";
 
 const Dashboard = React.lazy(() => import("./pages/NewDashboard"));
