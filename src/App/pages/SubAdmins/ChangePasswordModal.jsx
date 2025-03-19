@@ -159,13 +159,14 @@ const ChangePasswordModal = ({ open, handleClose, subAdminId, subAdminName, subA
         password: formState.newPassword,
       };
       
-      const resp = await API.patch(ENDPOINTS.CHANGE_SUBADMIN_PASSWORD(subAdminId), payload);
+      const resp = await API.patch(ENDPOINTS.CHANGE_SUBADMIN_PASSWORD, payload);
       
       if (resp.success) {
-        Toast.showSuccessToast("Password changed successfully");
+        Toast.showInfoToast("Password changed successfully");
         handleClose();
       }
     } catch (e) {
+      console.log(e)
       apiErrorHandler(e);
     } finally {
       setLoading(false);
