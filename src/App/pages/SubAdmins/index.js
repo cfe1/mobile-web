@@ -13,6 +13,7 @@ import {
   Chip,
   Tooltip,
   Typography,
+  Box,
 } from "@material-ui/core";
 import SearchHppd from "App/components/Form/SearchHppd";
 import {
@@ -28,12 +29,14 @@ import {
   ITEMS,
 } from "App/components/Filter/filterConts";
 import AddIcon from "@material-ui/icons/Add";
+import LockIcon from "@material-ui/icons/Lock";
 import { makeStyles } from "@material-ui/core/styles";
 import { apiErrorHandler } from "utils/apiUtil";
 import { API, ENDPOINTS } from "api/apiService";
 import queryString from "query-string";
 import CustomMultiSelect from "App/components/CustomMultiSelect";
 import AddSubadminModal from "./AddSubadminModal";
+import ChangePasswordModal from "./ChangePasswordModal";
 import Filters from "App/components/Filter/Filters";
 import { transformJobTitles } from "../NewDashboard/utills/common";
 import FacilityService from "../NewDashboard/utills/FacilityService";
@@ -75,7 +78,17 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "#FF0083", // Slightly transparent on hover
     },
   },
-
+  passwordButton: {
+    height: 32,
+    minWidth: 32,
+    padding: "0 8px",
+    marginRight: 10,
+    backgroundColor: "#f3f4f7",
+    color: "#020826",
+    "&:hover": {
+      backgroundColor: "#e0e0e0",
+    },
+  },
   searchField: {
     marginLeft: "auto",
     background: "#F3F4F7",
@@ -103,6 +116,11 @@ const useStyles = makeStyles((theme) => ({
   },
   flex: {
     display: "flex",
+  },
+  actionButtons: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
   },
 }));
 
@@ -149,12 +167,22 @@ const SubAdminPage = () => {
       index: -1,
     },
   ]);
+  // New state for change password modal
+  const [passwordModal, setPasswordModal] = useState({
+    open: false,
+    subAdminId: null,
+    subAdminName: "",
+    subAdminEmail: "",
+  });
+
   useEffect(() => {
     fetchSubAdminData();
   }, [search, pageSize, currentPage, selectedFacilityIds]);
+
   useEffect(() => {
     getFacilityList();
   }, []);
+
   const fetchSubAdminData = async () => {
     try {
       setLoading(true);
@@ -179,6 +207,7 @@ const SubAdminPage = () => {
       setLoading(false);
     }
   };
+
   const getFacilityList = async () => {
     // setLoading(true);
     const data = await FacilityService.fetchFacilityList();
@@ -224,6 +253,7 @@ const SubAdminPage = () => {
   const handleSearchClose = () => {
     setSearch("");
   };
+
   const handleNewButton = async (row) => {
     setisOpenNew(true);
     setSubAdminData(row); // getSelectJobTitileModalData(facilityRowId);
@@ -234,6 +264,27 @@ const SubAdminPage = () => {
     setisOpenNew(false);
     fetchSubAdminData();
   };
+
+  // New function to handle password change button click
+  const handlePasswordChange = (e, row) => {
+    e.stopPropagation(); // Prevent row click event
+    setPasswordModal({
+      open: true,
+      subAdminId: row.id,
+      subAdminName: row.name,
+      subAdminEmail: row.email,
+    });
+  };
+
+  // Close password modal
+  const handleClosePasswordModal = () => {
+    setPasswordModal({
+      open: false,
+      subAdminId: null,
+      subAdminName: "",
+    });
+  };
+
   const filtersObj = [
     {
       paramName: PARAM_NAME.FACILITY,
@@ -284,8 +335,9 @@ const SubAdminPage = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Admin</TableCell> <TableCell>Facility Name</TableCell>
-              <TableCell>Role</TableCell>{" "}
+              <TableCell>Admin</TableCell>
+              <TableCell>Facility Name</TableCell>
+              <TableCell>Role</TableCell>
               <TableCell align="right">Action</TableCell>
             </TableRow>
           </TableHead>
@@ -312,14 +364,26 @@ const SubAdminPage = () => {
                       align="right"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <SwitchButton
-                        value={row.subadmin_status === STATUS.ACITVE}
-                        onChange={(e) => handleChangeStatus(row, e)}
-                        color="#FF0083"
-                        width={28}
-                        height={16}
-                        handleDiameter={14}
-                      />
+                      <div className={classes.actionButtons}>
+                        <Tooltip title="Change Password">
+                          <Button
+                            className={classes.passwordButton}
+                            variant="contained"
+                            size="small"
+                            onClick={(e) => handlePasswordChange(e, row)}
+                          >
+                            <LockIcon fontSize="small" />
+                          </Button>
+                        </Tooltip>
+                        <SwitchButton
+                          value={row.subadmin_status === STATUS.ACITVE}
+                          onChange={(e) => handleChangeStatus(row, e)}
+                          color="#FF0083"
+                          width={28}
+                          height={16}
+                          handleDiameter={14}
+                        />
+                      </div>
                     </TableCell>
                   </TableRow>
                 );
@@ -351,6 +415,14 @@ const SubAdminPage = () => {
           handleCloseAddSubADmin={handleCloseAddSubADmin}
         />
       )}
+      {/* Add the new password change modal */}
+      <ChangePasswordModal
+        open={passwordModal.open}
+        handleClose={handleClosePasswordModal}
+        subAdminId={passwordModal.subAdminId}
+        subAdminName={passwordModal.subAdminName}
+        subAdminEmail={passwordModal.subAdminEmail}
+      />
     </div>
   );
 };

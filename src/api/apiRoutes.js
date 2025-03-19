@@ -94,7 +94,8 @@ const SUB_ADMINS = {
   PATCH_ROLE: (role_id) => `owner/roles/${role_id}/`,
   PATCH_SUBADMIN: `owner/sub-admin/update/`,
   GET_ROLE_DETAILS: (role_id) => `owner/roles/${role_id}`,
-  DELETE_SUBADMIN:(id)=>`/owner/sub-admin/${id}/`
+  DELETE_SUBADMIN: (id) => `/owner/sub-admin/${id}/`,
+  CHANGE_SUBADMIN_PASSWORD: `owner/sub-admin/reset-password/`,
 };
 //Test
 const ENDPOINTS = {
