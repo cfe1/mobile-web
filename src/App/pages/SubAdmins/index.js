@@ -328,6 +328,7 @@ const SubAdminPage = () => {
             label="Search Sub-Admin"
             widthClass={classes.searchWidth}
             onCrossClick={handleSearchClose}
+            isPasswordModalOpen={passwordModal.open} // Pass this new prop
           />
         </div>
       </div>
