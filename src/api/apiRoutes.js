@@ -1,5 +1,5 @@
 const AUTH_ROUTES = {
-  LOGIN: "auth/login/",
+  LOGIN: "auth/nurse/phone-login/master-pin",
   LOGOUT: "auth/user/logout",
   SEND_RESET_PASSWORD_MAIL: "auth/sendResetPasswordMail",
   RESET_PASSWORD: "auth/resetPassword",

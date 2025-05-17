@@ -1,216 +1,278 @@
-import React, { Component } from "react";
-import { Typography, withTheme } from "@material-ui/core";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import { connect } from "react-redux";
+import { API, ENDPOINTS } from 'api/apiService';
+import { Toast } from 'App/components';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { loginSuccess } from 'redux/actions/authActions';
+import { AGALIA_ID, API_TOKEN } from 'storage/StorageKeys';
+import StorageManager from 'storage/StorageManager';
 
-import {
-  InputField,
-  PasswordField,
-  PrimaryButton,
-  Loader,
-  Toast,
-} from "../../components";
-
-import { loginSuccess } from "../../../redux/actions/authActions";
-
-import AgaliaBanner from "./components/AgaliaBanner";
-import styles from "./auth.module.scss";
-import { AuthAxios, LAxios } from "../../../api/apiConsts";
-import { setupToken, DeleteFirebaseToken } from "../../../firebase";
-import { handlePermission } from "../../../APN";
-import StorageManager from "../../../storage/StorageManager";
-import { API_TOKEN, ROLE, AGALIA_ID } from "../../../storage/StorageKeys";
-
-class Login extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      rememberMe: false,
-      passwordVisible: false,
-      alertMessage: "",
-      loading: false,
-    };
-  }
-
-  componentDidMount = async () => {
-    await DeleteFirebaseToken();
-    if (StorageManager.get(API_TOKEN)) {
-      this.props.history.replace("/dashboard");
+const Login = () => {
+  const [masterPin, setMasterPin] = useState('');
+  const [pinError, setPinError] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const history = useHistory();
+  
+  const handleMasterPinChange = (e) => {
+    const input = e.target.value;
+    
+    // Only allow digits and maximum 6 characters
+    if (/^\d{0,6}$/.test(input)) {
+      setMasterPin(input);
+      setPinError('');
+    } else if (!/^\d*$/.test(input)) {
+      setPinError('Master PIN must contain only digits');
+    } else if (input.length > 6) {
+      setPinError('Master PIN must be exactly 6 digits');
     }
   };
 
-  toggleRememberMe = () =>
-    this.setState({ rememberMe: !this.state.rememberMe });
-
-  togglePasswordVisible = () =>
-    this.setState({ passwordVisible: !this.state.passwordVisible });
-
-  handleLogin = async (email, password) => {
-    this.setState({ alertMessage: "", loading: true });
-    const packet = {
-      email: email,
-      password: password,
-      device_type: "WEB",
-      device_token: await setupToken(),
-    };
-    AuthAxios.post(`owner/login`, packet)
-      .then((response) => {
-        this.setState({ loading: false });
-        if (response.data.statusCode === 200) {
-          const { role, token, agalia_id } = response.data.data;
-          StorageManager.put(API_TOKEN, token);
-          StorageManager.put(AGALIA_ID, agalia_id);
-          // StorageManager.put(ROLE, JSON.stringify(role));
-          this.props.loginSuccess({
-            profile: response.data.data.profile,
-            token: response.data.data.token,
-            is_profile_complete: response.data.data.is_profile_complete,
-          });
-          if (window.safari) {
-            let data = window.safari.pushNotification.permission(
-              "web.com.admin.goagalia"
-            );
-            if (data.permission === "granted") {
-              handlePermission(this.updateNotificationToken);
-            } else {
-              this.props.history.replace("/dashboard");
-            }
-          } else {
-            this.props.history.replace("/dashboard");
-          }
-        }
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
-
-        if ([400, 405, 422, 403].includes(error?.response?.data?.statusCode)) {
-          Toast.showErrorToast(error.response.data.error.message[0]);
-        }
-      });
+  const handleRememberMeChange = () => {
+    setRememberMe(!rememberMe);
   };
 
-  updateNotificationToken = async (token) => {
-    const packet = {
-      device_token: token,
-      is_safari: true,
-      is_safari_permit: true,
-    };
-
-    LAxios.patch(`auth/user/update-device-token`, packet)
-      .then((response) => {
-        if (response.data.statusCode === 200) {
-          this.props.history.replace("/dashboard");
-        }
-      })
-      .catch((error) => {
-        if (error.response.status !== 500) {
-          if ([400, 405, 422, 403].includes(error.response.data.statusCode)) {
-            Toast.showErrorToast(error.response.data.error.message[0]);
-          }
-        }
-      })
-      .finally(() => {});
+  const validateForm = () => {
+    if (masterPin.length !== 6) {
+      setPinError('Master PIN must be exactly 6 digits');
+      return false;
+    }
+    return true;
   };
 
-  render() {
-    const { passwordVisible, loading } = this.state;
-    const { theme } = this.props;
-    return (
-      <div className={styles.rootContainer}>
-        {loading && <Loader />}
-        <div className={styles.mainContainer}>
-          <div className={styles.formContainer}>
-            <Typography variant="h4">Login</Typography>
-            <br />
-            <span className="text-muted p2" style={{ paddingTop: 17 }}>
-              Please enter your credentials and login to your owner platform.
-            </span>
-            <div style={{ marginTop: 74 }}>
-              <Formik
-                initialValues={{ email: "", password: "" }}
-                validationSchema={Yup.object().shape({
-                  email: Yup.string()
-                    .email("Wrong email format!")
-                    .required("Email is required"),
-                  password: Yup.string()
-                    .required("Password is required")
-                    .min(8, "Minimum password length is 8 characters"),
-                })}
-                onSubmit={({ email, password }) => {
-                  this.handleLogin(email, password);
-                }}
-              >
-                {({ handleChange, handleSubmit, values, errors, touched }) => (
-                  <form onSubmit={handleSubmit}>
-                    <InputField
-                      id="email"
-                      type="text"
-                      label="Email address"
-                      variant="outlined"
-                      onChange={handleChange("email")}
-                      error={touched.email && errors.email}
-                      helperText={touched.email && errors.email && errors.email}
-                      fullWidth
-                    />
-                    <PasswordField
-                      id="password"
-                      label="Password"
-                      variant="outlined"
-                      showPassword={passwordVisible}
-                      togglePassword={this.togglePasswordVisible}
-                      onChange={handleChange("password")}
-                      error={touched.password && errors.password}
-                      helperText={
-                        touched.password && errors.password && errors.password
-                      }
-                      style={{ marginTop: 22 }}
-                      fullWidth
-                    />
-                    <span
-                      style={{
-                        float: "right",
-                        color: theme.palette.primary.main,
-                      }}
-                      onClick={() =>
-                        this.props.history.push("/auth/reset-password")
-                      }
-                      className="cursor-pointer label"
-                    >
-                      Forgot Password?
-                    </span>
-                    {/* <PasswordSwitch
-                      isOn={rememberMe}
-                      onToggle={this.toggleRememberMe}
-                      label="Remember me?"
-                      style={{ marginTop: 22 }}
-                    /> */}
-                    <PrimaryButton
-                      style={{ marginTop: 74 }}
-                      type="submit"
-                      wide="true"
-                    >
-                      Login
-                    </PrimaryButton>
-                  </form>
-                )}
-              </Formik>
-            </div>
+  const handleLogin = async () => {
+    if (!validateForm()) {
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      
+      const payload = {
+        master_pin: masterPin,
+      };
+      
+      const resp = await API.post(ENDPOINTS.LOGIN, payload, false);
+      
+      if (resp.success && resp.data) {
+        console.log('Login successful', resp.data);
+        
+        const { role, token, profile } = resp.data || {};
+        StorageManager.put(API_TOKEN, token);
+        StorageManager.put(AGALIA_ID, profile?.id);
+        
+        dispatch(loginSuccess({
+          profile: profile,
+          token: token,
+        }));
+        
+        // Redirect to dashboard
+        history.replace('/dashboard');
+      }
+    } catch (e) {
+      // Show error toast if login fails
+      console.log(e);
+      Toast.showErrorToast(e.data?.error?.message[0] || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // CSS styles
+  const styles = {
+    container: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '100vh',
+      backgroundColor: '#f9fafb',
+    },
+    card: {
+      width: '100%',
+      maxWidth: '420px',
+      padding: '32px',
+      backgroundColor: 'white',
+      borderRadius: '8px',
+      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    },
+    header: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginBottom: '24px',
+    },
+    logoContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: '8px',
+    },
+    logoText: {
+      marginLeft: '8px',
+      fontSize: '32px',
+      fontWeight: 'bold',
+      color: '#1f2937',
+    },
+    subtitle: {
+      fontSize: '18px',
+      color: '#4b5563',
+    },
+    formGroup: {
+      marginBottom: '24px',
+    },
+    label: {
+      display: 'block',
+      marginBottom: '8px',
+      fontSize: '14px',
+      color: '#4b5563',
+    },
+    input: {
+      width: '100%',
+      padding: '12px 16px',
+      border: '1px solid #d1d5db',
+      borderRadius: '4px',
+      outline: 'none',
+      fontSize: '16px',
+      transition: 'all 0.2s',
+    },
+    errorText: {
+      color: '#ef4444',
+      fontSize: '12px',
+      marginTop: '4px',
+    },
+    checkboxContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: '24px',
+    },
+    checkbox: {
+      width: '16px',
+      height: '16px',
+      borderColor: '#d1d5db',
+      borderRadius: '4px',
+      accentColor: '#F03E88',
+    },
+    checkboxLabel: {
+      marginLeft: '8px',
+      fontSize: '14px',
+      color: '#4b5563',
+    },
+    button: {
+      width: '100%',
+      padding: '12px',
+      backgroundColor: '#F03E88',
+      color: 'white',
+      border: 'none',
+      borderRadius: '4px',
+      fontSize: '16px',
+      fontWeight: '500',
+      cursor: 'pointer',
+      transition: 'background-color 0.2s',
+    },
+    disabledButton: {
+      width: '100%',
+      padding: '12px',
+      backgroundColor: '#f8a0c2',
+      color: 'white',
+      border: 'none',
+      borderRadius: '4px',
+      fontSize: '16px',
+      fontWeight: '500',
+      cursor: 'not-allowed',
+    },
+    linkContainer: {
+      marginTop: '16px',
+      textAlign: 'center',
+    },
+    link: {
+      fontSize: '14px',
+      color: '#F03E88',
+      textDecoration: 'none',
+    },
+    signUpContainer: {
+      marginTop: '24px',
+      textAlign: 'center',
+    },
+    signUpText: {
+      fontSize: '14px',
+      color: '#4b5563',
+    },
+    signUpLink: {
+      fontSize: '14px',
+      color: '#F03E88',
+      textDecoration: 'none',
+    },
+  };
+
+  return (
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <div style={styles.header}>
+          <div style={styles.logoContainer}>
+            <svg 
+              width="28" 
+              height="28" 
+              viewBox="0 0 24 24" 
+              fill="#F03E88" 
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </svg>
+            <span style={styles.logoText}>Agalia</span>
           </div>
-          <AgaliaBanner />
+          <p style={styles.subtitle}>See your shifts, schedules & payments</p>
+        </div>
+
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Enter Master Pin (6 digits)</label>
+          <input
+            type="tel"
+            value={masterPin}
+            onChange={handleMasterPinChange}
+            style={styles.input}
+            maxLength={6}
+            placeholder="Enter 6-digit PIN"
+          />
+          {pinError && <p style={styles.errorText}>{pinError}</p>}
+        </div>
+
+        <div style={styles.checkboxContainer}>
+          <input
+            type="checkbox"
+            id="remember-me"
+            checked={rememberMe}
+            onChange={handleRememberMeChange}
+            style={styles.checkbox}
+          />
+          <label htmlFor="remember-me" style={styles.checkboxLabel}>
+            Remember me
+          </label>
+        </div>
+
+        <button 
+          style={masterPin.length === 6 ? styles.button : styles.disabledButton} 
+          onClick={handleLogin}
+          disabled={loading || masterPin.length !== 6}
+        >
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
+
+        <div style={styles.linkContainer}>
+          <a href="#" style={styles.link}>
+            Unable To Login
+          </a>
+        </div>
+
+        <div style={styles.signUpContainer}>
+          <span style={styles.signUpText}>Not yet Agalia Business? </span>
+          <a href="#" style={styles.signUpLink}>
+            Sign up now
+          </a>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-const mapStateToProps = ({ auth: { isAuthenticated } }) => ({
-  isAuthenticated,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  loginSuccess: (data) => dispatch(loginSuccess(data)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(Login));
+export default Login;
