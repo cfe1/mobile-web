@@ -1,5 +1,5 @@
 import React from "react";
- 
+
 import MODULES from "./moduleList";
 
 const Dashboard = React.lazy(() => import("./pages/NewDashboard"));
@@ -15,6 +15,7 @@ const Notifications = React.lazy(() =>
 );
 const FacilityDetails = React.lazy(() => import("./pages/FacilityDetails"));
 const ErrorPage = React.lazy(() => import("./pages/404/404"));
+const Onboarding = React.lazy(() => import("./pages/Onboarding"));
 
 const routes = [
   {
@@ -52,6 +53,15 @@ const routes = [
     module: MODULES.PROFILE,
     checkAccess: false,
     component: Profile,
+  },
+  {
+    path: "/onboarding",
+    key: "profile",
+    exact: true,
+    name: "Profile",
+    module: MODULES.PROFILE,
+    checkAccess: false,
+    component: Onboarding,
   },
   {
     path: "/profile/edit",
