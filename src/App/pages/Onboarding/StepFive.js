@@ -46,16 +46,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1.1rem",
     textTransform: "none",
     marginTop: theme.spacing(3),
-    backgroundColor: "#F83E7D",
-    color: "white",
-    "&:hover": {
-      backgroundColor: "#E52D6A",
-    },
-    "&:disabled": {
-      backgroundColor: "#F83E7D",
-      opacity: 0.7,
-      color: "white",
-    },
   },
   backButton: {
     padding: theme.spacing(1.5),
@@ -167,6 +157,7 @@ export const StepFive = ({ profileData, updateProfile, loading, onBack }) => {
         className={classes.continueButton}
         disabled={!selectedCategory || loading}
         onClick={handleContinue}
+        color="primary"
       >
         Continue
       </Button>

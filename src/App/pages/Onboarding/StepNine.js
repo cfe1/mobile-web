@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Button,
@@ -10,10 +10,21 @@ import {
   MenuItem,
   CircularProgress,
   FormHelperText,
+  IconButton,
+  Box,
+  Divider,
+  Paper,
+  Snackbar,
+  SnackbarContent,
 } from "@material-ui/core";
 import { API, ENDPOINTS } from "api/apiService";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import GoogleMapReact from "google-map-react";
+import LocationOnIcon from "@material-ui/icons/LocationOn";
+import MyLocationIcon from "@material-ui/icons/MyLocation";
+import SearchIcon from "@material-ui/icons/Search";
+import ErrorIcon from "@material-ui/icons/Error";
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
@@ -25,6 +36,30 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "2rem",
     fontWeight: 600,
     marginBottom: theme.spacing(3),
+  },
+  mapContainer: {
+    width: "100%",
+    height: "300px",
+    marginBottom: theme.spacing(3),
+    position: "relative",
+    borderRadius: theme.spacing(1),
+    overflow: "hidden",
+  },
+  mapControls: {
+    position: "absolute",
+    top: theme.spacing(2),
+    right: theme.spacing(2),
+    zIndex: 2,
+    display: "flex",
+    flexDirection: "column",
+    gap: theme.spacing(1),
+  },
+  mapControlButton: {
+    backgroundColor: "white",
+    "&:hover": {
+      backgroundColor: "#f5f5f5",
+    },
+    boxShadow: "0px 2px 4px rgba(0,0,0,0.2)",
   },
   formField: {
     marginBottom: theme.spacing(3),
@@ -46,29 +81,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1.1rem",
     textTransform: "none",
     marginTop: theme.spacing(3),
-    backgroundColor: "#F83E7D",
-    color: "white",
-    "&:hover": {
-      backgroundColor: "#E52D6A",
-    },
-    "&:disabled": {
-      backgroundColor: "#F83E7D",
-      opacity: 0.7,
-      color: "white",
-    },
-  },
-  skipButton: {
-    padding: theme.spacing(1.5),
-    borderRadius: theme.spacing(1),
-    fontSize: "1.1rem",
-    textTransform: "none",
-    marginTop: theme.spacing(2),
-    color: "#F83E7D",
-    border: "1px solid #F83E7D",
-    backgroundColor: "white",
-    "&:hover": {
-      backgroundColor: "rgba(248, 62, 125, 0.05)",
-    },
   },
   backButton: {
     padding: theme.spacing(1.5),
@@ -94,7 +106,58 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(4),
   },
+  markerContainer: {
+    position: "absolute",
+    transform: "translate(-50%, -100%)",
+    "&:hover": {
+      zIndex: 2,
+    },
+  },
+  markerIcon: {
+    color: "#F83E7D",
+    fontSize: "2.5rem",
+  },
+  separatorText: {
+    display: "flex",
+    alignItems: "center",
+    margin: `${theme.spacing(3)}px 0`,
+    "&::before, &::after": {
+      content: '""',
+      flex: 1,
+      borderBottom: `1px solid ${theme.palette.divider}`,
+    },
+    "&::before": {
+      marginRight: theme.spacing(2),
+    },
+    "&::after": {
+      marginLeft: theme.spacing(2),
+    },
+  },
+  mapInfoMessage: {
+    position: "absolute",
+    bottom: theme.spacing(2),
+    left: "50%",
+    transform: "translateX(-50%)",
+    padding: theme.spacing(1, 2),
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    borderRadius: theme.spacing(1),
+    boxShadow: "0px 2px 4px rgba(0,0,0,0.2)",
+    zIndex: 2,
+  },
+  errorSnackbar: {
+    backgroundColor: theme.palette.error.dark,
+  },
+  errorIcon: {
+    marginRight: theme.spacing(1),
+  },
 }));
+
+// Marker component for Google Map
+const Marker = ({ lat, lng, className, children }) => (
+  <div className={className} lat={lat} lng={lng}>
+    {children}
+  </div>
+);
 
 // Validation schema
 const validationSchema = Yup.object({
@@ -129,6 +192,22 @@ export const StepNine = ({ profileData, updateProfile, loading, onBack }) => {
   const [states, setStates] = useState([]);
   const [fetchingCountries, setFetchingCountries] = useState(false);
   const [fetchingStates, setFetchingStates] = useState(false);
+  const [fetchingLocation, setFetchingLocation] = useState(false);
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const [center, setCenter] = useState({ lat: 40.7128, lng: -74.006 }); // Default to NYC
+  const [markerPosition, setMarkerPosition] = useState(null);
+  const [zoom, setZoom] = useState(14);
+  const [infoMessage, setInfoMessage] = useState(
+    "Click on the map to set your address"
+  );
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showError, setShowError] = useState(false);
+
+  // Refs for Google Maps API
+  const mapRef = useRef(null);
+  const mapsRef = useRef(null);
+  const geocoderRef = useRef(null);
 
   // Initialize form with Formik
   const formik = useFormik({
@@ -139,22 +218,52 @@ export const StepNine = ({ profileData, updateProfile, loading, onBack }) => {
       state: profileData?.address?.state || { id: "", name: "" },
       country: profileData?.address?.country || { id: "", name: "" },
       zipcode: profileData?.address?.zipcode || "",
+      latitude: profileData?.address?.latitude || null,
+      longitude: profileData?.address?.longitude || null,
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      // Format the data for API submission
-      const addressData = {
-        address: {
+    onSubmit: async (values) => {
+      // Set local submitting state to true
+      setSubmitting(true);
+
+      try {
+        // Create FormData
+        const formData = new FormData();
+
+        // Create the address object as per the specified format
+        const addressData = {
           address_line1: values.address_line1,
-          address_line2: values.address_line2,
+          address_line2: values.address_line2 || "",
           city: values.city,
           state: values.state.id,
           country: values.country.id,
           zipcode: values.zipcode,
-        },
-      };
+        };
 
-      updateProfile(addressData);
+        // Add coordinates if available
+        if (values.latitude && values.longitude) {
+          addressData.latitude = values.latitude;
+          addressData.longitude = values.longitude;
+        }
+
+        // Convert the address object to a JSON string and append to FormData
+        formData.append("address", JSON.stringify(addressData));
+
+        // Call the updateProfile function with FormData
+        await updateProfile(formData);
+        // The parent component will handle success cases
+      } catch (error) {
+        // Handle the error here
+        console.error("Error updating address:", error);
+        setErrorMessage(
+          error?.data?.error?.message ||
+            "Failed to update address. Please try again."
+        );
+        setShowError(true);
+      } finally {
+        // Set submitting state to false regardless of success or failure
+        setSubmitting(false);
+      }
     },
   });
 
@@ -171,6 +280,20 @@ export const StepNine = ({ profileData, updateProfile, loading, onBack }) => {
       setStates([]);
     }
   }, [formik.values.country]);
+
+  // Set marker position when form values with coordinates change
+  useEffect(() => {
+    if (formik.values.latitude && formik.values.longitude) {
+      setMarkerPosition({
+        lat: parseFloat(formik.values.latitude),
+        lng: parseFloat(formik.values.longitude),
+      });
+      setCenter({
+        lat: parseFloat(formik.values.latitude),
+        lng: parseFloat(formik.values.longitude),
+      });
+    }
+  }, [formik.values.latitude, formik.values.longitude]);
 
   // Pre-fill address if it exists in profile data
   useEffect(() => {
@@ -194,6 +317,20 @@ export const StepNine = ({ profileData, updateProfile, loading, onBack }) => {
       formik.setFieldValue("address_line2", address.address_line2 || "");
       formik.setFieldValue("city", address.city || "");
       formik.setFieldValue("zipcode", address.zipcode || "");
+
+      // Set coordinates
+      if (address.latitude && address.longitude) {
+        formik.setFieldValue("latitude", address.latitude);
+        formik.setFieldValue("longitude", address.longitude);
+        setMarkerPosition({
+          lat: parseFloat(address.latitude),
+          lng: parseFloat(address.longitude),
+        });
+        setCenter({
+          lat: parseFloat(address.latitude),
+          lng: parseFloat(address.longitude),
+        });
+      }
     }
   }, [profileData, countries]);
 
@@ -221,6 +358,10 @@ export const StepNine = ({ profileData, updateProfile, loading, onBack }) => {
       }
     } catch (error) {
       console.error("Error fetching countries:", error);
+      setErrorMessage(
+        "Failed to fetch countries. Please try reloading the page."
+      );
+      setShowError(true);
     } finally {
       setFetchingCountries(false);
     }
@@ -235,6 +376,10 @@ export const StepNine = ({ profileData, updateProfile, loading, onBack }) => {
       }
     } catch (error) {
       console.error("Error fetching states:", error);
+      setErrorMessage(
+        "Failed to fetch states. Please try selecting the country again."
+      );
+      setShowError(true);
     } finally {
       setFetchingStates(false);
     }
@@ -258,6 +403,157 @@ export const StepNine = ({ profileData, updateProfile, loading, onBack }) => {
     }
   };
 
+  // Map initialization callback
+  const handleApiLoaded = ({ map, maps }) => {
+    mapRef.current = map;
+    mapsRef.current = maps;
+    geocoderRef.current = new maps.Geocoder();
+    setMapLoaded(true);
+  };
+
+  // Handle map click to set marker and get address
+  const handleMapClick = (event) => {
+    if (!mapLoaded || !geocoderRef.current) return;
+
+    const newPosition = {
+      lat: event.lat,
+      lng: event.lng,
+    };
+
+    setMarkerPosition(newPosition);
+    formik.setFieldValue("latitude", newPosition.lat);
+    formik.setFieldValue("longitude", newPosition.lng);
+
+    // Reverse geocode to get address
+    geocoderRef.current.geocode(
+      { location: newPosition },
+      (results, status) => {
+        if (status === "OK" && results[0]) {
+          fillAddressFromGeocode(results[0]);
+        } else {
+          setErrorMessage(
+            "Could not find address for this location. You can enter it manually."
+          );
+          setShowError(true);
+        }
+      }
+    );
+  };
+
+  // Get current location from browser
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      setFetchingLocation(true);
+      setInfoMessage("Getting your current location...");
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+
+          setCenter(pos);
+          setMarkerPosition(pos);
+          formik.setFieldValue("latitude", pos.lat);
+          formik.setFieldValue("longitude", pos.lng);
+
+          // Reverse geocode to get address
+          if (geocoderRef.current) {
+            geocoderRef.current.geocode(
+              { location: pos },
+              (results, status) => {
+                if (status === "OK" && results[0]) {
+                  fillAddressFromGeocode(results[0]);
+                } else {
+                  setErrorMessage(
+                    "Could not find address for your location. Please enter it manually."
+                  );
+                  setShowError(true);
+                }
+                setFetchingLocation(false);
+                setInfoMessage("Click on the map to adjust your location");
+              }
+            );
+          } else {
+            setFetchingLocation(false);
+            setInfoMessage("Map not loaded properly. Please try again.");
+          }
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+          setFetchingLocation(false);
+          setInfoMessage(
+            "Unable to get your location. Please select manually."
+          );
+          setErrorMessage(
+            "Could not get your location. Please allow location access or enter the address manually."
+          );
+          setShowError(true);
+        }
+      );
+    } else {
+      setInfoMessage("Geolocation is not supported by your browser.");
+      setErrorMessage(
+        "Your browser doesn't support geolocation. Please enter your address manually."
+      );
+      setShowError(true);
+    }
+  };
+
+  // Fill address fields from geocode result
+  const fillAddressFromGeocode = (result) => {
+    if (!result) return;
+
+    let address1 = "";
+    let city = "";
+    let state = "";
+    let zipcode = "";
+
+    // Loop through address components to extract relevant data
+    result.address_components.forEach((component) => {
+      const types = component.types;
+
+      if (types.includes("street_number")) {
+        address1 = component.long_name;
+      } else if (types.includes("route")) {
+        address1 = address1
+          ? `${address1} ${component.long_name}`
+          : component.long_name;
+      } else if (types.includes("locality")) {
+        city = component.long_name;
+      } else if (types.includes("administrative_area_level_1")) {
+        state = component.long_name;
+      } else if (types.includes("postal_code")) {
+        zipcode = component.long_name;
+      }
+    });
+
+    // Update form values
+    formik.setFieldValue("address_line1", address1);
+    formik.setFieldValue("city", city);
+
+    // Find matching state in our states array
+    if (state && states.length > 0) {
+      const stateObj = states.find(
+        (s) => s.name.toLowerCase() === state.toLowerCase()
+      );
+      if (stateObj) {
+        formik.setFieldValue("state", stateObj);
+      }
+    }
+
+    formik.setFieldValue("zipcode", zipcode);
+  };
+
+  const handleCloseError = () => {
+    setShowError(false);
+  };
+
+  // Override the parent's loading prop with our local submitting state
+  // This ensures we can re-enable the button even if the parent's loading state is stuck
+  const isSubmitting = loading || submitting;
+
   if (fetchingCountries) {
     return (
       <div className={classes.loader}>
@@ -269,6 +565,51 @@ export const StepNine = ({ profileData, updateProfile, loading, onBack }) => {
   return (
     <div className={classes.formContainer}>
       <Typography className={classes.title}>Address</Typography>
+
+      <div className={classes.mapContainer}>
+        <GoogleMapReact
+          bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY }}
+          defaultCenter={center}
+          center={center}
+          defaultZoom={zoom}
+          zoom={zoom}
+          yesIWantToUseGoogleMapApiInternals
+          onGoogleApiLoaded={handleApiLoaded}
+          onClick={handleMapClick}
+        >
+          {markerPosition && (
+            <Marker
+              lat={markerPosition.lat}
+              lng={markerPosition.lng}
+              className={classes.markerContainer}
+            >
+              <LocationOnIcon className={classes.markerIcon} />
+            </Marker>
+          )}
+        </GoogleMapReact>
+
+        <div className={classes.mapControls}>
+          <IconButton
+            className={classes.mapControlButton}
+            onClick={getCurrentLocation}
+            disabled={fetchingLocation || isSubmitting}
+          >
+            {fetchingLocation ? (
+              <CircularProgress size={24} />
+            ) : (
+              <MyLocationIcon style={{ color: "#F83E7D" }} />
+            )}
+          </IconButton>
+        </div>
+
+        <Paper className={classes.mapInfoMessage}>
+          <Typography variant="body2">{infoMessage}</Typography>
+        </Paper>
+      </div>
+
+      <Typography className={classes.separatorText}>
+        OR ENTER MANUALLY
+      </Typography>
 
       <form onSubmit={formik.handleSubmit}>
         {/* Country */}
@@ -284,7 +625,7 @@ export const StepNine = ({ profileData, updateProfile, loading, onBack }) => {
             name="country"
             value={formik.values.country.id || ""}
             onChange={handleCountryChange}
-            disabled={loading || fetchingCountries}
+            disabled={isSubmitting || fetchingCountries}
           >
             <MenuItem value="">
               <em>Select Country</em>
@@ -317,7 +658,7 @@ export const StepNine = ({ profileData, updateProfile, loading, onBack }) => {
           helperText={
             formik.touched.address_line1 && formik.errors.address_line1
           }
-          disabled={loading}
+          disabled={isSubmitting}
         />
 
         {/* Address Line 2 */}
@@ -331,7 +672,7 @@ export const StepNine = ({ profileData, updateProfile, loading, onBack }) => {
           value={formik.values.address_line2}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          disabled={loading}
+          disabled={isSubmitting}
         />
         <Typography className={classes.optionalLabel}>Optional</Typography>
 
@@ -348,7 +689,7 @@ export const StepNine = ({ profileData, updateProfile, loading, onBack }) => {
           onBlur={formik.handleBlur}
           error={formik.touched.city && Boolean(formik.errors.city)}
           helperText={formik.touched.city && formik.errors.city}
-          disabled={loading}
+          disabled={isSubmitting}
         />
 
         {/* State */}
@@ -364,7 +705,9 @@ export const StepNine = ({ profileData, updateProfile, loading, onBack }) => {
             name="state"
             value={formik.values.state.id || ""}
             onChange={handleStateChange}
-            disabled={loading || fetchingStates || !formik.values.country.id}
+            disabled={
+              isSubmitting || fetchingStates || !formik.values.country.id
+            }
           >
             <MenuItem value="">
               <em>Select State</em>
@@ -393,17 +736,18 @@ export const StepNine = ({ profileData, updateProfile, loading, onBack }) => {
           onBlur={formik.handleBlur}
           error={formik.touched.zipcode && Boolean(formik.errors.zipcode)}
           helperText={formik.touched.zipcode && formik.errors.zipcode}
-          disabled={loading}
+          disabled={isSubmitting}
         />
 
         <Button
           type="submit"
           fullWidth
           variant="contained"
+          color="primary"
           className={classes.continueButton}
-          disabled={loading || !formik.isValid || formik.isSubmitting}
+          disabled={isSubmitting || !formik.isValid}
         >
-          {loading ? (
+          {isSubmitting ? (
             <CircularProgress size={24} color="inherit" />
           ) : (
             "Continue"
@@ -415,10 +759,31 @@ export const StepNine = ({ profileData, updateProfile, loading, onBack }) => {
         fullWidth
         className={classes.backButton}
         onClick={onBack}
-        disabled={loading}
+        disabled={isSubmitting}
       >
         Back
       </Button>
+
+      {/* Error Snackbar */}
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        open={showError}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+      >
+        <SnackbarContent
+          className={classes.errorSnackbar}
+          message={
+            <Box display="flex" alignItems="center">
+              <ErrorIcon className={classes.errorIcon} />
+              <span>{errorMessage}</span>
+            </Box>
+          }
+        />
+      </Snackbar>
     </div>
   );
 };

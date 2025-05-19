@@ -48,16 +48,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1.1rem",
     textTransform: "none",
     marginTop: theme.spacing(2),
-    backgroundColor: "#F83E7D", // Pink color as shown in the screenshot
     color: "white",
-    "&:hover": {
-      backgroundColor: "#E52D6A", // Slightly darker pink on hover
-    },
-    "&:disabled": {
-      backgroundColor: "#F83E7D",
-      opacity: 0.7,
-      color: "white",
-    },
   },
   backButton: {
     padding: theme.spacing(1.5),
@@ -159,6 +150,7 @@ export const StepThree = ({ profileData, updateProfile, loading, onBack }) => {
       <Button
         fullWidth
         variant="contained"
+        color="primary"
         className={classes.continueButton}
         disabled={!isValid || loading}
         onClick={handleContinue}

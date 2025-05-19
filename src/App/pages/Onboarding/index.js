@@ -15,8 +15,20 @@ import { StepNine } from "./StepNine";
 const useStyles = makeStyles((theme) => ({
   onboardingContainer: {
     maxWidth: "600px",
-    margin: "0 auto",
     padding: theme.spacing(4),
+    width: "50vw",
+    borderRadius: 8,
+    border: "1px solid #EDECF5",
+    maxHeight: "600px",
+    overflowY: "auto",
+  },
+  mainContainer: {
+    height: "calc(100vh - 152px)",
+    width: "100vw",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
   },
 }));
 
@@ -38,8 +50,8 @@ const Onboarding = (props) => {
       setCurrentStep(parseInt(props.profileData.onboarding_step) || 1);
     } else if (locationState?.profile) {
       setProfileData(locationState.profile);
-      //   setCurrentStep(parseInt(locationState.onboarding_step) || 1);
-      setCurrentStep(8);
+      setCurrentStep(parseInt(locationState.onboarding_step) || 1);
+      // setCurrentStep(1);
     } else if (queryParams?.step) {
       setCurrentStep(parseInt(queryParams.step) || 1);
       // If no profile data is available, we may need to fetch it
@@ -190,7 +202,11 @@ const Onboarding = (props) => {
     }
   };
 
-  return <div className={classes.onboardingContainer}>{renderStep()}</div>;
+  return (
+    <div className={classes.mainContainer}>
+      <div className={classes.onboardingContainer}>{renderStep()}</div>;
+    </div>
+  );
 };
 
 export default Onboarding;
