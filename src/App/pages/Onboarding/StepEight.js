@@ -144,6 +144,7 @@ export const StepEight = ({ profileData, updateProfile, loading, onBack }) => {
         className={classes.continueButton}
         disabled={!isValid || loading}
         onClick={handleContinue}
+        color="primary"
       >
         {loading ? <CircularProgress size={24} color="inherit" /> : "Continue"}
       </Button>
@@ -154,7 +155,6 @@ export const StepEight = ({ profileData, updateProfile, loading, onBack }) => {
         className={classes.skipButton}
         disabled={loading}
         onClick={handleSkip}
-        color="primary"
       >
         Skip
       </Button>

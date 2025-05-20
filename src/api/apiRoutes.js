@@ -100,7 +100,8 @@ const SUB_ADMINS = {
 
 const MOBILES = {
   GET_FACILITY_LISTS: `/auth/onboarding/user-profile/?user_type=`,
-  UPDATE_PROFILE: `/auth/nurse/profile`,
+  // UPDATE_PROFILE: `/auth/nurse/profile`,
+  UPDATE_PROFILE: (id) => `/auth/onboarding/${id}/profile/`,
   JOB_CATEGORIES: `/common/labor-categories-with-titles`,
   LABOUR_CATEGORIES: (jobCat) =>
     `/common/labor-categories/job-titles/${jobCat}/`,

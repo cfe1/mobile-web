@@ -71,9 +71,9 @@ const Onboarding = (props) => {
         // setCurrentStep(parseInt(response.data.onboarding_step) || 1);
       }
     } catch (error) {
-      Toast.showErrorToast(
-        error.data?.error?.message[0] || "Failed to fetch profile data"
-      );
+      // Toast.showErrorToast(
+      //   error.data?.error?.message[0] || "Failed to fetch profile data"
+      // );
     } finally {
       setLoading(false);
     }
@@ -82,7 +82,10 @@ const Onboarding = (props) => {
   const updateProfile = async (data) => {
     try {
       setLoading(true);
-      const response = await API.patch(ENDPOINTS.UPDATE_PROFILE, data);
+      const response = await API.patch(
+        ENDPOINTS.UPDATE_PROFILE("fcbb2be8-6b5b-4b7e-a19e-8a3d66ae7acb"),
+        data
+      );
       if (response?.success) {
         // Update local profile data
         setProfileData({ ...profileData, ...data });
@@ -93,9 +96,9 @@ const Onboarding = (props) => {
       }
       return false;
     } catch (error) {
-      Toast.showErrorToast(
-        error.data?.error?.message[0] || "Failed to update profile"
-      );
+      // Toast.showErrorToast(
+      //   error.data?.error?.message[0] || "Failed to update profile"
+      // );
       return false;
     } finally {
       setLoading(false);
