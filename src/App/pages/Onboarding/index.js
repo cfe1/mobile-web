@@ -47,10 +47,10 @@ const Onboarding = (props) => {
     // Initialize profile data from props or location state
     if (props.profileData) {
       setProfileData(props.profileData);
-      setCurrentStep(parseInt(props.profileData.onboarding_step) || 1);
+      setCurrentStep(parseInt(props.profileData.onboarding_step) + 1 || 1);
     } else if (locationState?.profile) {
       setProfileData(locationState.profile);
-      setCurrentStep(parseInt(locationState.onboarding_step) || 1);
+      setCurrentStep(parseInt(locationState.onboarding_step) + 1 || 1);
       // setCurrentStep(1);
     } else if (queryParams?.step) {
       setCurrentStep(parseInt(queryParams.step) || 1);
@@ -83,15 +83,15 @@ const Onboarding = (props) => {
     try {
       setLoading(true);
       const response = await API.patch(
-        ENDPOINTS.UPDATE_PROFILE("fcbb2be8-6b5b-4b7e-a19e-8a3d66ae7acb"),
+        ENDPOINTS.UPDATE_PROFILE(profileData?.id),
         data
       );
       if (response?.success) {
         // Update local profile data
-        setProfileData({ ...profileData, ...data });
+        setProfileData({ ...profileData, ...response?.data });
         // Move to next step
         moveToNextStep();
-        fetchProfileData();
+        // fetchProfileData();
         return true;
       }
       return false;

@@ -235,8 +235,8 @@ export const StepNine = ({ profileData, updateProfile, loading, onBack }) => {
           address_line1: values.address_line1,
           address_line2: values.address_line2 || "",
           city: values.city,
-          state: values.state.id, // Need the name
-          country: values.country.id, // Need the name
+          state: values.state.name, // Need the name
+          country: values.country.name, // Need the name
           zipcode: values.zipcode,
         };
 
