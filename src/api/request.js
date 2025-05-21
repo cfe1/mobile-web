@@ -1,6 +1,6 @@
 import axios from "axios";
 import StorageManager from "../storage/StorageManager";
-import { API_TOKEN } from "../storage/StorageKeys";
+import { API_TOKEN, FACILITY_API_TOKEN } from "../storage/StorageKeys";
 import { baseURL } from "./apiConsts";
 
 const request = async function (options, isTokenNeeded = true, customHeaders) {
@@ -9,7 +9,11 @@ const request = async function (options, isTokenNeeded = true, customHeaders) {
   };
   if (isTokenNeeded) {
     const authToken = StorageManager.get(API_TOKEN);
-    headers = { ...headers, Authorization: `Bearer ${authToken}` };
+    const nurseToken = StorageManager.get(FACILITY_API_TOKEN);
+    headers = {
+      ...headers,
+      Authorization: `Bearer ${nurseToken || authToken}`,
+    };
   }
 
   if (customHeaders) {
@@ -33,8 +37,8 @@ const request = async function (options, isTokenNeeded = true, customHeaders) {
       // Request was made but server responded with something
       // other than 2xx
       if (error.response.status === 401) {
-        window.location.href = "/auth/login";
-        StorageManager.removeItem(API_TOKEN);
+        // window.location.href = "/auth/login";
+        // StorageManager.removeItem(API_TOKEN);
       }
       console.debug("Status:", error.response.status);
       console.debug("Data:", error.response.data);

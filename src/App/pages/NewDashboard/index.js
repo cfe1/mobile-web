@@ -1,600 +1,308 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { API, ENDPOINTS } from "api/apiService";
-import queryString from "query-string";
-import moment from "moment";
-import { Grid, makeStyles, Typography } from "@material-ui/core";
-import { Loader, TablePagination, ArrowBackButton } from "App/components";
-import { useLocation } from "react-router-dom";
-import Filters from "App/components/Filter/Filters";
-import { LimitAlertModal } from "./manageAlerts/LimitAlertModal";
-import {
-  FilterConts,
-  PARAM_NAME,
-  ITEMS,
-} from "App/components/Filter/filterConts";
-import DrawerSearchInput from "App/components/Form/DrawerSearchInput";
-import FacilityTable from "./FacilityTable";
-import { transformJobTitles } from "./utills/common";
-import JobTitleService from "./utills/JobTitleService";
-import FacilityService from "./utills/FacilityService";
-import FacilityDetailsTable from "./FacilityDetails/FacilityDetailsTable";
-import FacilityEmployeesTable from "./FacilityEmployees/FacilityEmployeesTable";
+import { makeStyles } from "@material-ui/core/styles";
+import { Typography, Box, Paper, Button, Grid } from "@material-ui/core";
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import LocationCityIcon from "@material-ui/icons/LocationCity";
+import { useHistory } from "react-router-dom";
+import StorageManager from "storage/StorageManager";
+import { FACILITY_API_TOKEN } from "storage/StorageKeys";
 
-import DateRangePicker from "App/components/Form/DateRangePicker/index";
-import "./NewDashboard.scss";
-import { useModal } from "App/hooks";
-import { ModalTypes } from "App/constants/ModalConstants";
-import { PdfSettings } from "./PdfSettings/PdfSettings";
-import {
-  FacilityContext,
-  FacilityProvider,
-} from "./PdfSettings/FacilityListContext";
-import { StackedBarGraph } from "./GraphView/StackedBarGraph";
-const DEFAULT_PAGE_NO = 1;
-const DEFAULT_PAGE_SIZE = 10;
-const GRAPH = "GRAPH";
-const TABLE = "TABLE";
-const getWeekStartDate = () => {
-  return moment().startOf("week").toDate(); // Start of the current week (Sunday)
-};
-
-const getWeekEndDate = () => {
-  return moment().endOf("week").toDate(); // End of the current week (Saturday)
-};
-
-const NewDashboard = () => {
-  const location = useLocation();
-  const [loading, setLoading] = useState(false);
-  const [statsData, setStatsData] = useState([]);
-  const [startDate, setWeekStartDate] = useState(getWeekStartDate());
-  const [endDate, setWeekEndDate] = useState(getWeekEndDate());
-  const [isInitialRender, setIsInitialRender] = useState(true);
-  const [search, setSearch] = useState(null);
-  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
-  const [page, setPage] = useState(DEFAULT_PAGE_NO);
-  const [count, setCount] = useState();
-  const [sort, setSort] = useState({ key: "", dir: "asc" });
-  const [facilityId, setFacilityId] = useState(null);
-  const [allJobTitles, setAllJobTitles] = useState([]);
-  const [facilityList, setFacilityList] = useState([]);
-  const [selectedJobTitleIds, setSelectedJobTitleIds] = useState([]);
-  const [selectedFacilityIds, setSelectedFacilityIds] = useState([]);
-  const [selectedDay, setSelectedDay] = useState([]);
-  const [facilityTitle, setFacilityTitle] = useState("");
-  const [step, setStep] = useState(0);
-  const [selectedWeekRow, setSelectedWeekRow] = useState();
-  const [stepOneFilters, setStepOneFilters] = useState([]);
-  const [stepTwoFilters, setStepTwoFilters] = useState([]);
-  const [stepOneDate, setStepOneDate] = useState();
-  const [stepTwoDate, setStepTwoDate] = useState();
-  const [stepOnePagination, setStepOnePagination] = useState();
-  const [stepTwoPagination, setStepTwoPagination] = useState();
-  const [selectedFacility, setSelectedFacility] = useState([]);
-  const [isFacilityDetailsLoaded, setIsFacilityDetailsLoading] =
-    useState(false);
-  const [selectedFilters, setSelectedFilters] = useState([
-    {
-      value: "CLEAR_ALL",
-      label: "Clear All",
-      index: -1,
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: theme.spacing(4),
+    maxWidth: 800,
+    margin: "0 auto",
+    borderRadius: 16,
+    boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+    width: "71vw",
+  },
+  header: {
+    fontWeight: 700,
+    fontSize: "28px",
+    marginBottom: theme.spacing(4),
+  },
+  facilityItem: {
+    padding: theme.spacing(3),
+    marginBottom: theme.spacing(2),
+    borderRadius: 12,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.03)",
+    border: "1px solid #EDECF5",
+  },
+  iconContainer: {
+    backgroundColor: "#FFF0F5",
+    borderRadius: "50%",
+    width: 60,
+    height: 60,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: theme.spacing(3),
+    "& svg": {
+      color: "#E75480",
+      fontSize: 30,
     },
-  ]);
+  },
+  facilityInfo: {
+    flexGrow: 1,
+  },
+  facilityName: {
+    fontWeight: 600,
+    fontSize: "20px",
+    marginBottom: theme.spacing(1),
+  },
+  nurseLabel: {
+    backgroundColor: "#F5F5F5",
+    borderRadius: 50,
+    padding: "6px 16px",
+    fontSize: "14px",
+    fontWeight: 500,
+  },
+  notificationIcon: {
+    marginRight: theme.spacing(2),
+    color: "#FF0083",
+    fontSize: 28,
+    position: "relative",
+  },
+  notificationBadge: {
+    position: "absolute",
+    top: -4,
+    right: 12,
+    backgroundColor: "#FF0083",
+    color: "#FFFFFF",
+    borderRadius: "50%",
+    width: 15,
+    height: 15,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+  notificationDot: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    backgroundColor: "#FF0000",
+    borderRadius: "50%",
+    width: 10,
+    height: 10,
+  },
+  statusActive: {
+    color: "#4CAF50",
+    fontSize: "18px",
+    fontWeight: 500,
+    marginRight: theme.spacing(3),
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    paddingTop: theme.spacing(0.75),
+    paddingBottom: theme.spacing(0.75),
+    backgroundColor: "#F0F9F0",
+    borderRadius: 50,
+  },
+  statusInvited: {
+    color: "#E75480",
+    fontSize: "18px",
+    fontWeight: 500,
+    marginRight: theme.spacing(3),
+  },
+  selectButton: {
+    borderRadius: 50,
+    textTransform: "none",
+    padding: "10px 32px",
+    fontWeight: 600,
+    border: "1px solid #FF0083",
+    color: "#FF0083",
+    fontSize: "16px",
+    "&:hover": {
+      backgroundColor: "rgba(231, 84, 128, 0.08)",
+    },
+  },
+  selectButtonInvited: {
+    borderRadius: 50,
+    textTransform: "none",
+    padding: "10px 32px",
+    fontWeight: 600,
+    color: "#fff",
+    backgroundColor: "#E75480",
+    border: "1px solid #FF0083",
+    fontSize: "16px",
+    "&:hover": {
+      backgroundColor: "#D64D77",
+    },
+  },
+}));
 
-  const [view, setView] = useState(TABLE); // graph and table
-
-  const { openModal, closeModal, actionType, modalData, isOpen } =
-    useModal() || {};
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const handleAlertOpen = (facility) => {
-    setSelectedFacility(facility);
-    setModalOpen(true);
-  };
-
-  const handleClose = (isRefreshPage) => {
-    setModalOpen(false);
-    if (isRefreshPage) {
-      fetchStats();
-    }
-  };
-
+const FacilityList = () => {
   const classes = useStyles();
+  const history = useHistory();
+  const [loading, setLoading] = useState(false);
+  const [listingData, setListingData] = useState([]);
+  const [selectLoading, setSelectLoading] = useState(false);
 
-  useEffect(() => {
-    if (view === TABLE) {
-      getJobTitles();
-      fetchStats();
-      getFacilityList();
-    }
-  }, [view]);
-
-  const updatedFiltersOnScreenChange = (filtersParam) => {
-    const selectedDays = filtersParam
-      .filter((filter) => filter.index == 1)
-      ?.map((row) => row.value);
-    const selectedJobIds = filtersParam
-      .filter((filter) => filter.index == 0)
-      ?.map((row) => row.value);
-    setSelectedDay(selectedDays);
-    setSelectedJobTitleIds(selectedJobIds);
-  };
-
-  useEffect(() => {
-    if (view === TABLE) {
-      if (isInitialRender) {
-        setIsInitialRender(false);
-        return;
-      }
-
-      if (step == 0) {
-        fetchStats();
-      } else if (step == 1) {
-        fetchFacilityDetails();
-      } else if (step == 2) {
-        fetchFacilityEmployees();
-      }
-    }
-  }, [
-    selectedJobTitleIds,
-    selectedFacilityIds,
-    selectedDay,
-    pageSize,
-    page,
-    step,
-    sort,
-    search,
-    endDate,
-  ]);
-
-  const handleSortClick = (key) => {
-    const newSort = {};
-    if (sort.key === "" || sort.key !== key) {
-      newSort.key = key;
-      newSort.dir = "asc";
-    } else {
-      newSort.key = key;
-      if (sort.dir === "asc") {
-        newSort.dir = "desc";
-      } else {
-        newSort.key = "";
-      }
-    }
-    setSort(newSort);
-  };
-
-  const getJobTitles = async () => {
-    setLoading(true);
-    const data = await JobTitleService.fetchJobTitles();
-    const jobTitles = transformJobTitles(data);
-    setAllJobTitles(jobTitles);
-    setLoading(false);
-  };
-
-  const getFacilityList = async () => {
-    setLoading(true);
-    const data = await FacilityService.fetchFacilityList();
-    const facilityList = transformJobTitles(data);
-    setFacilityList(facilityList);
-    setLoading(false);
-  };
-
-  const handleChangePageSize = (pageSize) => {
-    setPageSize(pageSize);
-  };
-  const handlePageChange = (e, page) => {
-    setPage(page);
-  };
-
-  const fetchStats = async () => {
-    try {
-      setIsFacilityDetailsLoading(true);
-      const params = {
-        position: selectedJobTitleIds,
-        facility_id: selectedFacilityIds,
-        day: selectedDay,
-        page_size: pageSize,
-        page: page,
-      };
-
-      if (search) {
-        params.search = search;
-      }
-
-      let ordering = "";
-
-      if (sort.key !== "") {
-        if (sort.dir === "asc") {
-          ordering = `${sort.key}`;
-        } else {
-          ordering = `-${sort.key}`;
-        }
-        params.ordering = ordering;
-      }
-      const urlParams = queryString.stringify(params);
-
-      const startDateF = moment(startDate).format("YYYY-MM-DD");
-      const endDateF = moment(endDate).format("YYYY-MM-DD");
-
-      const response = await API.get(
-        ENDPOINTS.FETCH_FACILITIES(startDateF, endDateF, urlParams)
-      );
-      if (response.success) {
-        setStatsData(response?.data);
-        setCount(response?.data?.count || 0);
-      }
-    } catch (error) {
-      setStatsData([]);
-    } finally {
-      setIsFacilityDetailsLoading(false);
-    }
-  };
-
-  const fetchFacilityDetails = async () => {
-    try {
-      setIsFacilityDetailsLoading(true);
-      const params = {
-        position: selectedJobTitleIds,
-        day: selectedDay,
-        page_size: pageSize,
-        page: page,
-      };
-
-      let ordering = "";
-
-      if (sort.key !== "") {
-        if (sort.dir === "asc") {
-          ordering = `${sort.key}`;
-        } else {
-          ordering = `-${sort.key}`;
-        }
-        params.ordering = ordering;
-      }
-
-      const urlParams = queryString.stringify(params);
-
-      const startDateF = moment(startDate).format("YYYY-MM-DD");
-      const endDateF = moment(endDate).format("YYYY-MM-DD");
-
-      const response = await API.get(
-        ENDPOINTS.FETCH_FACILITY_DETAILS(
-          startDateF,
-          endDateF,
-          facilityId,
-          urlParams
-        )
-      );
-      if (response.success) {
-        setStatsData(response?.data);
-        setCount(response?.data?.count || 0);
-      }
-    } catch (error) {
-      setStatsData([]);
-    } finally {
-      setIsFacilityDetailsLoading(false);
-    }
-  };
-
-  const fetchFacilityEmployees = async () => {
+  const handleGetFacilityData = async () => {
     try {
       setLoading(true);
-      setFacilityId(facilityId);
-      const params = {
-        position: selectedJobTitleIds,
-        facility_id: selectedFacilityIds,
-        day: selectedDay,
-        page_size: pageSize,
-        page: page,
-      };
-
-      if (search) {
-        params.search = search;
-      }
-
-      let ordering = "";
-
-      if (sort.key !== "") {
-        if (sort.dir === "asc") {
-          ordering = `${sort.key}`;
-        } else {
-          ordering = `-${sort.key}`;
-        }
-        params.ordering = ordering;
-      }
-
-      const urlParams = queryString.stringify(params);
-
-      const startDateF = moment(startDate).format("YYYY-MM-DD");
-      const endDateF = moment(endDate).format("YYYY-MM-DD");
-
-      const response = await API.get(
-        ENDPOINTS.FETCH_FACILITY_EMPLOYEE_DETAILS(
-          startDateF,
-          endDateF,
-          facilityId,
-          urlParams
-        )
-      );
-
-      if (response.success) {
-        setStatsData(response?.data);
-        setCount(response?.data?.count || 0);
+      const response = await API.get(ENDPOINTS.GET_FACILITY_LISTS);
+      if (response?.success) {
+        setListingData(response?.data);
       }
     } catch (error) {
-      setStatsData([]);
+      // Handle error
     } finally {
       setLoading(false);
     }
   };
 
-  const onFacilityClick = (facilityId, facilityTitle) => {
-    if (!facilityId) return;
-    setStep(1);
-    setStepOneFilters(selectedFilters);
-    setStepOnePagination({ page, pageSize });
-    setPage(DEFAULT_PAGE_NO);
-    setPageSize(DEFAULT_PAGE_SIZE);
-    setStepOneDate({ startDate, endDate });
-    const updatedFilters = selectedFilters.filter((row) => row.index != 2);
-    setSelectedFilters(updatedFilters);
-    setFacilityTitle(facilityTitle);
-    setFacilityId(facilityId);
+  useEffect(() => {
+    handleGetFacilityData();
+  }, []);
+
+  // The API response only has one item, so let's use the data provided
+  const facilities =
+    listingData.length > 0
+      ? listingData
+      : [
+          {
+            id: "e2ea4ca0-babf-4e38-83ed-72f6f274d9d3",
+            user_type: "EN",
+            emp_id: "QK-037992",
+            status: "ACTIVE",
+            country_code: "+1",
+            mobile: "2244195222",
+            is_notification_enable: true,
+            joining_date: "2025-05-20",
+            onboarding_step: 0,
+            is_onboarding_completed: false,
+            notification_count: 2, // Added this for demo
+            facility_name: "Landmark of Louisville",
+          },
+        ];
+
+  const getNurseTypeLabel = (userType) => {
+    return userType === "IN" ? "Internal Nurse" : "External Nurse";
   };
 
-  const onTimelineClick = (row) => {
-    setStepTwoFilters(selectedFilters);
-    setSelectedWeekRow(row);
-    setStepTwoDate({ startDate, endDate });
-    setStepTwoPagination({ page, pageSize });
-    setPage(DEFAULT_PAGE_NO);
-    setPageSize(DEFAULT_PAGE_SIZE);
-    const sDate = row?.date_range?.start_date;
-    const eDate = row?.date_range?.end_date;
-    setWeekStartDate(moment(sDate).toDate());
-    setWeekEndDate(moment(eDate).toDate());
-    setStep(2);
-  };
-  const handleAccept = (startDate, endDate) => {
-    setWeekEndDate(endDate);
-    setWeekStartDate(startDate);
-  };
-  const handleCancel = () => {
-    // setIsModalOpen(false);
-  };
+  const handleSelect = async (profileId) => {
+    try {
+      setSelectLoading(true);
 
-  const handleBack = () => {
-    if (step > 0) {
-      if (step == 1) {
-        const startDate = stepOneDate.startDate;
-        const endDate = stepOneDate.endDate;
-        const page = stepOnePagination.page;
-        const pageSize = stepOnePagination.pageSize;
-        setPage(page);
-        setPageSize(pageSize);
-        setWeekStartDate(startDate);
-        setWeekEndDate(endDate);
-        updatedFiltersOnScreenChange(stepOneFilters);
-        setSelectedFilters(stepOneFilters);
-        setStepOneFilters([]);
-        setStepTwoFilters([]);
-        setStepOneDate({ startDate: "", endDate: "" });
-        setStepTwoDate({ startDate: "", endDate: "" });
-      } else if (step == 2) {
-        updatedFiltersOnScreenChange(stepTwoFilters);
-        setSelectedFilters(stepTwoFilters);
-        const startDate = stepTwoDate.startDate;
-        const endDate = stepTwoDate.endDate;
-        setWeekStartDate(startDate);
-        setWeekEndDate(endDate);
-        const page = stepTwoPagination.page;
-        const pageSize = stepTwoPagination.pageSize;
-        setPage(page);
-        setPageSize(pageSize);
+      const payload = {
+        device_type: "IOS",
+        device_token: "fasf2",
+        profile_id: profileId,
+      };
+
+      const response = await API.post(
+        "/auth/onboarding/profile-token/",
+        payload
+      );
+
+      if (response?.success) {
+        // Extract token and onboarding information from response
+        const { token, is_onboarding_completed, onboarding_step } =
+          response.data;
+
+        // Store token in local storage
+        StorageManager.put(FACILITY_API_TOKEN, token);
+
+        // Handle routing based on onboarding status
+        if (!is_onboarding_completed && onboarding_step !== "9") {
+          // Route to onboarding page with specific step
+          history.push({
+            pathname: `/onboarding`,
+            state: {
+              data: response.data,
+            },
+          });
+        } else {
+          // If onboarding is complete or step is 9, route to main dashboard or home
+          history.push("/dashboard");
+        }
+      } else {
+        // Handle unsuccessful selection
+        console.error("Failed to select profile:", response);
       }
-      setStep((prevStep) => prevStep - 1);
+    } catch (error) {
+      console.error("Error selecting profile:", error);
+      // Handle error - perhaps show an error message
+    } finally {
+      setSelectLoading(false);
     }
   };
 
-  const filtersObj = [
-    {
-      paramName: PARAM_NAME.POSITION,
-      items: allJobTitles,
-      key: "position",
-      // type: FilterConts.MULTIPLE_SELECT,
-      setFunction: (value) => {
-        setSelectedJobTitleIds(value);
-      },
-      value: selectedJobTitleIds,
-      initialValue: [],
-    },
-    {
-      paramName: PARAM_NAME.DAY,
-      items: ITEMS.DAYS_OF_WEEK,
-      key: "day",
-      // type: FilterConts.MULTIPLE_SELECT,
-      setFunction: (value) => {
-        setSelectedDay(value);
-      },
-      value: selectedDay,
-      initialValue: [],
-    },
-    {
-      paramName: PARAM_NAME.FACILITY,
-      items: facilityList,
-      key: "facility",
-      // type: FilterConts.MULTIPLE_SELECT,
-      setFunction: (value) => {
-        setSelectedFacilityIds(value);
-      },
-      value: selectedFacilityIds,
-      initialValue: [],
-    },
-  ];
-
-  if (step !== 0) {
-    filtersObj.splice(2, 1);
-  }
-
   return (
-    <>
-      {(loading || isFacilityDetailsLoaded) && <Loader />}
-      <Grid container justifyContent="space-between">
-        <Grid item>
-          <div className="module-nav">
-            <div className="mls">
-              <div className="module-title">Dashboard</div>
-            </div>
-            <DateRangePicker
-              title="Change date"
-              initialDateRange={{
-                startDate,
-                endDate,
-              }}
-              open={true}
-              onAccept={handleAccept}
-              onCancel={handleCancel}
-              dateStringFormatter="DD/MM/YYYY"
-            />
-          </div>
-        </Grid>
-        <Grid item className="flex select-container gap-10 items-center">
-          <span
-            className={`select-option ${view === GRAPH && "selected-option"}`}
-            onClick={() => setView(GRAPH)}
-          >
-            Graph
-          </span>
-          <span
-            className={`select-option ${view === TABLE && "selected-option"}`}
-            onClick={() => setView(TABLE)}
-          >
-            List
-          </span>
-        </Grid>
-      </Grid>
+    <Paper className={classes.root} elevation={0}>
+      <Typography variant="h5" className={classes.header}>
+        Select Location
+      </Typography>
 
-      {view === TABLE && (
-        <>
-          <Grid
-            className="mt-10"
-            container
-            alignItems="center"
-            justifyContent="space-between"
+      {loading ? (
+        <Typography>Loading facilities...</Typography>
+      ) : (
+        facilities.map((facility) => (
+          <Paper
+            key={facility.id}
+            className={classes.facilityItem}
+            elevation={0}
           >
-            <div>
-              {!step && (
-                <Typography className={`${classes.title1}`}>
-                  You have <span className={classes.pinkColor}>{count} </span>
-                  Facilities
+            <Box display="flex" alignItems="center">
+              <Box className={classes.iconContainer}>
+                <LocationCityIcon />
+              </Box>
+              <Box className={classes.facilityInfo}>
+                <Typography className={classes.facilityName}>
+                  {facility.facility_name}
+                </Typography>
+                <Box mt={0.5}>
+                  <span className={classes.nurseLabel}>
+                    {getNurseTypeLabel(facility.user_type)}
+                  </span>
+                </Box>
+              </Box>
+            </Box>
+
+            <Box display="flex" alignItems="center">
+              <Box position="relative">
+                <NotificationsIcon className={classes.notificationIcon} />
+                {facility.notification_count > 0 && (
+                  <Box className={classes.notificationBadge}>
+                    {facility.notification_count < 10
+                      ? facility.notification_count
+                      : "9+"}
+                  </Box>
+                )}
+              </Box>
+              {facility.status === "ACTIVE" ? (
+                <Typography className={classes.statusActive}>Active</Typography>
+              ) : (
+                <Typography className={classes.statusInvited}>
+                  Invited
                 </Typography>
               )}
-              {step > 0 && (
-                <div className="row-center cursor-pointer" onClick={handleBack}>
-                  <ArrowBackButton />
-                  <Typography className={`${classes.title1}`}>
-                    {facilityTitle}
-                  </Typography>
-                </div>
-              )}
-            </div>
-
-            <div
-              className="pdf-btn cursor-pointer"
-              onClick={() => openModal(ModalTypes.EDIT)}
-            >
-              Pdf Settings
-            </div>
-          </Grid>
-          <Grid
-            container
-            className={classes.filterAndSearch}
-            justifyContent="space-between"
-          >
-            <Filters
-              gridSize={8}
-              filterObject={filtersObj}
-              onFilterSelected={(data) => setSelectedFilters(data)}
-              selectedFiltersPopulate={selectedFilters}
-            />
-            {step != 1 && (
-              <DrawerSearchInput
-                //     value={this.state.search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                }}
-                // setSearch={this.setSeacrh}
-                label={`Find an ${step == 2 ? "Employee" : "Facility"}`}
-                widthClass={classes.searchWidth}
-              />
-            )}
-          </Grid>
-
-          {step === 0 && (
-            <FacilityTable
-              data={statsData}
-              onFacilityClick={onFacilityClick}
-              handleSortClick={handleSortClick}
-              sort={sort}
-              handleAlertOpen={handleAlertOpen}
-            />
-          )}
-          {step === 1 && (
-            <FacilityDetailsTable
-              data={statsData}
-              onTimelineClick={onTimelineClick}
-              handleSortClick={handleSortClick}
-              sort={sort}
-            />
-          )}
-          {step === 2 && (
-            <FacilityEmployeesTable
-              data={statsData}
-              handleSortClick={handleSortClick}
-              sort={sort}
-            />
-          )}
-          <TablePagination
-            count={count}
-            page={page}
-            rowsPerPage={pageSize}
-            setRowsPerPage={handleChangePageSize}
-            onChangePage={(e, page) => handlePageChange(e, page)}
-          />
-          <LimitAlertModal
-            open={modalOpen}
-            handleClose={handleClose}
-            facility={selectedFacility}
-          />
-          <FacilityProvider value={{ facilityList }}>
-            {isOpen && actionType === ModalTypes.EDIT && (
-              <PdfSettings onClose={closeModal} />
-            )}
-          </FacilityProvider>
-        </>
+              <Button
+                variant={
+                  facility.status === "INVITED" ? "contained" : "outlined"
+                }
+                className={
+                  facility.status === "INVITED"
+                    ? classes.selectButtonInvited
+                    : classes.selectButton
+                }
+                onClick={() => handleSelect(facility.id)}
+                disabled={selectLoading}
+              >
+                Select
+              </Button>
+            </Box>
+          </Paper>
+        ))
       )}
-
-      {view === GRAPH && (
-        <StackedBarGraph startDate={startDate} endDate={endDate} />
-      )}
-    </>
+    </Paper>
   );
 };
-export default NewDashboard;
 
-const useStyles = makeStyles((theme) => ({
-  title1: {
-    fontSize: 26,
-    fontWeight: 700,
-    "@media (min-width:1279px)": {
-      fontSize: 22,
-    },
-  },
-  pinkColor: {
-    color: theme.palette.primary.main,
-  },
-  filterAndSearch: {
-    marginTop: 16,
-  },
-  searchWidth: {
-    width: 380,
-  },
-}));
+export default FacilityList;
